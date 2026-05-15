@@ -1,0 +1,37 @@
+{
+  "gate_id": "REVIEW_GATE_3",
+  "reviewed_at": "2026-05-14T17:10:00Z",
+  "reviewer": "operator (infinitygauntletllc@gmail.com)",
+  "status": "APPROVED",
+  "notes": "Operator spot-checked 3795 Mount Olive Rd, Adkins (DOC_NUMBER 20260600092) against the live maps.bexar.org/foreclosures map UI and confirmed the record matches. First adapter (scrapers/foreclosure_notices_map.py) produces 288 normalized raw records across two ArcGIS layers (273 mortgage + 15 tax). 9/9 fixture test cases pass. parser_confidence is 95 for every record; 0 missing DOC_NUMBER or ADDRESS.",
+  "approved_artifacts": [
+    "scaffold/scrapers/__init__.py",
+    "scaffold/scrapers/_arcgis_featureserver.py",
+    "scrapers/__init__.py",
+    "scrapers/foreclosure_notices_map.py",
+    "scaffold/tests/fixtures/foreclosure_notices_map/",
+    "scaffold/tests/test_foreclosure_notices_map.py",
+    "data/raw/foreclosure_notices_map.jsonl",
+    "config/counties/bexar_tx.json (scraper_module corrected + heartbeat populated)"
+  ],
+  "operator_decisions": {
+    "doc_type_granularity": {
+      "decision": "Option (a): treat all Mortgage-layer rows as canonical NOTICE_OF_SUBSTITUTE_TRUSTEE_SALE. Tax-layer rows -> TAX_FORECLOSURE_NOTICE.",
+      "deferred": "Cross-link to bexar.tx.publicsearch.us by DOC_NUMBER to recover specific instrument doc-type (NSTS vs NOS vs NOD) -- deferred to a later phase.",
+      "rationale": "Accept classification imprecision for v1 in exchange for fast time-to-leads."
+    },
+    "cross_county_leakage": {
+      "decision": "Phase 4 parcel-matcher should flag non-Bexar municipality records as REVIEW_REQUIRED with review_flag 'potential_cross_county_leak'. Do NOT drop silently.",
+      "implementation_phase": "Phase 3 production-ingest applies the flag now (so Phase 3 dashboard already labels these correctly); Phase 4 parcel-matcher confirms via BCAD ownership lookup."
+    },
+    "sale_date_precision": {
+      "decision": "Derive expected_sale_date = first Tuesday of recording_month. Per Tex. Prop. Code Sec. 51.002, non-judicial trustee sales fall on the first Tuesday of each month; the framework's expected_sale_date should reflect that statute.",
+      "fallback": "If first-Tuesday falls on Jan 1 or July 4, shift to first-Wednesday (also per the statute)."
+    },
+    "dashboard_framing": {
+      "decision": "Dashboard surfaces this as 'upcoming foreclosure sales (rolling 60-90 day window)' not 'all Bexar foreclosures.'",
+      "build_label": "SOURCE_LIMITED",
+      "deferred": "Historical deeds-upon-trustee-sale post-sale records -- deferred to clerk_recordings (bexar.tx.publicsearch.us) integration in a later phase."
+    }
+  }
+}

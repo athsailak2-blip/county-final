@@ -1,0 +1,24 @@
+{
+  "gate_id": "REVIEW_GATE_4",
+  "reviewed_at": "2026-05-14T18:30:00Z",
+  "reviewer": "operator (infinitygauntletllc@gmail.com)",
+  "status": "APPROVED",
+  "notes": "Operator spot-checked the production dashboard: 288 leads render, build_label SOURCE_LIMITED banner displays the rolling-window framing, Boerne records correctly flagged potential_cross_county_leak with REVIEW_REQUIRED status, expected_sale_date column shows first Tuesday of recording month (e.g. 2026-06-02 for June 2026), evidence chain traces back to the original ArcGIS query URL with source_reliability_grade A and parser_confidence 100. Two-Truths invariant passes. Phase 1 synthetic harness still green (110/110). Phase 2 adapter test still green (9/9).",
+  "approved_artifacts": [
+    "scaffold/pipeline/source_translators.py",
+    "scaffold/pipeline/build_leads.py (production mode wired)",
+    "scaffold/pipeline/normalize.py (production subtype aliases)",
+    "scaffold/pipeline/stack.py (placeholder-aware multi-property detection)",
+    "scaffold/pipeline/review.py (preset-flag preservation)",
+    "scaffold/pipeline/manifest.py (configurable strategy label)",
+    "scaffold/pipeline/dashboard.py (production projection fields)",
+    "dashboard/index.html (rolling-window banner + review-flag column)",
+    "dashboard/dashboard.js (banner rendering + pending-badge + flag-cell)",
+    "dashboard/dashboard.css (pending-badge + flag-tag styles)",
+    "data/leads.json (288 production leads)",
+    "data/evidence.jsonl (288 evidence records)",
+    "data/source_heartbeat.json (foreclosure_notices_map status=healthy)",
+    "data/runs/latest.manifest.json"
+  ],
+  "phase_4_scope_directive": "Wire BCAD parcel-master via scrapers/parcel_master.py + scaffold/pipeline/matcher.py. Replace 288 placeholders with real BCAD data. Attributes (absentee, long_term_owned, high_equity, senior_owner, out_of_state, entity_owned) should fire and additional deal paths (sub_to, flip, messy_title) should unlock. Access pattern: prefer Harris Govern at https://hgo.harrisgovern.com/bexar/property/search; fall back to whatever works. Log recon observations in operator_notes.md."
+}

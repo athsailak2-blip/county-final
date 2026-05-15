@@ -1,0 +1,31 @@
+{
+  "gate_id": "REVIEW_GATE_2",
+  "reviewed_at": "2026-05-14T16:30:00Z",
+  "reviewer": "operator (infinitygauntletllc@gmail.com)",
+  "status": "APPROVED",
+  "notes": "Operator confirmed dashboard visual check passed in the browser (12 leads render, tier badges + tier/pattern/attribute/deal-path/stack-depth chips wired, CSV export downloads with 31 columns, Operator View toggle works, pre-canned views filter correctly). JSON-side Phase 1 verifier passed 110/110 invariants against synthetic_expectations.json. All 11 patterns, 9 attributes, 7 deal paths, 4 score tiers exercised at least once. specific_parcel_expectations for SYN-001 through SYN-012 all match. Operator approved entry to Phase 2 with foreclosure_notices_map as the first scraper (overriding the default 'parcel master first' suggestion because the Bexar foreclosure map is the easiest path to live distress leads — free CSV export, no auth, daily refresh).",
+  "approved_artifacts": [
+    "scaffold/pipeline/__init__.py",
+    "scaffold/pipeline/normalize.py",
+    "scaffold/pipeline/stack.py",
+    "scaffold/pipeline/score.py",
+    "scaffold/pipeline/classify.py",
+    "scaffold/pipeline/evidence.py",
+    "scaffold/pipeline/review.py",
+    "scaffold/pipeline/dashboard.py",
+    "scaffold/pipeline/manifest.py",
+    "scaffold/pipeline/build_leads.py",
+    "scaffold/tests/verify_synthetic_harness.py",
+    "dashboard/index.html",
+    "dashboard/dashboard.css",
+    "dashboard/dashboard.js",
+    "data/leads_synthetic.json",
+    "data/source_heartbeat.json",
+    "data/evidence.jsonl",
+    "data/runs/latest.manifest.json"
+  ],
+  "phase_2_scope_directive": "foreclosure_notices_map first. Defer parcel_master, court_civil, court_probate, tax_collector to later phases or parallel slices.",
+  "backlog_items_logged": [
+    "v5.1.2-beta — exempt data/ from test_county_agnostic_regression.py is_exempt_path()"
+  ]
+}

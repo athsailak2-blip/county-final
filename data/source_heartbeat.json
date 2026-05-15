@@ -1,0 +1,38 @@
+[
+  {
+    "source_id": "foreclosure_notices_map",
+    "source_name": "foreclosure_notices_map",
+    "source_class": "lead_generating",
+    "source_priority": "P0",
+    "source_reliability_grade": "A",
+    "build_priority": "mvp_required",
+    "access_pattern": "open_api",
+    "status": "healthy",
+    "last_attempted_at": "2026-05-14T23:31:55Z",
+    "last_successful_at": "2026-05-14T23:31:55Z",
+    "last_failed_at": null,
+    "last_failure_reason": null,
+    "records_seen_current_run": 288,
+    "records_new_current_run": 288,
+    "records_seen_previous_run": 0,
+    "records_new_previous_run": 0,
+    "parser_confidence_avg": 100,
+    "error_count_current_run": 0,
+    "consecutive_failures": 0,
+    "session_status": "not_applicable",
+    "session_expires_at": null,
+    "next_retry_at": null,
+    "next_scheduled_run_at": null,
+    "access_attempts": [
+      {
+        "attempt_order": 1,
+        "strategy": "arcgis_rest_query",
+        "status": "SUCCESS",
+        "reason": "Phase 3 production pull from foreclosure_notices_map",
+        "timestamp": "2026-05-14T23:31:55Z"
+      }
+    ],
+    "final_access_strategy": "arcgis_rest_query",
+    "records_request_allowed": false
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "run_id": "run_7fe8eadebc054e69a16dc81f380c1d21",
+  "county": "Bexar",
+  "state": "TX",
+  "started_at": "2026-05-14T23:31:55Z",
+  "finished_at": "2026-05-14T23:31:55Z",
+  "sources_attempted": 1,
+  "records_collected": 288,
+  "records_normalized": 288,
+  "leads_created": 287,
+  "review_required": 62,
+  "errors": [],
+  "output_files": [
+    "data/leads.json",
+    "data/source_heartbeat.json",
+    "data/evidence.jsonl"
+  ]
+}

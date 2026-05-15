@@ -1,0 +1,933 @@
+{
+  "generated_at": "2026-05-14T23:31:44Z",
+  "build_label": "FULL_BUILD",
+  "mode": "synthetic",
+  "county": "Bexar",
+  "state": "TX",
+  "lead_total": 12,
+  "total_signals_active": 23,
+  "total_signals_suppressed": 2,
+  "pattern_counts": {
+    "bankruptcy": 1,
+    "code": 1,
+    "divorce": 1,
+    "estate": 3,
+    "eviction": 1,
+    "foreclosure": 3,
+    "lien": 4,
+    "surplus_owed": 1,
+    "tax": 3,
+    "tired_landlord": 1,
+    "transfer": 2
+  },
+  "attribute_counts": {
+    "absentee": 4,
+    "entity_owned": 1,
+    "free_and_clear": 1,
+    "high_equity": 2,
+    "long_term_owned": 6,
+    "multiple_properties": 1,
+    "out_of_state": 2,
+    "senior_owner": 1,
+    "vacant": 2
+  },
+  "stack_depth_distribution": {
+    "1": 6,
+    "2": 4,
+    "3": 2
+  },
+  "score_tier_distribution": {
+    "Hot": 3,
+    "Low": 2,
+    "Strong": 3,
+    "Workable": 4
+  },
+  "deal_path_distribution": {
+    "flip": 1,
+    "messy_title": 2,
+    "partial_interest": 2,
+    "seller_finance": 1,
+    "sub_to": 3,
+    "surplus_recovery": 1,
+    "wholesale": 11
+  },
+  "quality_metrics": {
+    "source_verification_rate": 1.0,
+    "field_completeness_rate": 1.0,
+    "match_confidence_avg": 100.0,
+    "parser_confidence_avg": 100.0,
+    "source_url_coverage": 1.0,
+    "dedupe_ran": true,
+    "unsupported_claim_count": 0,
+    "hallucination_risk_avg": 0,
+    "live_verification_passed": true
+  },
+  "records": [
+    {
+      "lead_id": "lead_8607a077be2f12fd",
+      "primary_parcel_id": "SYN-001",
+      "display_address": "100 Synthetic Lane, Synthtown A, ZZ",
+      "display_owner": "TEST_OWNER_001",
+      "display_score": 85,
+      "display_tier": "Hot",
+      "display_patterns": [
+        "foreclosure",
+        "bankruptcy"
+      ],
+      "stack_contrib_patterns": [
+        "foreclosure",
+        "bankruptcy"
+      ],
+      "display_pattern_set": [
+        "foreclosure",
+        "bankruptcy"
+      ],
+      "display_attributes": [
+        "absentee",
+        "long_term_owned",
+        "out_of_state"
+      ],
+      "display_deal_paths": [
+        "sub_to",
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "sub_to",
+          "confidence": "high",
+          "rationale": "Foreclosure paired with bankruptcy stay or absentee owner; subject-to acquisition pattern fits."
+        },
+        {
+          "path": "wholesale",
+          "confidence": "high",
+          "rationale": "Multi-signal distress + investor-friendly attribute set."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 340000,
+      "display_last_sale_price": 185000,
+      "display_last_sale_date": "2002-03-12",
+      "display_year_built": 1978,
+      "display_match_confidence": 100,
+      "stack_depth": 2,
+      "score_reasons": [
+        {
+          "factor": "base_NOTICE_OF_SALE",
+          "delta": 60
+        },
+        {
+          "factor": "stack_depth_2",
+          "delta": 12
+        },
+        {
+          "factor": "recent_filing_within_30_days",
+          "delta": 5
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 8
+        }
+      ],
+      "evidence_ids": [
+        "ev_0cb644cd11994aec8eae247b49961a1d",
+        "ev_75d0a4102fcd4effa4d73ba0a6c7879d"
+      ],
+      "primary_source_urls": [
+        "synthetic://clerk/bk-001",
+        "synthetic://sheriff/SYN-001"
+      ],
+      "primary_event_date": "2026-04-25",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_aebeeb7804cf8fe4",
+      "primary_parcel_id": "SYN-002",
+      "display_address": "200 Synthetic Lane, Synthtown B, ZZ",
+      "display_owner": "TEST_OWNER_002",
+      "display_score": 70,
+      "display_tier": "Strong",
+      "display_patterns": [
+        "tax",
+        "lien"
+      ],
+      "stack_contrib_patterns": [
+        "tax",
+        "lien"
+      ],
+      "display_pattern_set": [
+        "tax",
+        "lien"
+      ],
+      "display_attributes": [
+        "high_equity",
+        "long_term_owned"
+      ],
+      "display_deal_paths": [
+        "messy_title",
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "messy_title",
+          "confidence": "high",
+          "rationale": "Lien stack and/or title-action pattern; closing requires release/payoff curative work."
+        },
+        {
+          "path": "wholesale",
+          "confidence": "high",
+          "rationale": "Multi-signal distress + investor-friendly attribute set."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 425000,
+      "display_last_sale_price": 92000,
+      "display_last_sale_date": "1998-08-04",
+      "display_year_built": 1965,
+      "display_match_confidence": 100,
+      "stack_depth": 2,
+      "score_reasons": [
+        {
+          "factor": "base_TAX_SALE_CERTIFICATE",
+          "delta": 50
+        },
+        {
+          "factor": "stack_depth_2",
+          "delta": 12
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 8
+        }
+      ],
+      "evidence_ids": [
+        "ev_7a0a2d619e2b4f648724e930a8d5c8ba",
+        "ev_b72db29e3f6e4650bac88217bf6eac4c"
+      ],
+      "primary_source_urls": [
+        "synthetic://clerk/SYN-jl-002",
+        "synthetic://clerk/SYN-tsc-002"
+      ],
+      "primary_event_date": "2026-03-10",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_ce14fa409654cf15",
+      "primary_parcel_id": "SYN-003",
+      "display_address": "300 Synthetic Lane, Synthtown C, ZZ",
+      "display_owner": "TEST_OWNER_003_HEIRS",
+      "display_score": 72,
+      "display_tier": "Strong",
+      "display_patterns": [
+        "estate",
+        "transfer"
+      ],
+      "stack_contrib_patterns": [
+        "estate",
+        "transfer"
+      ],
+      "display_pattern_set": [
+        "estate",
+        "transfer"
+      ],
+      "display_attributes": [
+        "absentee",
+        "out_of_state"
+      ],
+      "display_deal_paths": [
+        "partial_interest",
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "partial_interest",
+          "confidence": "high",
+          "rationale": "Estate pattern paired with intra-family transfer or long-held parcel; multiple heirs likely."
+        },
+        {
+          "path": "wholesale",
+          "confidence": "high",
+          "rationale": "Multi-signal distress + investor-friendly attribute set."
+        }
+      ],
+      "display_title_complexity_tier": "Light curative",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 295000,
+      "display_last_sale_price": 68000,
+      "display_last_sale_date": "1985-06-22",
+      "display_year_built": 1972,
+      "display_match_confidence": 100,
+      "stack_depth": 2,
+      "score_reasons": [
+        {
+          "factor": "base_AFFIDAVIT_OF_HEIRSHIP",
+          "delta": 55
+        },
+        {
+          "factor": "stack_depth_2",
+          "delta": 12
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 5
+        }
+      ],
+      "evidence_ids": [
+        "ev_c9a40578639e4424bd6ac5611cf04593",
+        "ev_1f067c4c990c49ad9aad281acf2291c6"
+      ],
+      "primary_source_urls": [
+        "synthetic://clerk/SYN-aoh-003",
+        "synthetic://clerk/SYN-qc-003"
+      ],
+      "primary_event_date": "2026-03-05",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_5618c521027c412b",
+      "primary_parcel_id": "SYN-004",
+      "display_address": "400 Synthetic Lane, Synthtown D, ZZ",
+      "display_owner": "TEST_OWNER_004",
+      "display_score": 58,
+      "display_tier": "Workable",
+      "display_patterns": [
+        "code"
+      ],
+      "stack_contrib_patterns": [
+        "code"
+      ],
+      "display_pattern_set": [
+        "code"
+      ],
+      "display_attributes": [
+        "absentee",
+        "vacant"
+      ],
+      "display_deal_paths": [
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "wholesale",
+          "confidence": "moderate",
+          "rationale": "Single-signal distress; lower-conviction wholesale candidate."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 215000,
+      "display_last_sale_price": 105000,
+      "display_last_sale_date": "1989-04-15",
+      "display_year_built": 1958,
+      "display_match_confidence": 100,
+      "stack_depth": 1,
+      "score_reasons": [
+        {
+          "factor": "base_DEMOLITION_ORDER",
+          "delta": 50
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 8
+        }
+      ],
+      "evidence_ids": [
+        "ev_fcf26ffd9d7f4d4e838ad6df91c5c474"
+      ],
+      "primary_source_urls": [
+        "synthetic://code/SYN-demo-004"
+      ],
+      "primary_event_date": "2026-04-01",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_83f84889dbd7cc4d",
+      "primary_parcel_id": "SYN-005",
+      "display_address": "500 Synthetic Lane, Synthtown E, ZZ",
+      "display_owner": "TEST_OWNER_005",
+      "display_score": 68,
+      "display_tier": "Strong",
+      "display_patterns": [
+        "foreclosure"
+      ],
+      "stack_contrib_patterns": [
+        "foreclosure"
+      ],
+      "display_pattern_set": [
+        "foreclosure"
+      ],
+      "display_attributes": [
+        "long_term_owned"
+      ],
+      "display_deal_paths": [
+        "sub_to",
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "sub_to",
+          "confidence": "moderate",
+          "rationale": "Foreclosure on long-term-owned parcel; investigate loan terms for subject-to."
+        },
+        {
+          "path": "wholesale",
+          "confidence": "moderate",
+          "rationale": "Single-signal distress; lower-conviction wholesale candidate."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 265000,
+      "display_last_sale_price": 165000,
+      "display_last_sale_date": "2001-11-30",
+      "display_year_built": 1990,
+      "display_match_confidence": 100,
+      "stack_depth": 1,
+      "score_reasons": [
+        {
+          "factor": "base_SHERIFF_SALE",
+          "delta": 60
+        },
+        {
+          "factor": "recent_filing_within_30_days",
+          "delta": 5
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 3
+        }
+      ],
+      "evidence_ids": [
+        "ev_a858a257029c442ebdb383acc0892981"
+      ],
+      "primary_source_urls": [
+        "synthetic://sheriff/SYN-005"
+      ],
+      "primary_event_date": "2026-05-12",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_cbece3e4e2cc513a",
+      "primary_parcel_id": "SYN-006",
+      "display_address": "600 Synthetic Lane, Synthtown F, ZZ",
+      "display_owner": "TEST_OWNER_006",
+      "display_score": 90,
+      "display_tier": "Hot",
+      "display_patterns": [
+        "tax",
+        "lien",
+        "lien"
+      ],
+      "stack_contrib_patterns": [
+        "tax",
+        "lien",
+        "lien"
+      ],
+      "display_pattern_set": [
+        "tax",
+        "lien"
+      ],
+      "display_attributes": [
+        "free_and_clear",
+        "high_equity",
+        "long_term_owned"
+      ],
+      "display_deal_paths": [
+        "messy_title",
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "messy_title",
+          "confidence": "high",
+          "rationale": "Lien stack and/or title-action pattern; closing requires release/payoff curative work."
+        },
+        {
+          "path": "wholesale",
+          "confidence": "high",
+          "rationale": "Multi-signal distress + investor-friendly attribute set."
+        }
+      ],
+      "display_title_complexity_tier": "Light curative",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 510000,
+      "display_last_sale_price": 125000,
+      "display_last_sale_date": "1992-02-08",
+      "display_year_built": 1962,
+      "display_match_confidence": 100,
+      "stack_depth": 3,
+      "score_reasons": [
+        {
+          "factor": "base_FEDERAL_TAX_LIEN",
+          "delta": 55
+        },
+        {
+          "factor": "stack_depth_3",
+          "delta": 24
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 11
+        }
+      ],
+      "evidence_ids": [
+        "ev_db0fa6e36a90497fbe4946030da8bddf",
+        "ev_972b5c1263764a88b90a61ba1deee78b",
+        "ev_f4971d6efa3848daa7f0ed75b8b32d9d"
+      ],
+      "primary_source_urls": [
+        "synthetic://clerk/SYN-ftl-006",
+        "synthetic://clerk/SYN-jl-006",
+        "synthetic://clerk/SYN-ml-006"
+      ],
+      "primary_event_date": "2026-01-20",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_aa97d7a27578a61f",
+      "primary_parcel_id": "SYN-007",
+      "display_address": "700 Synthetic Lane, Synthtown G, ZZ",
+      "display_owner": "TEST_OWNER_007 & TEST_SPOUSE_007",
+      "display_score": 50,
+      "display_tier": "Workable",
+      "display_patterns": [
+        "divorce"
+      ],
+      "stack_contrib_patterns": [
+        "divorce"
+      ],
+      "display_pattern_set": [
+        "divorce"
+      ],
+      "display_attributes": [],
+      "display_deal_paths": [
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "wholesale",
+          "confidence": "moderate",
+          "rationale": "Single-signal distress; lower-conviction wholesale candidate."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 385000,
+      "display_last_sale_price": 295000,
+      "display_last_sale_date": "2008-09-14",
+      "display_year_built": 1985,
+      "display_match_confidence": 100,
+      "stack_depth": 1,
+      "score_reasons": [
+        {
+          "factor": "base_MARITAL_PROPERTY_DIVISION",
+          "delta": 45
+        },
+        {
+          "factor": "recent_filing_within_30_days",
+          "delta": 5
+        }
+      ],
+      "evidence_ids": [
+        "ev_73e53ff9eb614cda9d511ab0beca9c38",
+        "ev_b972f382a07e4186aa6d59039ff5c760"
+      ],
+      "primary_source_urls": [
+        "synthetic://clerk/SYN-recent-007",
+        "synthetic://court/SYN-divorce-007"
+      ],
+      "primary_event_date": "2026-04-30",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_a3cbbdd8610dcfdf",
+      "primary_parcel_id": "SYN-008",
+      "display_address": "800 Synthetic Lane, Synthtown H, ZZ",
+      "display_owner": "SYN_LANDLORD_LLC",
+      "display_score": 54,
+      "display_tier": "Workable",
+      "display_patterns": [
+        "eviction",
+        "tired_landlord"
+      ],
+      "stack_contrib_patterns": [
+        "tired_landlord"
+      ],
+      "display_pattern_set": [
+        "tired_landlord"
+      ],
+      "display_attributes": [
+        "entity_owned",
+        "multiple_properties"
+      ],
+      "display_deal_paths": [
+        "seller_finance",
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "seller_finance",
+          "confidence": "high",
+          "rationale": "Repeat-eviction pattern on rental-classed property; owner-fatigue suggests seller-finance pivot."
+        },
+        {
+          "path": "wholesale",
+          "confidence": "moderate",
+          "rationale": "Single-signal distress; lower-conviction wholesale candidate."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 290000,
+      "display_last_sale_price": 225000,
+      "display_last_sale_date": "2014-07-20",
+      "display_year_built": 1975,
+      "display_match_confidence": 100,
+      "stack_depth": 1,
+      "score_reasons": [
+        {
+          "factor": "base_pattern:tired_landlord",
+          "delta": 50
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 4
+        }
+      ],
+      "evidence_ids": [
+        "ev_3710be8c408844dc9140ffd01fc82f76",
+        "ev_43592c90ef4e4dbc8c4e4818aa74843f",
+        "ev_b9a3fbe66a3b453c931ff5b2ce86c8d3"
+      ],
+      "primary_source_urls": [
+        "synthetic://court/SYN-ev1-008",
+        "synthetic://court/SYN-ev2-008",
+        "synthetic://court/SYN-ev3-008"
+      ],
+      "primary_event_date": "2026-03-22",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_0794ab702576aaf5",
+      "primary_parcel_id": "SYN-009",
+      "display_address": "900 Synthetic Lane, Synthtown I, ZZ",
+      "display_owner": "TEST_OWNER_009 (DECEASED)",
+      "display_score": 85,
+      "display_tier": "Hot",
+      "display_patterns": [
+        "estate",
+        "tax",
+        "estate"
+      ],
+      "stack_contrib_patterns": [
+        "estate",
+        "tax",
+        "estate"
+      ],
+      "display_pattern_set": [
+        "estate",
+        "tax"
+      ],
+      "display_attributes": [
+        "long_term_owned",
+        "senior_owner"
+      ],
+      "display_deal_paths": [
+        "partial_interest",
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "partial_interest",
+          "confidence": "high",
+          "rationale": "Estate pattern paired with intra-family transfer or long-held parcel; multiple heirs likely."
+        },
+        {
+          "path": "wholesale",
+          "confidence": "moderate",
+          "rationale": "Multi-signal distress stack; standard wholesale flow."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 315000,
+      "display_last_sale_price": 110000,
+      "display_last_sale_date": "1994-05-11",
+      "display_year_built": 1970,
+      "display_match_confidence": 100,
+      "stack_depth": 3,
+      "score_reasons": [
+        {
+          "factor": "base_LETTERS_TESTAMENTARY",
+          "delta": 55
+        },
+        {
+          "factor": "stack_depth_3",
+          "delta": 24
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 6
+        }
+      ],
+      "evidence_ids": [
+        "ev_932cb74cd06548139726c88691bfcf69",
+        "ev_b5bfd3fe6f394d209a29fee704ef1441",
+        "ev_aeb140d6d89f436bad7f1919b76163e2"
+      ],
+      "primary_source_urls": [
+        "synthetic://court/SYN-probate-009",
+        "synthetic://court/SYN-probate-009#derived-admin",
+        "synthetic://tax/SYN-009"
+      ],
+      "primary_event_date": "2026-04-01",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_05c235cc8232b195",
+      "primary_parcel_id": "SYN-010",
+      "display_address": "1000 Synthetic Lane, Synthtown J, ZZ",
+      "display_owner": "TEST_OWNER_010",
+      "display_score": 55,
+      "display_tier": "Workable",
+      "display_patterns": [
+        "foreclosure",
+        "lien"
+      ],
+      "stack_contrib_patterns": [
+        "foreclosure",
+        "lien"
+      ],
+      "display_pattern_set": [
+        "foreclosure",
+        "lien"
+      ],
+      "display_attributes": [
+        "absentee",
+        "vacant"
+      ],
+      "display_deal_paths": [
+        "sub_to",
+        "flip",
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "sub_to",
+          "confidence": "high",
+          "rationale": "Foreclosure paired with bankruptcy stay or absentee owner; subject-to acquisition pattern fits."
+        },
+        {
+          "path": "flip",
+          "confidence": "moderate",
+          "rationale": "Vacant parcel facing distress (non-demolition); rehab flip candidate."
+        },
+        {
+          "path": "wholesale",
+          "confidence": "high",
+          "rationale": "Multi-signal distress + investor-friendly attribute set."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 255000,
+      "display_last_sale_price": 195000,
+      "display_last_sale_date": "2005-03-19",
+      "display_year_built": 1980,
+      "display_match_confidence": 100,
+      "stack_depth": 2,
+      "score_reasons": [
+        {
+          "factor": "base_LIS_PENDENS",
+          "delta": 35
+        },
+        {
+          "factor": "stack_depth_2",
+          "delta": 12
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 8
+        }
+      ],
+      "evidence_ids": [
+        "ev_43f0bd6d09ca402f90e00f3db1ca7f76",
+        "ev_33c2061593394282b22db9ddd44d2b74"
+      ],
+      "primary_source_urls": [
+        "synthetic://clerk/SYN-hoa-010",
+        "synthetic://clerk/SYN-lp-010"
+      ],
+      "primary_event_date": "2026-03-15",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_0bf99ea166f0a866",
+      "primary_parcel_id": "SYN-011",
+      "display_address": "1100 Synthetic Lane, Synthtown K, ZZ",
+      "display_owner": "FORMER_OWNER_011",
+      "display_score": 40,
+      "display_tier": "Low",
+      "display_patterns": [
+        "surplus_owed"
+      ],
+      "stack_contrib_patterns": [
+        "surplus_owed"
+      ],
+      "display_pattern_set": [
+        "surplus_owed"
+      ],
+      "display_attributes": [],
+      "display_deal_paths": [
+        "surplus_recovery"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "surplus_recovery",
+          "confidence": "high",
+          "rationale": "Surplus-owed signal: post-foreclosure-sale recovery persona, not routed to acquisition paths."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 275000,
+      "display_last_sale_price": 312000,
+      "display_last_sale_date": "2025-09-15",
+      "display_year_built": 1985,
+      "display_match_confidence": 100,
+      "stack_depth": 1,
+      "score_reasons": [
+        {
+          "factor": "base_SHERIFF_SALE_SURPLUS",
+          "delta": 40
+        }
+      ],
+      "evidence_ids": [
+        "ev_5ec66103ee9e41e7a370eda5070efb62"
+      ],
+      "primary_source_urls": [
+        "synthetic://sheriff/SYN-011"
+      ],
+      "primary_event_date": "2025-09-20",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    },
+    {
+      "lead_id": "lead_15f822aacef2a1c5",
+      "primary_parcel_id": "SYN-012",
+      "display_address": "1200 Synthetic Lane, Synthtown L, ZZ",
+      "display_owner": "TEST_OWNER_012_ESTATE_OF",
+      "display_score": 38,
+      "display_tier": "Low",
+      "display_patterns": [
+        "transfer"
+      ],
+      "stack_contrib_patterns": [
+        "transfer"
+      ],
+      "display_pattern_set": [
+        "transfer"
+      ],
+      "display_attributes": [
+        "long_term_owned"
+      ],
+      "display_deal_paths": [
+        "wholesale"
+      ],
+      "display_deal_path_details": [
+        {
+          "path": "wholesale",
+          "confidence": "low",
+          "rationale": "Single-pattern transfer signal; weak wholesale candidate."
+        }
+      ],
+      "display_title_complexity_tier": "None",
+      "display_lead_status": "APPROVED_FOR_DASHBOARD",
+      "display_assessed_value": 225000,
+      "display_last_sale_price": 78000,
+      "display_last_sale_date": "1990-11-28",
+      "display_year_built": 1968,
+      "display_match_confidence": 100,
+      "stack_depth": 1,
+      "score_reasons": [
+        {
+          "factor": "base_EXECUTORS_DEED",
+          "delta": 35
+        },
+        {
+          "factor": "attribute_bonus",
+          "delta": 3
+        }
+      ],
+      "evidence_ids": [
+        "ev_a150a7a1a16c4f729163ef1afd09ac0c"
+      ],
+      "primary_source_urls": [
+        "synthetic://clerk/SYN-ed-012"
+      ],
+      "primary_event_date": "2026-02-28",
+      "expected_sale_date": null,
+      "parcel_master_status": "",
+      "parcel_master_status_note": "",
+      "parcel_master_match_method": "",
+      "candidate_parcel_ids": [],
+      "review_flags": []
+    }
+  ],
+  "build_label_reason": ""
+}
