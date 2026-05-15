@@ -29,15 +29,15 @@ from scaffold.pipeline.matcher import (  # noqa: E402
 
 
 def _bcad(**overrides) -> dict:
+    """Fixture parcel in canonical (post-translator) field-name shape."""
     base = {
         "parcel_id": "BCAD-00100000",
-        "bcad_prop_id": 100000,
-        "situs_address": "100 SYNTHETIC LN",
-        "situs_city": "SYNTHTOWN",
+        "address": "100 SYNTHETIC LN",
+        "city": "SYNTHTOWN",
         "situs_state": "TX",
-        "situs_zip": "78001",
+        "zip": "78001",
         "owner_name": "SAMPLE OWNER",
-        "owner_mailing_addr1": "100 SYNTHETIC LN",
+        "owner_mailing_address": "100 SYNTHETIC LN",
         "owner_mailing_city": "SYNTHTOWN",
         "owner_mailing_state": "TX",
         "owner_mailing_zip": "78001",
@@ -46,8 +46,22 @@ def _bcad(**overrides) -> dict:
         "exempt_homestead": False,
         "exempt_over_65": False,
         "exempt_disabled": False,
-        "exemptions": "",
     }
+    # Back-compat: accept legacy field names in test calls and route them
+    # to canonical names so existing test cases keep working.
+    legacy_map = {
+        "situs_address": "address",
+        "situs_city": "city",
+        "situs_zip": "zip",
+        "owner_mailing_addr1": "owner_mailing_address",
+    }
+    for k, v in list(overrides.items()):
+        if k in legacy_map:
+            overrides[legacy_map[k]] = v
+            overrides.pop(k)
+        elif k == "bcad_prop_id":
+            # legacy fixture field; no longer used by matcher
+            overrides.pop(k)
     base.update(overrides)
     return base
 
@@ -196,21 +210,24 @@ def test_city_match_when_zip_disagrees():
 # Out-of-state validator
 # ---------------------------------------------------------------------
 
+_BEXAR_OOS_KWARGS = {"in_state_zip_prefixes": ["7"], "in_state_code": "TX"}
+
+
 def test_oos_clean_california():
     print("\n[out_of_state — clean California]")
     p = _bcad(owner_mailing_state="CA", owner_mailing_zip="94105",
               situs_state="TX")
     _assert("CA mailing with CA-style ZIP fires out_of_state",
-            looks_like_out_of_state(p) is True)
+            looks_like_out_of_state(p, **_BEXAR_OOS_KWARGS) is True)
 
 
 def test_oos_data_entry_artifact():
-    print("\n[out_of_state — data entry artifact 'OH' with TX ZIP]")
-    # Real BCAD data: "SAN ANTONI, OH 78252" — clearly a typo.
+    print("\n[out_of_state — data entry artifact 'OH' with in-state ZIP]")
+    # Real parcel-master data: typo state code paired with in-state ZIP.
     p = _bcad(owner_mailing_state="OH", owner_mailing_zip="78252",
               situs_state="TX")
-    _assert("OH mailing with TX ZIP does NOT fire out_of_state",
-            looks_like_out_of_state(p) is False)
+    _assert("OH mailing with in-state ZIP does NOT fire out_of_state",
+            looks_like_out_of_state(p, **_BEXAR_OOS_KWARGS) is False)
 
 
 def test_oos_invalid_state_code():
@@ -218,15 +235,15 @@ def test_oos_invalid_state_code():
     p = _bcad(owner_mailing_state="ZZ", owner_mailing_zip="00000",
               situs_state="TX")
     _assert("ZZ mailing state does NOT fire out_of_state",
-            looks_like_out_of_state(p) is False)
+            looks_like_out_of_state(p, **_BEXAR_OOS_KWARGS) is False)
 
 
 def test_oos_same_state():
     print("\n[out_of_state — same-state mailing]")
     p = _bcad(owner_mailing_state="TX", owner_mailing_zip="78001",
               situs_state="TX")
-    _assert("TX-TX does NOT fire out_of_state",
-            looks_like_out_of_state(p) is False)
+    _assert("same-state does NOT fire out_of_state",
+            looks_like_out_of_state(p, **_BEXAR_OOS_KWARGS) is False)
 
 
 def main() -> int:

@@ -8,8 +8,8 @@
     "build_priority": "mvp_required",
     "access_pattern": "synthetic_jsonl_fixture",
     "status": "healthy",
-    "last_attempted_at": "2026-05-14T23:31:44Z",
-    "last_successful_at": "2026-05-14T23:31:44Z",
+    "last_attempted_at": "2026-05-15T19:57:06Z",
+    "last_successful_at": "2026-05-15T19:57:06Z",
     "last_failed_at": null,
     "last_failure_reason": null,
     "records_seen_current_run": 14,
@@ -29,7 +29,7 @@
         "strategy": "synthetic_jsonl_fixture",
         "status": "SUCCESS",
         "reason": "Phase 1 synthetic harness",
-        "timestamp": "2026-05-14T23:31:44Z"
+        "timestamp": "2026-05-15T19:57:06Z"
       }
     ],
     "final_access_strategy": "synthetic_jsonl_fixture",
@@ -44,8 +44,8 @@
     "build_priority": "high_value",
     "access_pattern": "synthetic_jsonl_fixture",
     "status": "healthy",
-    "last_attempted_at": "2026-05-14T23:31:44Z",
-    "last_successful_at": "2026-05-14T23:31:44Z",
+    "last_attempted_at": "2026-05-15T19:57:06Z",
+    "last_successful_at": "2026-05-15T19:57:06Z",
     "last_failed_at": null,
     "last_failure_reason": null,
     "records_seen_current_run": 1,
@@ -65,7 +65,7 @@
         "strategy": "synthetic_jsonl_fixture",
         "status": "SUCCESS",
         "reason": "Phase 1 synthetic harness",
-        "timestamp": "2026-05-14T23:31:44Z"
+        "timestamp": "2026-05-15T19:57:06Z"
       }
     ],
     "final_access_strategy": "synthetic_jsonl_fixture",
@@ -80,8 +80,8 @@
     "build_priority": "high_value",
     "access_pattern": "synthetic_jsonl_fixture",
     "status": "healthy",
-    "last_attempted_at": "2026-05-14T23:31:44Z",
-    "last_successful_at": "2026-05-14T23:31:44Z",
+    "last_attempted_at": "2026-05-15T19:57:06Z",
+    "last_successful_at": "2026-05-15T19:57:06Z",
     "last_failed_at": null,
     "last_failure_reason": null,
     "records_seen_current_run": 6,
@@ -101,7 +101,7 @@
         "strategy": "synthetic_jsonl_fixture",
         "status": "SUCCESS",
         "reason": "Phase 1 synthetic harness",
-        "timestamp": "2026-05-14T23:31:44Z"
+        "timestamp": "2026-05-15T19:57:06Z"
       }
     ],
     "final_access_strategy": "synthetic_jsonl_fixture",
@@ -116,8 +116,8 @@
     "build_priority": "mvp_required",
     "access_pattern": "synthetic_jsonl_fixture",
     "status": "healthy",
-    "last_attempted_at": "2026-05-14T23:31:44Z",
-    "last_successful_at": "2026-05-14T23:31:44Z",
+    "last_attempted_at": "2026-05-15T19:57:06Z",
+    "last_successful_at": "2026-05-15T19:57:06Z",
     "last_failed_at": null,
     "last_failure_reason": null,
     "records_seen_current_run": 3,
@@ -137,7 +137,7 @@
         "strategy": "synthetic_jsonl_fixture",
         "status": "SUCCESS",
         "reason": "Phase 1 synthetic harness",
-        "timestamp": "2026-05-14T23:31:44Z"
+        "timestamp": "2026-05-15T19:57:06Z"
       }
     ],
     "final_access_strategy": "synthetic_jsonl_fixture",
@@ -152,8 +152,8 @@
     "build_priority": "high_value",
     "access_pattern": "synthetic_jsonl_fixture",
     "status": "healthy",
-    "last_attempted_at": "2026-05-14T23:31:44Z",
-    "last_successful_at": "2026-05-14T23:31:44Z",
+    "last_attempted_at": "2026-05-15T19:57:06Z",
+    "last_successful_at": "2026-05-15T19:57:06Z",
     "last_failed_at": null,
     "last_failure_reason": null,
     "records_seen_current_run": 1,
@@ -173,7 +173,7 @@
         "strategy": "synthetic_jsonl_fixture",
         "status": "SUCCESS",
         "reason": "Phase 1 synthetic harness",
-        "timestamp": "2026-05-14T23:31:44Z"
+        "timestamp": "2026-05-15T19:57:06Z"
       }
     ],
     "final_access_strategy": "synthetic_jsonl_fixture",

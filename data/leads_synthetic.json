@@ -1,9 +1,22 @@
 {
-  "generated_at": "2026-05-14T23:31:44Z",
+  "generated_at": "2026-05-15T19:57:06Z",
   "build_label": "FULL_BUILD",
   "mode": "synthetic",
   "county": "Bexar",
   "state": "TX",
+  "deployment": {
+    "github_org": "xcerebro",
+    "github_repo": "bexar",
+    "live_url": "",
+    "scheduled_task_name": "",
+    "watchdog_task_name": "",
+    "scheduler_runtime_class": "SCHEDULER_NOT_CONFIGURED",
+    "scheduler_test_fired_at": "",
+    "production_verification_status": "NOT_RUN",
+    "production_verification_at": "",
+    "last_known_good_commit": "",
+    "last_known_good_dashboard_at": ""
+  },
   "lead_total": 12,
   "total_signals_active": 23,
   "total_signals_suppressed": 2,
@@ -130,8 +143,8 @@
         }
       ],
       "evidence_ids": [
-        "ev_0cb644cd11994aec8eae247b49961a1d",
-        "ev_75d0a4102fcd4effa4d73ba0a6c7879d"
+        "ev_158ab4f07d3f43b084c980092b69b002",
+        "ev_eb25fb88b7b94d9ebc226f9df71e2f1c"
       ],
       "primary_source_urls": [
         "synthetic://clerk/bk-001",
@@ -207,8 +220,8 @@
         }
       ],
       "evidence_ids": [
-        "ev_7a0a2d619e2b4f648724e930a8d5c8ba",
-        "ev_b72db29e3f6e4650bac88217bf6eac4c"
+        "ev_dcc4f082fd7940bf9e5ef5f64dfd97a7",
+        "ev_c8e0bcbe00b34ec39971e99e6cc69efd"
       ],
       "primary_source_urls": [
         "synthetic://clerk/SYN-jl-002",
@@ -284,8 +297,8 @@
         }
       ],
       "evidence_ids": [
-        "ev_c9a40578639e4424bd6ac5611cf04593",
-        "ev_1f067c4c990c49ad9aad281acf2291c6"
+        "ev_fbedd3f128254938bb2a9e35beffa0dc",
+        "ev_f51abf7eceac40cda7ec2df950a2f819"
       ],
       "primary_source_urls": [
         "synthetic://clerk/SYN-aoh-003",
@@ -348,7 +361,7 @@
         }
       ],
       "evidence_ids": [
-        "ev_fcf26ffd9d7f4d4e838ad6df91c5c474"
+        "ev_e923f0f3e06c4d029e8635218ddd7c57"
       ],
       "primary_source_urls": [
         "synthetic://code/SYN-demo-004"
@@ -419,7 +432,7 @@
         }
       ],
       "evidence_ids": [
-        "ev_a858a257029c442ebdb383acc0892981"
+        "ev_f27f1ec347ba4d2f9f0214ae35aef426"
       ],
       "primary_source_urls": [
         "synthetic://sheriff/SYN-005"
@@ -497,9 +510,9 @@
         }
       ],
       "evidence_ids": [
-        "ev_db0fa6e36a90497fbe4946030da8bddf",
-        "ev_972b5c1263764a88b90a61ba1deee78b",
-        "ev_f4971d6efa3848daa7f0ed75b8b32d9d"
+        "ev_38afe81933f84d349c7ac60935d594f4",
+        "ev_901f695c61a544c7b20658c7af7be14f",
+        "ev_4737f4c907c74eb5b9511d9c49107a01"
       ],
       "primary_source_urls": [
         "synthetic://clerk/SYN-ftl-006",
@@ -560,8 +573,8 @@
         }
       ],
       "evidence_ids": [
-        "ev_73e53ff9eb614cda9d511ab0beca9c38",
-        "ev_b972f382a07e4186aa6d59039ff5c760"
+        "ev_b811abb1fbb449a0877353a2b9ab2c8b",
+        "ev_386bfdf203254d3280ee93d269303759"
       ],
       "primary_source_urls": [
         "synthetic://clerk/SYN-recent-007",
@@ -631,9 +644,9 @@
         }
       ],
       "evidence_ids": [
-        "ev_3710be8c408844dc9140ffd01fc82f76",
-        "ev_43592c90ef4e4dbc8c4e4818aa74843f",
-        "ev_b9a3fbe66a3b453c931ff5b2ce86c8d3"
+        "ev_8b8a698514dd4c1d8b9edc5431148abf",
+        "ev_51f95d4667bc4132b9d9fb2d28325c9c",
+        "ev_55b2321c45a940ef9ba6cffbfc00ddc6"
       ],
       "primary_source_urls": [
         "synthetic://court/SYN-ev1-008",
@@ -712,9 +725,9 @@
         }
       ],
       "evidence_ids": [
-        "ev_932cb74cd06548139726c88691bfcf69",
-        "ev_b5bfd3fe6f394d209a29fee704ef1441",
-        "ev_aeb140d6d89f436bad7f1919b76163e2"
+        "ev_e7a7beca17e84bfa8d312b500c923671",
+        "ev_d96b3cc42cb84413b2f92a9a97926e39",
+        "ev_0a93004561d34f5a9921c01c00d79700"
       ],
       "primary_source_urls": [
         "synthetic://court/SYN-probate-009",
@@ -797,8 +810,8 @@
         }
       ],
       "evidence_ids": [
-        "ev_43f0bd6d09ca402f90e00f3db1ca7f76",
-        "ev_33c2061593394282b22db9ddd44d2b74"
+        "ev_379214a4463a4f559584ed390076d7d7",
+        "ev_3947d7430a264c1fb736256d4cca211d"
       ],
       "primary_source_urls": [
         "synthetic://clerk/SYN-hoa-010",
@@ -854,7 +867,7 @@
         }
       ],
       "evidence_ids": [
-        "ev_5ec66103ee9e41e7a370eda5070efb62"
+        "ev_0c6942a081624fa797f01ec6f6b22c24"
       ],
       "primary_source_urls": [
         "synthetic://sheriff/SYN-011"
@@ -915,7 +928,7 @@
         }
       ],
       "evidence_ids": [
-        "ev_a150a7a1a16c4f729163ef1afd09ac0c"
+        "ev_6a8b8379ebb5455db626204771b1dc6b"
       ],
       "primary_source_urls": [
         "synthetic://clerk/SYN-ed-012"

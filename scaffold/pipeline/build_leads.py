@@ -74,16 +74,31 @@ from scaffold.pipeline.manifest import (  # noqa: E402
     build_run_manifest,
     build_heartbeat,
 )
-from scaffold.pipeline.source_translators import (  # noqa: E402
-    translate_foreclosure_notices_map,
+from scaffold.pipeline.translators import (  # noqa: E402
+    lookup as lookup_translator,
 )
 from scaffold.pipeline.matcher import (  # noqa: E402
     match_signals_to_parcels,
     looks_like_out_of_state,
 )
 from scaffold.pipeline.owner_name_patterns import (  # noqa: E402
-    emit_owner_name_signals,
+    emit_owner_name_signals_for_parcels,
 )
+
+
+def _adapt_translator_signal(sig: dict, source_id: str) -> dict:
+    """Bridge v5.1.2-beta-r3 translator output to the raw_signal shape that
+    normalize_signal() consumes. Adds back-compat aliases (parcel_id, source,
+    subtype, case_number) without dropping the new-shape fields."""
+    adapted = dict(sig)
+    if "primary_parcel_id" in adapted:
+        adapted.setdefault("parcel_id", adapted["primary_parcel_id"])
+    adapted.setdefault("source", sig.get("source_id", source_id))
+    adapted.setdefault(
+        "subtype", sig.get("doc_type_subtype_label") or sig.get("doc_type")
+    )
+    adapted.setdefault("case_number", sig.get("doc_number"))
+    return adapted
 
 
 SYNTHETIC_DEFAULT_AS_OF = date(2026, 5, 14)
@@ -228,37 +243,25 @@ def _signals_by_parcel(signals: Iterable[dict]) -> dict:
 
 
 # ---------------------------------------------------------------------
-# Synthetic-data attribute boosts
+# Synthetic-data attribute overrides (loaded only in synthetic mode)
 # ---------------------------------------------------------------------
 
-# The synthetic fixture's parcel-master records lean conservative on
-# vacancy/free-and-clear/equity flags — they only carry the bare-bones
-# attributes a real parcel master exposes. The expectations file
-# requires explicit attribute coverage (e.g. SYN-001 absentee + long-term,
-# SYN-006 high-equity + free-and-clear). For synthetic mode we apply a
-# small fixture-aligned attribute override map so the harness exercises
-# every attribute path. This map IS the synthetic-data attribute spec.
-# Synthetic-mode attribute spec. In synthetic mode we REPLACE the natural
-# attribute-derivation output with this map so the harness produces
-# exactly the attribute distribution declared in
-# scaffold/data/synthetic_expectations.json. The natural derivation
-# (normalize.derive_attributes) is still exercised in production mode
-# and in unit tests for the derivation rules themselves; the synthetic
-# replacement only fires under the --synthetic CLI flag.
-SYNTHETIC_ATTRIBUTE_OVERRIDES = {
-    "SYN-001": {"set": ["absentee", "long_term_owned", "out_of_state"]},
-    "SYN-002": {"set": ["high_equity", "long_term_owned"]},
-    "SYN-003": {"set": ["out_of_state", "absentee"]},
-    "SYN-004": {"set": ["vacant", "absentee"]},
-    "SYN-005": {"set": ["long_term_owned"]},
-    "SYN-006": {"set": ["high_equity", "free_and_clear", "long_term_owned"]},
-    "SYN-007": {"set": []},
-    "SYN-008": {"set": ["entity_owned", "multiple_properties"]},
-    "SYN-009": {"set": ["senior_owner", "long_term_owned"]},
-    "SYN-010": {"set": ["absentee", "vacant"]},
-    "SYN-011": {"set": []},
-    "SYN-012": {"set": ["long_term_owned"]},
-}
+# Per MASTER_PROMPT §4.31.7, synthetic-only attribute overrides live in
+# scaffold/data/synthetic_attribute_overrides.json and are loaded ONLY
+# when build_leads runs with --synthetic. Production mode MUST NOT read
+# the file. Populated by _load_synthetic_attribute_overrides() in main().
+SYNTHETIC_ATTRIBUTE_OVERRIDES: dict = {}
+
+
+def _load_synthetic_attribute_overrides() -> dict:
+    """Read scaffold/data/synthetic_attribute_overrides.json and return
+    the overrides_by_parcel_id map. Returns {} if the file is missing."""
+    path = REPO_ROOT / "scaffold" / "data" / "synthetic_attribute_overrides.json"
+    if not path.exists():
+        return {}
+    with open(path, "r", encoding="utf-8") as fh:
+        payload = json.load(fh)
+    return payload.get("overrides_by_parcel_id", {}) or {}
 
 
 # ---------------------------------------------------------------------
@@ -390,13 +393,13 @@ def _apply_parcel_master_matching(*, signals: list, placeholders: list,
                                     bcad_records: list,
                                     per_signal_meta_by_url: dict) -> list:
     """
-    Run the property matcher against the BCAD parcel records and swap
-    each foreclosure signal's placeholder parcel for the matched
-    real BCAD parcel.
+    Run the property matcher against parcel-master records and swap
+    each lead-generating signal's placeholder parcel for the matched
+    real parcel.
 
     Returns the parcel list the pipeline should use downstream (real
-    BCAD parcels for matched signals; the original placeholder for
-    signals that didn't match — those carry a parcel_not_found_in_bcad
+    parcels for matched signals; the original placeholder for signals
+    that didn't match — those carry a parcel_not_found_in_bcad
     review flag).
     """
     # Decorate signals with the address metadata the matcher expects.
@@ -416,10 +419,10 @@ def _apply_parcel_master_matching(*, signals: list, placeholders: list,
     )
 
     # The pipeline keys signals by `parcel_id`. For matched cases we
-    # need the signal's parcel_id to point to the BCAD record's
-    # parcel_id (and the parcels list to include that BCAD record).
-    # For unmatched cases the placeholder parcel stays in play but
-    # the lead gets a parcel_not_found_in_bcad review flag.
+    # rewrite the signal's parcel_id to the matched parcel-master id
+    # (and the parcels list includes that real record). For unmatched
+    # cases the placeholder parcel stays in play but the lead gets a
+    # parcel_not_found_in_bcad review flag.
     placeholders_by_id = {p["parcel_id"]: p for p in placeholders}
     new_parcels_by_id: dict = {}
 
@@ -442,12 +445,13 @@ def _apply_parcel_master_matching(*, signals: list, placeholders: list,
 
         if primary_pid and primary_pid in matched:
             sig["parcel_id"] = primary_pid
+            sig["primary_parcel_id"] = primary_pid
             real = matched[primary_pid]
             new_parcels_by_id[primary_pid] = real
         else:
-            # No BCAD match — keep the placeholder parcel in play, but
-            # surface the gap explicitly. The lead will carry a
-            # parcel_not_found_in_bcad flag and go to REVIEW_REQUIRED.
+            # No parcel-master match — keep the placeholder parcel in
+            # play, but surface the gap explicitly. The lead will carry
+            # a parcel_not_found_in_bcad flag and go to REVIEW_REQUIRED.
             placeholder_pid = sig["parcel_id"]
             if placeholder_pid in placeholders_by_id:
                 new_parcels_by_id[placeholder_pid] = placeholders_by_id[placeholder_pid]
@@ -464,7 +468,8 @@ def run_pipeline(*, mode: str, parcels: list, raw_signals: list, county_id: str,
                   as_of: date | None,
                   per_signal_meta: dict | None = None,
                   build_label: str = "FULL_BUILD",
-                  build_label_reason: str = "") -> dict:
+                  build_label_reason: str = "",
+                  deployment: dict | None = None) -> dict:
     as_of = as_of or date.today()
     now = _now_iso()
     started_at = now
@@ -521,7 +526,7 @@ def run_pipeline(*, mode: str, parcels: list, raw_signals: list, county_id: str,
         if mode == "synthetic":
             ov = SYNTHETIC_ATTRIBUTE_OVERRIDES.get(parcel_id)
             if ov is not None:
-                attrs = sorted(set(ov.get("set", [])))
+                attrs = sorted(set(ov.get("attributes", [])))
 
         score_blob = compute_score(stack, attrs)
         deal_paths = classify_deal_paths(stack, attrs)
@@ -588,8 +593,7 @@ def run_pipeline(*, mode: str, parcels: list, raw_signals: list, county_id: str,
             lead["match_confidence"] = 85
             lead["parcel_master_status"] = "placeholder_pending_enrichment"
             lead["parcel_master_status_note"] = (
-                "Address-only match; BCAD parcel-master enrichment "
-                "wires in during Phase 4."
+                "Address-only match; parcel-master enrichment pending."
             )
 
         lead = evaluate_review_queue(lead, now=now)
@@ -623,6 +627,7 @@ def run_pipeline(*, mode: str, parcels: list, raw_signals: list, county_id: str,
         county=county_name,
         state=state,
         mode=mode,
+        deployment=deployment,
     )
     payload["build_label_reason"] = build_label_reason
     assert_two_truths(payload)
@@ -750,111 +755,150 @@ def main() -> int:
         raw_signals = _read_jsonl(REPO_ROOT / "scaffold" / "data" / "synthetic_signals.jsonl")
         out_path = Path(args.out) if args.out else REPO_ROOT / "data" / "leads_synthetic.json"
         mode = "synthetic"
+        # Synthetic-only: load attribute overrides per MASTER_PROMPT §4.31.7.
+        global SYNTHETIC_ATTRIBUTE_OVERRIDES
+        SYNTHETIC_ATTRIBUTE_OVERRIDES = _load_synthetic_attribute_overrides()
     else:
-        # Production mode — Phase 3 first-source ingest.
-        # Sources are translated by scaffold/pipeline/source_translators.py
-        # into the pipeline's normalize-ready signal shape, with their
-        # parcel records synthesized from the source's address fields
-        # (Phase 4 parcel matcher will replace these with real BCAD rows).
+        # Production mode — config-driven translator dispatch.
+        # Each enabled source with a registered translator is loaded,
+        # translated, and contributes signals + parcels to the pipeline.
+        # Lead-generating sources produce signals + placeholder parcels;
+        # enrichment sources produce real parcels for the matcher.
         raw_dir = REPO_ROOT / "data" / "raw"
         if not raw_dir.exists():
             print("data/raw/ directory not found. Run scrapers first or use --synthetic.",
                   file=sys.stderr)
             return 3
 
-        signals: list = []
-        parcels: list = []
+        all_signals: list = []
+        all_parcels: list = []          # placeholder parcels from lead-generating sources
+        bcad_records: list = []         # real parcels from enrichment sources
         seen_parcel_ids: set = set()
         translated_sources: list = []
 
-        fnm_path = raw_dir / "foreclosure_notices_map.jsonl"
-        if fnm_path.exists():
-            raw = _read_jsonl(fnm_path)
-            s, p, meta = translate_foreclosure_notices_map(raw)
-            signals.extend(s)
-            for parcel in p:
-                if parcel["parcel_id"] not in seen_parcel_ids:
-                    seen_parcel_ids.add(parcel["parcel_id"])
-                    parcels.append(parcel)
-            for sig, m in zip(s, meta):
-                per_signal_meta_by_url[sig["source_url"]] = m
+        for source_id, source_cfg in county_config.get("sources", {}).items():
+            if not source_cfg.get("enabled", True):
+                continue
+            translator_name = source_cfg.get("translator")
+            if not translator_name:
+                continue
+            raw_path = raw_dir / f"{source_id}.jsonl"
+            if not raw_path.exists():
+                continue
+
+            raw_records = _read_jsonl(raw_path)
+            source_cfg_with_id = dict(source_cfg)
+            source_cfg_with_id["_source_id"] = source_id
+            translate_fn = lookup_translator(translator_name)
+            signals, parcels, per_signal_meta = translate_fn(
+                raw_records, county_config, source_cfg_with_id
+            )
+
+            # Adapt translator-output signals to the raw_signal shape that
+            # normalize_signal() consumes downstream.
+            adapted_signals = [_adapt_translator_signal(s, source_id) for s in signals]
+            all_signals.extend(adapted_signals)
+
+            # Route parcels by role. Lead-generating sources emit placeholder
+            # parcels keyed by address hash; enrichment sources emit real
+            # parcels the matcher will join onto signals. Empirical fallback:
+            # a translator that emits no signals is enrichment.
+            is_enrichment = (
+                (source_cfg.get("lead_value", "").upper() == "ENRICHMENT")
+                or not signals
+            )
+            if is_enrichment:
+                bcad_records.extend(parcels)
+            else:
+                for p in parcels:
+                    if p["parcel_id"] not in seen_parcel_ids:
+                        seen_parcel_ids.add(p["parcel_id"])
+                        all_parcels.append(p)
+
+            per_signal_meta_by_url.update(per_signal_meta)
             translated_sources.append({
-                "source_id": "foreclosure_notices_map",
-                "records": len(raw),
-                "signals": len(s),
-                "parcels": len(p),
+                "source_id": source_id,
+                "records": len(raw_records),
+                "signals": len(signals),
+                "parcels": len(parcels),
             })
 
-        # Phase 4 — wire BCAD parcel-master matcher when available.
-        parcel_master_path = raw_dir / "parcel_master.jsonl"
-        if parcel_master_path.exists() and signals:
-            bcad_records = _read_jsonl(parcel_master_path)
+        # Parcel-master matcher join — swap placeholder parcels for real
+        # records where addresses match.
+        if bcad_records and all_signals:
             print(
-                f"[production] loaded {len(bcad_records)} BCAD parcel records "
+                f"[production] loaded {len(bcad_records)} parcel-master records "
                 f"for matcher",
                 file=sys.stderr,
             )
-            parcels = _apply_parcel_master_matching(
-                signals=signals,
-                placeholders=parcels,
+            all_parcels = _apply_parcel_master_matching(
+                signals=all_signals,
+                placeholders=all_parcels,
                 bcad_records=bcad_records,
                 per_signal_meta_by_url=per_signal_meta_by_url,
             )
 
-            # Phase 4 — owner-name pattern signal emission. For every
-            # parcel that now carries a real BCAD owner string, run
-            # the pattern matcher and append the derived signals to
-            # the raw_signals list. The stacker will merge them with
-            # the existing foreclosure signal on the same parcel.
-            owner_name_signal_count = 0
-            for parcel in parcels:
-                if not parcel.get("owner_name"):
-                    continue
-                emitted = emit_owner_name_signals(parcel)
-                for new_sig in emitted:
-                    # Tag the source_url so the per-signal-meta lookup
-                    # carries the upstream metadata (we don't have a
-                    # foreclosure event_date for these derived signals
-                    # so reuse the parcel's matched foreclosure event
-                    # date if available; otherwise leave None).
-                    parent_meta = next(
-                        (per_signal_meta_by_url[u]
-                         for u, m in per_signal_meta_by_url.items()
-                         if m.get("primary_parcel_id") == parcel["parcel_id"]),
-                        None,
-                    )
-                    if parent_meta and not new_sig.get("filing_date"):
-                        new_sig["filing_date"] = parent_meta.get("expected_sale_date")
-                    per_signal_meta_by_url[new_sig["source_url"]] = {
-                        "preset_review_flags": [],
-                        "expected_sale_date": (parent_meta or {}).get("expected_sale_date"),
-                        "match_confidence": (parent_meta or {}).get("match_confidence", 95),
-                        "match_method": (parent_meta or {}).get("match_method", "derived_owner_name"),
-                        "address": (parent_meta or {}).get("address", ""),
-                        "city": (parent_meta or {}).get("city", ""),
-                        "zip": (parent_meta or {}).get("zip", ""),
-                        "owner_name_literal_match": new_sig.get("_owner_name_literal_match"),
-                        "owner_name_full": new_sig.get("_owner_name_full"),
-                    }
-                    signals.append(new_sig)
-                    owner_name_signal_count += 1
+            # Step 6 — owner-name pattern signal emission with defensive guard.
+            # The emitter only fires for parcels already carrying a lead-
+            # generating signal (clerk-driven product rule, audit Q9).
+            parcels_with_lead_signals = {
+                sig.get("primary_parcel_id") or sig.get("parcel_id")
+                for sig in all_signals
+                if sig.get("primary_parcel_id") or sig.get("parcel_id")
+            }
+            emitted = emit_owner_name_signals_for_parcels(
+                parcels=all_parcels,
+                parcels_with_lead_signals=parcels_with_lead_signals,
+                source_id="parcel_master",
+            )
+            adapted_owner_name = [
+                _adapt_translator_signal(s, "parcel_master") for s in emitted
+            ]
+            for new_sig in adapted_owner_name:
+                parent_meta = next(
+                    (per_signal_meta_by_url[u]
+                     for u, m in per_signal_meta_by_url.items()
+                     if m.get("primary_parcel_id") == new_sig.get("parcel_id")),
+                    None,
+                )
+                if parent_meta and not new_sig.get("filing_date"):
+                    new_sig["filing_date"] = parent_meta.get("expected_sale_date")
+                per_signal_meta_by_url[new_sig["source_url"]] = {
+                    "preset_review_flags": [],
+                    "expected_sale_date": (parent_meta or {}).get("expected_sale_date"),
+                    "match_confidence": (parent_meta or {}).get("match_confidence", 95),
+                    "match_method": (parent_meta or {}).get("match_method", "derived_owner_name"),
+                    "address": (parent_meta or {}).get("address", ""),
+                    "city": (parent_meta or {}).get("city", ""),
+                    "zip": (parent_meta or {}).get("zip", ""),
+                    "owner_name_literal_match": new_sig.get("_owner_name_literal_match"),
+                    "owner_name_full": new_sig.get("_owner_name_full"),
+                }
+            all_signals.extend(adapted_owner_name)
             print(
                 f"[production] owner-name pattern signals emitted: "
-                f"{owner_name_signal_count}",
+                f"{len(adapted_owner_name)}",
                 file=sys.stderr,
             )
 
-        raw_signals = signals
+        raw_signals = all_signals
+        parcels = all_parcels
         out_path = Path(args.out) if args.out else REPO_ROOT / "data" / "leads.json"
         mode = "production"
 
-        build_label = "SOURCE_LIMITED"
-        build_label_reason = (
-            "Source-limited build: only the Bexar County foreclosure_notices_map "
-            "(rolling 60-90 day upcoming-sale window) is wired in. Clerk recordings, "
-            "civil/probate courts, tax delinquency, and parcel-master enrichment are "
-            "deferred to later phases."
-        )
+        # Config-driven build label. If fewer than three lead-generating
+        # sources are wired, mark the build as source-limited and compose
+        # the prose from the actual source list.
+        sources_used = [
+            s for s, c in county_config.get("sources", {}).items()
+            if c.get("enabled", True) and c.get("translator")
+        ]
+        if len(sources_used) < 3:
+            build_label = "SOURCE_LIMITED"
+            build_label_reason = (
+                f"Source-limited build: only sources {sources_used} were enabled. "
+                f"Other sources are deferred."
+            )
 
         print(
             f"[production] translated sources: {translated_sources}",
@@ -877,6 +921,7 @@ def main() -> int:
         per_signal_meta=per_signal_meta_by_url,
         build_label=build_label,
         build_label_reason=build_label_reason,
+        deployment=county_config.get("deployment") or {},
     )
 
     out_path.parent.mkdir(parents=True, exist_ok=True)

@@ -214,8 +214,8 @@ def stack_signals(
 # detection. Production-mode placeholder parcels carry an "Unknown"
 # owner name pending parcel-master enrichment; treating them all as
 # the same owner produces a false multiple_properties attribute on
-# every parcel. Phase 4 parcel-matcher replaces these with real
-# owner names from BCAD.
+# every parcel. The parcel matcher replaces these with real owner
+# names from the parcel master once the matcher runs.
 _NON_GROUPABLE_OWNER_TOKENS = (
     "UNKNOWN",
     "PENDING",

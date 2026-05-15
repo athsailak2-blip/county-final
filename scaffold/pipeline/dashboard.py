@@ -95,6 +95,7 @@ def build_payload(
     county: str = "<synthetic>",
     state: str = "ZZ",
     mode: str = "synthetic",
+    deployment: dict | None = None,
 ) -> dict:
     rows = [project_lead(lead, parcels_by_id[lead["primary_parcel_id"]]) for lead in leads]
 
@@ -130,6 +131,7 @@ def build_payload(
         "mode": mode,
         "county": county,
         "state": state,
+        "deployment": deployment or {},
         "lead_total": len(leads),
         "total_signals_active": sum(len(lead.get("_active_signals", [])) for lead in leads),
         "total_signals_suppressed": suppressed_count,

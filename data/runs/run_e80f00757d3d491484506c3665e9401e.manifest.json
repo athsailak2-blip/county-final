@@ -1,9 +1,9 @@
 {
-  "run_id": "run_a3d44fd91a8642e3bc06ff8a857a0247",
+  "run_id": "run_e80f00757d3d491484506c3665e9401e",
   "county": "Bexar",
   "state": "TX",
-  "started_at": "2026-05-15T20:00:49Z",
-  "finished_at": "2026-05-15T20:00:49Z",
+  "started_at": "2026-05-15T19:57:12Z",
+  "finished_at": "2026-05-15T19:57:12Z",
   "sources_attempted": 1,
   "records_collected": 288,
   "records_normalized": 288,

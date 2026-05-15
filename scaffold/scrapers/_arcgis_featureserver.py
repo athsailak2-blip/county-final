@@ -16,7 +16,7 @@ Usage:
 
     server = ArcGISFeatureServer(
         "https://maps.example.gov/arcgis/rest/services/Foo/MapServer",
-        user_agent="xcerebro-county-bexar-foreclosure/0.1",
+        user_agent="xcerebro-county-foreclosure/0.1",
     )
     for feature in server.iter_features(layer_id=0):
         ...

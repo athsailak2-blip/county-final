@@ -5,20 +5,12 @@ Demonstrates that the production pipeline correctly:
 
   1. Translates a foreclosure-map raw record into a signal + placeholder
      parcel.
-  2. Matches the placeholder to a (synthetic) BCAD parcel whose owner
-     name matches an estate / living-trust pattern.
+  2. Matches the placeholder to a (synthetic) parcel-master record whose
+     owner name matches an estate / living-trust pattern.
   3. Emits a derived owner-name signal that stacks with the
      foreclosure signal on the same parcel.
   4. Produces a multi-pattern lead with stack_depth >= 2 that
      dashboard.js will render with the heir-candidate badge.
-
-This test exists because the live 288-foreclosure data slice has zero
-overlap with BCAD's ESTATE OF / LIVING TRUST owner set (operators in
-foreclosure tend to be individual living owners; estate / trust
-parcels are typically held outright). The wiring nonetheless needs
-verification — when the data eventually overlaps (next month's
-foreclosure batch, or a different county), the pipeline must produce
-the operator's heir-candidate leads.
 
 Run with: python3 scaffold/tests/test_owner_name_signal_integration.py
 """
@@ -27,7 +19,7 @@ from __future__ import annotations
 
 import json
 import sys
-import tempfile
+from datetime import date
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -35,15 +27,22 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scaffold.pipeline.build_leads import (  # noqa: E402
+    _adapt_translator_signal,
     _apply_parcel_master_matching,
-    derive_synthetic_signals,
-    normalize_signal,
     run_pipeline,
 )
-from scaffold.pipeline.source_translators import (  # noqa: E402
-    translate_foreclosure_notices_map,
+from scaffold.pipeline.owner_name_patterns import (  # noqa: E402
+    emit_owner_name_signals_for_parcels,
 )
-from datetime import date  # noqa: E402
+from scaffold.pipeline.translators import lookup as lookup_translator  # noqa: E402
+
+
+# Load the live Bexar config once. Tests pass it through to the
+# translator so cross-county-leak and sale-date rules see the same
+# accepted_municipalities + sale_date_rule that production uses.
+_CFG_PATH = REPO_ROOT / "config" / "counties" / "bexar_tx.json"
+with _CFG_PATH.open() as _fh:
+    COUNTY_CONFIG = json.load(_fh)
 
 
 passes = []
@@ -61,14 +60,12 @@ def _assert(label, cond, detail=""):
 
 def _foreclosure_raw_record(address: str, doc_number: str, zip_code: str,
                               city: str = "SAN ANTONIO") -> dict:
-    """Build a foreclosure-map raw record matching the scraper's shape."""
+    """Build a foreclosure-map raw record in the canonical §4.32 shape."""
     return {
         "raw_record_id": "raw_int_test_" + doc_number,
         "source_id": "foreclosure_notices_map",
         "source_url": (
-            "https://maps.bexar.org/arcgis/rest/services/CC/ForeclosuresProd/"
-            f"MapServer/0/query?where=DOC_NUMBER%3D%27{doc_number}%27"
-            "&outFields=*&f=json"
+            "about:test/foreclosures/" + doc_number
         ),
         "source_fetched_at": "2026-05-14T19:00:00Z",
         "raw_payload": {
@@ -85,7 +82,6 @@ def _foreclosure_raw_record(address: str, doc_number: str, zip_code: str,
             "layer_name": "Mortgage",
             "category_hint": "mortgage_foreclosure",
             "object_id": 99999,
-            "geometry": {"x": 2130000.0, "y": 13680000.0},
         },
         "raw_text": None,
         "first_seen_at": "2026-05-14T19:00:00Z",
@@ -98,88 +94,95 @@ def _foreclosure_raw_record(address: str, doc_number: str, zip_code: str,
 def _bcad_parcel(situs: str, owner: str, zip_code: str,
                   *, prop_id: int = 999001,
                   exempt_hs: bool = False, exempt_ov65: bool = False) -> dict:
-    """Build a BCAD parcel record matching scrapers/parcel_master.py's shape."""
+    """Build a canonical-shape parcel record (post-translator shape)."""
     return {
         "parcel_id": f"BCAD-{prop_id:08d}",
-        "bcad_prop_id": prop_id,
-        "situs_address": situs.upper().strip(),
-        "situs_address_raw": situs,
-        "situs_city": "SAN ANTONIO",
+        "address": situs.upper().strip(),
+        "city": "SAN ANTONIO",
         "situs_state": "TX",
-        "situs_zip": zip_code,
+        "zip": zip_code,
         "owner_name": owner,
-        "owner_mailing_addr1": situs,
+        "owner_mailing_address": situs,
         "owner_mailing_city": "SAN ANTONIO",
         "owner_mailing_state": "TX",
         "owner_mailing_zip": zip_code,
         "year_built": 1985,
-        "land_value": 80000.0,
-        "improvement_value": 220000.0,
-        "assessed_value": 300000.0,
-        "property_class": "1",
+        "land_value": 80000,
+        "improvement_value": 220000,
+        "assessed_value": 300000,
+        "property_use": "1",
         "exempt_homestead": exempt_hs,
         "exempt_over_65": exempt_ov65,
         "exempt_disabled": False,
-        "exemptions": "HS, OV65" if exempt_ov65 else ("HS" if exempt_hs else ""),
         "legal_description": "INT_TEST_LOT",
-        "last_sale_date": None,
-        "last_sale_price": None,
+        "parcel_master_status": "matched_pending_join",
     }
 
 
 def _run_e2e(foreclosure_raws: list, bcad_records: list) -> dict:
     """Run the production pipeline against fixture inputs."""
-    signals, parcels, meta = translate_foreclosure_notices_map(foreclosure_raws)
-    per_signal_meta_by_url = {}
-    for sig, m in zip(signals, meta):
-        per_signal_meta_by_url[sig["source_url"]] = m
-    # Parcel matcher swap.
+    source_cfg = dict(COUNTY_CONFIG["sources"]["foreclosure_notices_map"])
+    source_cfg["_source_id"] = "foreclosure_notices_map"
+    translate_fn = lookup_translator(source_cfg.get("translator", "foreclosure_notices"))
+    raw_signals, placeholders, per_signal_meta = translate_fn(
+        foreclosure_raws, COUNTY_CONFIG, source_cfg
+    )
+    signals = [_adapt_translator_signal(s, "foreclosure_notices_map") for s in raw_signals]
+    per_signal_meta_by_url = dict(per_signal_meta)
+
     parcels = _apply_parcel_master_matching(
         signals=signals,
-        placeholders=parcels,
+        placeholders=placeholders,
         bcad_records=bcad_records,
         per_signal_meta_by_url=per_signal_meta_by_url,
     )
-    # Owner-name signal emission.
-    from scaffold.pipeline.owner_name_patterns import emit_owner_name_signals
-    for parcel in parcels:
-        if not parcel.get("owner_name"):
-            continue
-        emitted = emit_owner_name_signals(parcel)
-        for new_sig in emitted:
-            parent_meta = next(
-                (per_signal_meta_by_url[u]
-                 for u, m in per_signal_meta_by_url.items()
-                 if m.get("primary_parcel_id") == parcel["parcel_id"]),
-                None,
-            )
-            if parent_meta and not new_sig.get("filing_date"):
-                new_sig["filing_date"] = parent_meta.get("expected_sale_date")
-            per_signal_meta_by_url[new_sig["source_url"]] = {
-                "preset_review_flags": [],
-                "expected_sale_date": (parent_meta or {}).get("expected_sale_date"),
-                "match_confidence": (parent_meta or {}).get("match_confidence", 95),
-                "match_method": "derived_owner_name",
-                "address": (parent_meta or {}).get("address", ""),
-                "city": (parent_meta or {}).get("city", ""),
-                "zip": (parent_meta or {}).get("zip", ""),
-            }
-            signals.append(new_sig)
 
-    result = run_pipeline(
+    # Owner-name signal emission with defensive guard.
+    parcels_with_lead_signals = {
+        sig.get("primary_parcel_id") or sig.get("parcel_id")
+        for sig in signals
+        if sig.get("primary_parcel_id") or sig.get("parcel_id")
+    }
+    emitted = emit_owner_name_signals_for_parcels(
+        parcels=parcels,
+        parcels_with_lead_signals=parcels_with_lead_signals,
+        source_id="parcel_master",
+    )
+    adapted_owner_name = [_adapt_translator_signal(s, "parcel_master") for s in emitted]
+    for new_sig in adapted_owner_name:
+        parent_meta = next(
+            (per_signal_meta_by_url[u]
+             for u, m in per_signal_meta_by_url.items()
+             if m.get("primary_parcel_id") == new_sig.get("parcel_id")),
+            None,
+        )
+        if parent_meta and not new_sig.get("filing_date"):
+            new_sig["filing_date"] = parent_meta.get("expected_sale_date")
+        per_signal_meta_by_url[new_sig["source_url"]] = {
+            "preset_review_flags": [],
+            "expected_sale_date": (parent_meta or {}).get("expected_sale_date"),
+            "match_confidence": (parent_meta or {}).get("match_confidence", 95),
+            "match_method": "derived_owner_name",
+            "address": (parent_meta or {}).get("address", ""),
+            "city": (parent_meta or {}).get("city", ""),
+            "zip": (parent_meta or {}).get("zip", ""),
+        }
+    signals.extend(adapted_owner_name)
+
+    return run_pipeline(
         mode="production",
         parcels=parcels,
         raw_signals=signals,
-        county_id="bexar_tx",
-        county_name="Bexar",
-        state="TX",
-        scoring_overrides={},
+        county_id=COUNTY_CONFIG.get("county_id", ""),
+        county_name=COUNTY_CONFIG.get("county_name", ""),
+        state=COUNTY_CONFIG.get("state", ""),
+        scoring_overrides=COUNTY_CONFIG.get("scoring_overrides", {}),
         as_of=date(2026, 5, 14),
         per_signal_meta=per_signal_meta_by_url,
         build_label="SOURCE_LIMITED",
         build_label_reason="integration smoke test",
+        deployment=COUNTY_CONFIG.get("deployment") or {},
     )
-    return result
 
 
 def test_foreclosure_plus_estate_owner_yields_heir_lead():
@@ -213,7 +216,7 @@ def test_foreclosure_plus_estate_owner_yields_heir_lead():
     _assert("score elevated above plain foreclosure (>= 75) by the stack",
             row["display_score"] >= 75,
             f"got {row['display_score']} / {row['display_tier']}")
-    _assert("BCAD owner name visible on the lead",
+    _assert("owner name visible on the lead",
             "ESTATE OF SYNTHETIC DOE" in row["display_owner"])
     _assert("evidence chain length >= 2 (foreclosure + estate-name)",
             len(row["evidence_ids"]) >= 2)
@@ -248,8 +251,6 @@ def test_foreclosure_plus_living_trust_owner_yields_trust_lead():
 
 def test_foreclosure_plus_estate_owner_with_ov65_reaches_hot():
     print("\n[integration — heir candidate + senior_owner (OV65) -> Hot tier]")
-    # Realistic operator scenario: estate-of property with the
-    # decedent's homestead/over-65 exemptions still on the parcel.
     fc = _foreclosure_raw_record(
         address="700 SYNTHETIC HEIR DR",
         doc_number="INT-EST-002",
@@ -267,7 +268,6 @@ def test_foreclosure_plus_estate_owner_with_ov65_reaches_hot():
     row = result["payload"]["records"][0]
     _assert("senior_owner fires from OV65",
             "senior_owner" in row["display_attributes"])
-    # absentee should NOT fire because HS exemption is present
     _assert("absentee suppressed by HS exemption",
             "absentee" not in row["display_attributes"])
     _assert("Hot tier achieved with foreclosure + estate + senior_owner",
@@ -307,22 +307,22 @@ def test_foreclosure_plus_entity_owner_fires_attribute_not_signal():
     )
     bcad = _bcad_parcel(
         situs="321 SYNTHETIC HOLDINGS WAY",
-        owner="FAMSACA LLC",
+        owner="SYNTHETIC HOLDINGS LLC",
         zip_code="78245",
         prop_id=999400,
     )
     result = _run_e2e([fc], [bcad])
     row = result["payload"]["records"][0]
-    _assert("entity owner -> single foreclosure pattern",
-            row["display_patterns"] == ["foreclosure"])
-    _assert("entity owner -> entity_owned attribute fires",
+    _assert("entity_owned attribute fires for LLC owner",
             "entity_owned" in row["display_attributes"])
-    _assert("entity owner -> stack_depth stays 1 (entity is attribute, not signal)",
+    _assert("only foreclosure pattern (no signal-class entity emission)",
+            row["display_patterns"] == ["foreclosure"])
+    _assert("stack_depth 1 (no new signal from LLC owner)",
             row["stack_depth"] == 1)
 
 
 def main() -> int:
-    print("[owner-name signal integration tests]\n")
+    print("[owner_name_signal_integration tests]\n")
     test_foreclosure_plus_estate_owner_yields_heir_lead()
     test_foreclosure_plus_living_trust_owner_yields_trust_lead()
     test_foreclosure_plus_estate_owner_with_ov65_reaches_hot()

@@ -1,5 +1,5 @@
 /**
- * Bexar County Distress Intelligence — static dashboard runtime.
+ * Distress Intelligence — static dashboard runtime.
  *
  * The dashboard reads a flat JSON payload (data/leads.json in production
  * or data/leads_synthetic.json in synthetic mode) and renders:
@@ -115,8 +115,22 @@
 
   function render() {
     if (!state.payload) return;
+    const countyName = state.payload.county || "";
     document.getElementById("brand-title").textContent =
-      `${state.payload.county} County Distress Intelligence`;
+      countyName
+        ? `${countyName} County Distress Intelligence`
+        : "Distress Intelligence";
+    document.title = countyName
+      ? `${countyName} County Distress Intelligence`
+      : "Distress Intelligence";
+    const deployment = state.payload.deployment || {};
+    const repoOrg = deployment.github_org;
+    const repoName = deployment.github_repo;
+    const repoLink = document.getElementById("repo-link");
+    if (repoLink && repoOrg && repoName) {
+      repoLink.href = `https://github.com/${repoOrg}/${repoName}`;
+      repoLink.hidden = false;
+    }
     document.getElementById("build-label").textContent =
       state.payload.build_label || "FULL_BUILD";
     document.getElementById("generated-at").textContent =

@@ -1048,6 +1048,175 @@ This file is created by the bootstrap script when the run directory is created (
 
 ---
 
+## 4.31. Universality contract (v5.1.2-beta+)
+
+This section exists because the v5.1.1-beta-seeded Bexar build (May 2026) produced a working Phase 1–4 pipeline but contaminated the universal framework with Bexar-specific data: a `BEXAR_ACCEPTED_CITIES` frozenset inside `scaffold/pipeline/source_translators.py`, a Texas-specific `first_tuesday_of_month` helper, hardcoded BCAD field names in the matcher, a single-county source dispatch in `build_leads.py`, BCAD-specific comments in seven framework files, and a hardcoded `BX-ADDR-` parcel-ID prefix. An audit identified 11 specific Bexar leaks in `scaffold/pipeline/` and 4 in `dashboard/`. The framework code knew it was running for Bexar.
+
+That violated the core product promise: **the framework is universal, the county build is configured, and county-specific data lives in county-scoped files**. v5.1.2-beta locks in this contract.
+
+**Locked rule 4.31.1 — No county name, no city name, no statute reference, no portal hostname, no vendor name in `scaffold/pipeline/`.**
+
+Any file under `scaffold/pipeline/` (including `scaffold/pipeline/translators/`) MUST NOT contain a literal string referencing:
+
+- A real US county name (Bexar, Maricopa, Cuyahoga, etc.)
+- A real US city name (San Antonio, Phoenix, etc.) — unless it's a generic example in a comment block, clearly labeled as illustrative
+- A US state's foreclosure / probate / assessor statute (Tex. Prop. Code §51.002, Cal. Civ. Code §2924, etc.)
+- A vendor portal hostname (publicsearch.us, tylertech.cloud, harrisgovern.com, etc.)
+- A real county-specific vendor product name (BCAD, HCAD, etc.)
+
+The `test_county_agnostic_regression.py` test enforces this rule by scanning `scaffold/pipeline/**/*.py` (and other universal directories) and failing on any of the patterns above. The test exempts `data/`, `runs/`, `.claude/`, `dashboard/`, and `scrapers/` because those are county-scoped or operator-scoped.
+
+**Locked rule 4.31.2 — Cross-county portability.** The same `scaffold/pipeline/` code must run for any county without code changes. Counties enter the pipeline through three doors and three doors only:
+
+1. **County config** — `config/counties/<slug>.json`. Reads include `geography.accepted_municipalities[]`, `geography.sale_date_rule`, `geography.cross_county_policy`, `sources.<id>.translator`, `sources.<id>.translator_config`, `sources.<id>.field_map`, `sources.<id>.doc_type_synonyms`, `sources.<id>.parcel_id_prefix`, `state_rule_family`.
+2. **Source adapters** — `scrapers/<source>.py`. County-side code that scrapes a portal. Adapter output is normalized raw records; the framework's translator registry converts them into signals + parcels.
+3. **Translator registry** — `scaffold/pipeline/translators/`. The framework provides generic translators (ArcGIS foreclosure notices, ArcGIS parcel master, CSV static list, etc.) plus a hybrid registry where counties register additional named translators via county adapter code when none of the built-ins fit.
+
+The orchestrator (`scaffold/pipeline/build_leads.py`) MUST NOT branch on source ID, county name, or state. It MUST dispatch to translators by string name from county config.
+
+**Locked rule 4.31.3 — State-specific rules go through state rule families.**
+
+`geography.sale_date_rule.rule_name` selects an entry from `scaffold/pipeline/sale_date_rules.py`'s registry. Built-in rules: `first_tuesday_of_month` (TX, GA), `first_monday_of_month`, `first_business_day_of_month`, `scheduled_by_sheriff`, `first_of_month` (fallback). `geography.sale_date_rule.holiday_shift` declares which date-shift logic to apply when the computed date is a state-recognized holiday. `state_rule_family` is reserved for future per-state defaults (statute references, foreclosure-stage doc-type defaults). State rules NEVER appear as literal logic in pipeline code.
+
+**Locked rule 4.31.4 — Doc-type synonyms come from config, not code.**
+
+Each source declares its own doc-type label → canonical mapping in `sources.<id>.doc_type_synonyms`. The pipeline's normalize module reads this per-source map at runtime. There is no in-code synonym table referencing state-specific instruments. Common state-level doc-type variants belong in `canonical_doc_types.json` as `common_abbreviations` on the canonical entry.
+
+**Locked rule 4.31.5 — Field maps come from config, not code.**
+
+Each source declares its raw-field-name → framework-canonical-field-name mapping in `sources.<id>.field_map`. The matcher and the parcel translator read this map at runtime. No source-specific field name appears as a literal in `scaffold/pipeline/`.
+
+**Locked rule 4.31.6 — Parcel ID prefixes come from config, not code.**
+
+Each source whose translator emits placeholder parcel IDs declares its prefix in `sources.<id>.parcel_id_prefix`. The translator uses this prefix. If omitted, the framework uses a generic `PARCEL-` prefix.
+
+**Locked rule 4.31.7 — Synthetic fixture data and overrides stay in `scaffold/data/`.**
+
+The synthetic harness is framework-canonical. Synthetic fixtures (`synthetic_signals.jsonl`, `synthetic_parcels.jsonl`, `synthetic_expectations.json`) live in `scaffold/data/`. Synthetic-mode-only attribute overrides MUST NOT appear in production pipeline code. If a synthetic fixture needs an override that doesn't fall out naturally from the pipeline's production logic, the override lives in `scaffold/data/synthetic_attribute_overrides.json` (new in v5.1.2-beta), loaded ONLY when the orchestrator is invoked with `--synthetic`. Production runs MUST NOT read this file.
+
+**Locked rule 4.31.8 — Defensive guard on owner-name signal emission.**
+
+The owner-name pattern emitter (`scaffold/pipeline/owner_name_patterns.py`) MUST NOT emit signals for parcels that aren't already linked to a lead-generating signal in the current run. Standalone parcels — enrichment-only records — cannot produce lead rows. This rule is enforced by the emitter itself: callers pass the set of parcel IDs that already carry a lead-generating signal; the emitter refuses to emit for parcels outside that set. The clerk-driven product rule is thus enforced at three layers: orchestrator dispatch, signal emission, and dashboard projection (Two-Truths invariant in `dashboard.py`).
+
+**Locked rule 4.31.9 — Translator registry is the only source-dispatch path.**
+
+The orchestrator MUST iterate over `county_config.sources`, look up `sources.<id>.translator`, dispatch via `translators.lookup(name)(raw_records, county_config, source_config)`. It MUST NOT contain a hardcoded `if source_id == "foreclosure_notices_map":` branch or any other source-specific dispatch logic.
+
+**Locked rule 4.31.10 — Comments referencing real counties are scrubbed.**
+
+Comments in universal pipeline files (`scaffold/pipeline/**`) referencing a real county, city, or vendor by name are scrubbed during v5.1.2-beta. Where an example is illustrative, the comment uses generic placeholders (`<county>`, `<source>`, `<vendor>`). The regression test scans comments too.
+
+These ten rules are enforced by `scaffold/tests/test_county_agnostic_regression.py`, which is now part of the gate suite (was historically more lenient). The test fails the build if any of the patterns above appear in universal directories.
+
+---
+
+## 4.32. Scraper-to-translator data contract (v5.1.2-beta-r2+)
+
+The universality contract in §4.31 forbids portal-specific code in universal pipeline modules. To honor that rule, the framework must declare a clear interface between county-side scrapers (which know the portal protocol) and universal translators (which produce framework signals).
+
+This section locks the contract.
+
+### The contract (Path 1: scrapers normalize)
+
+**Scrapers normalize source-specific fields into framework-canonical field names BEFORE writing JSONL.**
+
+Concretely: a scraper pulling from a REST API, public-records portal, court e-portal, or static CSV is responsible for:
+1. Connecting to the source and authenticating per the source's access pattern.
+2. Pulling raw records using the source's protocol.
+3. Mapping the source's field names to framework-canonical lowercase field names (`address`, `doc_number`, `owner_name`, `recording_year`, `recording_month`, `city`, `zip`, `layer_id`, `assessed_value`, `exempt_homestead`, etc.).
+4. Parsing source-specific encodings into framework types where reasonable (boolean exemption flags rather than concatenated code strings, integer ZIP rather than string-with-leading-spaces, etc.).
+5. Wrapping each normalized record in the canonical wrapped shape (below) and writing one JSON line to `data/raw/<source_id>.jsonl`.
+
+Translators then read this normalized output, validate shape, apply per-source config (`parcel_id_prefix`, `layer_doc_type_map`, `field_map` for non-canonical normalizations, `translator_config.*`), and emit framework signals + parcels.
+
+### The wrapped raw-record shape
+
+Every record in `data/raw/<source_id>.jsonl` MUST conform to:
+
+```json
+{
+  "raw_record_id": "<stable unique id for this record>",
+  "source_id": "<source id from county config>",
+  "source_url": "<deep link to the source record if available, else 'about:blank/<source_id>/<id>'>",
+  "source_fetched_at": "<ISO 8601 timestamp when this record was fetched>",
+  "parser_confidence": <integer 0..100, defaults to 95 if scraper has no ambiguity>,
+  "raw_payload": {
+    "<framework-canonical lowercase field name>": <normalized value>,
+    "<another canonical field>": <normalized value>,
+    ...
+  }
+}
+```
+
+Top-level fields are FRAMEWORK METADATA. `raw_payload` is the only field containing source-specific data, and it contains NORMALIZED data — not raw vendor protocol attrs.
+
+### Why this contract
+
+Three reasons the contract picks Path 1 (scraper-normalizes) over Path 2 (translator-translates):
+
+1. **Scrapers already know the source.** They authenticate, paginate, retry, and parse the source's response. Adding normalization is incremental cost on a module that's already source-specific. Pushing normalization into translators forces every translator to know every source's idiosyncrasies, making translators bigger AND more portal-specific.
+
+2. **Translators stay protocol-agnostic.** A `foreclosure_notices` translator works for ANY source that produces normalized foreclosure-notice records, regardless of whether the source is a REST API, court e-portal, scraped HTML, or CSV. The translator cares about RECORD TYPE, not portal protocol.
+
+3. **Data-quality observability.** When a county's `data/raw/<source_id>.jsonl` is on disk in normalized form, an operator can inspect it directly to verify scraping correctness without running pipeline code. Raw vendor responses are harder to inspect — they have inconsistent shape per-portal.
+
+### Framework support for normalization
+
+Scrapers that ingest from common protocols can use framework helpers in `scaffold/scrapers/`:
+- `_arcgis_featureserver.py` — handles pagination, error envelopes, rate limits for REST FeatureServer protocols. Returns raw attrs; the scraper applies field-name normalization on the way out.
+- Future: `_publicsearch_portal.py`, `_tyler_odyssey.py`, `_arcgis_mapserver.py`, etc. as additional protocol clients land.
+
+These helpers DO portal protocol. The scraper that USES them does normalization. The translator that READS the scraper output does signal/parcel emission.
+
+### Migration of pre-v5.1.2-beta-r2 scrapers
+
+Scrapers built against pre-v5.1.2-beta versions may:
+- Emit FLAT records (no `raw_payload` wrapper) — these break the contract.
+- Emit raw vendor attrs without normalization — these break the contract.
+- Use UPPERCASE/mixedCase field names matching the source's protocol verbatim — these break the contract.
+
+These scrapers MUST be migrated to the contract before v5.1.2-beta-r2 translators can consume their output. For counties with existing live data and a preserved regression baseline, a one-time deterministic transform of `data/raw/<source_id>.jsonl` from the legacy shape into the contract shape is acceptable (deterministic = no data drift, baseline reproducibility preserved). Re-scraping is also acceptable but loses baseline reproducibility if the source has updated since the last pull.
+
+### Field-name canonicalization registry (future)
+
+A canonical-field-name registry (`scaffold/data/canonical_record_fields.json` or similar) is on the v5.1.2-beta-final backlog. The registry will enumerate every framework-canonical field name with its type, definition, and which translators read it. Until that registry exists, scrapers should:
+- Use lowercase ASCII with underscores (`owner_name`, not `OwnerName` or `OWNER_NAME`)
+- Match the field names used in existing v5.1.2-beta-r2+ canonical translators (see `scaffold/pipeline/translators/foreclosure_notices.py` and `scaffold/pipeline/translators/parcel_master.py` docstrings for current canonical names)
+- Document any deviations in their docstring AND map them via per-source `field_map` config
+
+### Field-name bridge via source_config.field_map (v5.1.2-beta-r3+)
+
+When a scraper's normalized field names DIFFER from the translator's expected canonical names — common during initial framework adoption when scrapers predate the canonical-field-name decisions — the source config can declare a `field_map`:
+
+```json
+{
+  "translator": "parcel_master",
+  "field_map": {
+    "address": "situs_address",
+    "city": "situs_city",
+    "zip": "situs_zip",
+    "owner_mailing_address": "owner_mailing_addr1",
+    "property_use": "property_class"
+  }
+}
+```
+
+Keys are the canonical field names the translator expects; values are the actual field names the scraper writes to `raw_payload`. The translator resolves each canonical name through `field_map` before reading. Canonical fields NOT listed in `field_map` are read directly (identity mapping).
+
+`field_map` is OPTIONAL. Scrapers that already normalize to canonical names need no `field_map` at all. Scrapers that normalize to source-specific conventions provide a `field_map` and the translator bridges automatically. This eliminates the need to either (a) re-scrape after framework adoption, or (b) require all scrapers to adopt canonical names immediately.
+
+Limitations of `field_map`:
+- Exemption boolean keys (`exempt_homestead`, `exempt_over_65`, `exempt_disabled`, `exempt_veteran`) are NOT field-mapped. The scraper either emits canonical exemption keys directly or doesn't emit them at all. Exemption semantics are framework-canonical; per-source nomenclature is not honored.
+- `field_map` is read by translators built in v5.1.2-beta-r3+. Custom county translators registered via `@register(name, force=True)` are responsible for honoring their own `field_map` if they want this capability.
+
+### Enforcement
+
+This contract is enforced by `scaffold/tests/test_translator_registry.py`, which feeds wrapped/normalized synthetic records to every registered translator and asserts correct output. The gate test will catch translators that bypass `raw_payload` and read top-level fields, or that assume vendor-protocol field names.
+
+The contract does NOT have a separate test that scans scraper output shape on disk — that's a county-build runtime check during Phase 2 (synthetic harness) and Phase 3 (production pipeline). If a county's `data/raw/*.jsonl` is wrong-shaped, its translator will produce zero signals and the dashboard will be empty, which surfaces the bug at smoke-test time.
+
+---
+
 ## 5. Two-Truths invariant
 
 The dashboard's filter counts and the rendered table must come from the same `matches()` function. Header counts in `leads.json` (`pattern_counts`, `attribute_counts`, etc.) must equal counts re-derived from `records[]`. The pipeline writes both; the build script asserts equality before saving and exits non-zero on drift.

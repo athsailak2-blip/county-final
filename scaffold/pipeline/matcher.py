@@ -2,18 +2,18 @@
 Property matcher per architecture/12_entity_resolution.md.
 
 Joins source records (e.g. foreclosure notices, court filings, code-
-enforcement events) to a parcel master (e.g. BCAD's appraisal records)
-using a confidence-tiered address-resolution hierarchy.
+enforcement events) to a parcel master (e.g. an appraisal district's
+records) using a confidence-tiered address-resolution hierarchy.
 
 Match confidence tiers (framework-wide)
 ---------------------------------------
 
-  100  parcel_id exact (source carries the BCAD PropID directly)
+  100  parcel_id exact (source carries the parcel master's id directly)
    95  situs_address normalized + ZIP exact match, single candidate
    85  house_number + street_root + ZIP exact match, single candidate
    75  house_number + street_root + city exact match (no ZIP agreement)
-   60  multi-candidate match (multiple BCAD parcels share the situs);
-        primary candidate chosen by deterministic PropID order
+   60  multi-candidate match (multiple parcels share the situs);
+        primary candidate chosen by deterministic parcel_id order
    40  fuzzy match (city only, address-token overlap below threshold)
     0  no match found
 
@@ -103,7 +103,7 @@ def street_body(addr: str) -> list:
 # ---------------------------------------------------------------------
 
 class ParcelIndex:
-    """In-memory index over BCAD parcel records, keyed for fast match."""
+    """In-memory index over parcel-master records, keyed for fast match."""
 
     def __init__(self, parcels: list):
         self._by_norm_address: dict = defaultdict(list)
@@ -111,9 +111,9 @@ class ParcelIndex:
         self._by_city_housenum_root: dict = defaultdict(list)
         self._by_zip_housenum: dict = defaultdict(list)
         for p in parcels:
-            situs = normalize_address(p.get("situs_address") or "")
-            zip_code = (p.get("situs_zip") or "").strip()
-            city = (p.get("situs_city") or "").strip().upper()
+            situs = normalize_address(p.get("address") or "")
+            zip_code = (p.get("zip") or "").strip()
+            city = (p.get("city") or "").strip().upper()
             num = house_number(situs)
             root = street_root(situs)
             if situs and zip_code:
@@ -148,7 +148,7 @@ class ParcelIndex:
                 body_source = street_body(addr)
                 tightened = [
                     p for p in candidates
-                    if _body_overlap(street_body(p.get("situs_address") or ""), body_source)
+                    if _body_overlap(street_body(p.get("address") or ""), body_source)
                 ]
                 if tightened:
                     confidence = 85 if len(tightened) == 1 else 60
@@ -210,11 +210,11 @@ def match_signals_to_parcels(signals: list, parcels: list,
             primary = candidates[0]
             review_flags.append("address_match_uncertain")
         elif confidence == 60:
-            # Multi-parcel address — pick deterministically by PropID,
+            # Multi-parcel address — pick deterministically by parcel_id,
             # flag for operator review.
             primary = sorted(
                 candidates,
-                key=lambda p: p.get("bcad_prop_id") or 9_999_999_999,
+                key=lambda p: p.get("parcel_id") or "~",
             )[0]
             review_flags.append("multi_parcel_address")
         elif confidence == 40:
@@ -252,12 +252,19 @@ _VALID_US_STATE_CODES = frozenset({
 })
 
 
-def looks_like_out_of_state(parcel: dict) -> bool:
+def looks_like_out_of_state(
+    parcel: dict,
+    *,
+    in_state_zip_prefixes: list | None = None,
+    in_state_code: str | None = None,
+) -> bool:
     """
-    Conservative out-of-state check: only fire when the mailing state
-    is a valid US 2-letter code AND it disagrees with the situs state
-    AND the mailing ZIP doesn't look like a typo. Avoids the
-    'SAN ANTONI, OH 78252' kind of BCAD data-entry artifact.
+    Conservative out-of-state check: fire only when the mailing state
+    is a valid US 2-letter code, disagrees with the situs state, and
+    the mailing ZIP doesn't contradict the mailing state. The in-state
+    ZIP-prefix guard catches the case where a parcel-master row carries
+    an in-state ZIP under a typo state code; for those rows the ZIP
+    wins and the row is treated as in-state.
     """
     mail_st = (parcel.get("owner_mailing_state") or "").strip().upper()
     situs_st = (parcel.get("situs_state") or "").strip().upper()
@@ -267,11 +274,15 @@ def looks_like_out_of_state(parcel: dict) -> bool:
         return False
     if mail_st not in _VALID_US_STATE_CODES:
         return False
-    # Belt-and-suspenders: only count out-of-state when the ZIP is
-    # clearly NOT a Texas ZIP (which start with 7).
     mail_zip = (parcel.get("owner_mailing_zip") or "").strip()
-    if mail_zip and mail_zip.startswith("7") and mail_st != "TX":
-        # ZIP says Texas but state code says otherwise — looks like
-        # BCAD data entry noise. Don't fire out_of_state.
+    in_state_code = (in_state_code or "").upper()
+    prefixes = in_state_zip_prefixes or []
+    if (
+        mail_zip
+        and prefixes
+        and in_state_code
+        and any(mail_zip.startswith(p) for p in prefixes)
+        and mail_st != in_state_code
+    ):
         return False
     return True

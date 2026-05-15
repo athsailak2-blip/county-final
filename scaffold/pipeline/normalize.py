@@ -52,73 +52,6 @@ CANONICAL: dict = REGISTRY["canonical_types"]
 LEAD_PATTERNS: list = REGISTRY["lead_patterns"]
 SOURCE_CLASSES: list = REGISTRY["source_classes"]
 
-# Synthetic-only canonical extension. The framework's
-# canonical_doc_types.json deliberately does not carry a
-# sheriff-sale-surplus entry because the doc type isn't a recorded
-# instrument; it's a derivation from post-sale accounting. The
-# synthetic harness needs a stable canonical key for it so scoring
-# and classification can route to the surplus_recovery persona
-# without colliding with SHERIFF_SALE-class signals (which fire the
-# foreclosure pattern). Adding it here in-code keeps the framework
-# registry file unmodified per Phase 0 hard rules.
-CANONICAL.setdefault(
-    "SHERIFF_SALE_SURPLUS",
-    {
-        "lead_pattern": "surplus_owed",
-        "subtype": "sheriff_sale_surplus",
-        "source_class": "lead_generating",
-        "default_confidence": 85,
-        "document_priority": 60,
-        "common_abbreviations": ["SHERIFF SALE SURPLUS", "SS SURPLUS"],
-        "notes": "Synthetic-only canonical extension for surplus-owed leads.",
-        "source_priority": "P0",
-    },
-)
-
-# Parcel-master derived signals — see
-# runs/bexar_tx/backlog/v5.1.2-beta-framework-patches.md for the
-# framework-patch proposal that would promote these to first-class
-# canonical entries in canonical_doc_types.json. The Bexar build
-# implements them here as in-code extensions so the framework KB
-# stays unmodified.
-CANONICAL.setdefault(
-    "ESTATE_OWNER_NAME_PATTERN",
-    {
-        "lead_pattern": "estate",
-        "subtype": "estate_owner_name_pattern",
-        "source_class": "lead_generating",
-        "default_confidence": 75,
-        "document_priority": 55,
-        "common_abbreviations": [],
-        "notes": (
-            "Derived signal — fires when a parcel-master owner string "
-            "matches an estate/heirship regex (ESTATE OF, HEIRS OF, etc.). "
-            "Medium confidence: it is a name string, not a court-filed "
-            "probate event."
-        ),
-        "source_priority": "P2",
-    },
-)
-
-CANONICAL.setdefault(
-    "LIVING_TRUST_OWNER_NAME_PATTERN",
-    {
-        "lead_pattern": "transfer",
-        "subtype": "living_trust_owner_name_pattern",
-        "source_class": "lead_generating",
-        "default_confidence": 70,
-        "document_priority": 30,
-        "common_abbreviations": [],
-        "notes": (
-            "Derived signal — fires when a parcel-master owner string "
-            "matches a living-trust regex (LIVING TRUST, REVOCABLE TRUST, "
-            "etc.). Often signals deceased or incapacitated original owner."
-        ),
-        "source_priority": "P2",
-    },
-)
-
-
 _NON_ALNUM = re.compile(r"[^A-Z0-9]+")
 
 
@@ -139,10 +72,12 @@ for _ctype, _entry in CANONICAL.items():
         _BY_SLUG[_slug(_abbrev)] = _ctype
 
 
-# Synthetic-fixture subtype shortcuts. Maps the synthetic_signals.jsonl
-# subtype strings directly to canonical types without relying on the
-# slug heuristic. These keep the synthetic harness deterministic.
-_SYNTHETIC_SUBTYPE_MAP = {
+# Raw subtype shortcuts. Maps subtype strings (from synthetic fixtures
+# AND from production source translators) directly to canonical types
+# without relying on the slug heuristic. The synthetic harness depends
+# on this for determinism; production translators benefit from explicit
+# label aliases (e.g. possessive vs non-possessive forms).
+_RAW_SUBTYPE_MAP = {
     "Notice of Sale": "NOTICE_OF_SALE",
     "Sheriff Sale": "SHERIFF_SALE",
     "Lis Pendens": "LIS_PENDENS",
@@ -163,11 +98,9 @@ _SYNTHETIC_SUBTYPE_MAP = {
     "Sale of Marital Home Order": "MARITAL_PROPERTY_DIVISION",
     "Eviction Filing": "EVICTION_FILING",
     "Sheriff Sale Surplus": "SHERIFF_SALE_SURPLUS",
-    # Production-mode subtype labels emitted by source_translators.py.
-    # Texas non-judicial foreclosure terminology uses possessive
-    # "Trustee's Sale"; the canonical key drops the apostrophe-S so
-    # the alias is explicit here rather than depending on slug
-    # heuristics.
+    # Production-mode subtype labels emitted by the translator registry.
+    # Possessive forms ("Trustee's Sale") aliased to the apostrophe-free
+    # canonical key for deterministic mapping without slug heuristics.
     "Notice of Substitute Trustee's Sale": "NOTICE_OF_SUBSTITUTE_TRUSTEE_SALE",
     "Notice of Trustee's Sale": "NOTICE_OF_SALE",
     "Tax Foreclosure Notice": "TAX_FORECLOSURE_NOTICE",
@@ -193,11 +126,11 @@ def normalize_doc_type(raw: str, county_synonyms: dict | None = None) -> dict:
     slug = _slug(cleaned)
     county_synonyms = county_synonyms or {}
 
-    # Layer 0: synthetic-fixture shortcuts (case-sensitive match against
-    # the raw subtype strings used in scaffold/data/synthetic_signals.jsonl).
-    if cleaned in _SYNTHETIC_SUBTYPE_MAP:
+    # Layer 0: raw-subtype shortcuts (case-sensitive match against
+    # fixture and translator-emitted subtype labels in _RAW_SUBTYPE_MAP).
+    if cleaned in _RAW_SUBTYPE_MAP:
         return {
-            "normalized_doc_type": _SYNTHETIC_SUBTYPE_MAP[cleaned],
+            "normalized_doc_type": _RAW_SUBTYPE_MAP[cleaned],
             "confidence": 100,
             "reason": "exact_match_synthetic_fixture_subtype",
             "review_required": False,
@@ -272,13 +205,7 @@ LEAD_ATTRIBUTES = [
 ]
 
 
-_VALID_US_STATE_CODES = frozenset({
-    "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN",
-    "IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV",
-    "NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN",
-    "TX","UT","VT","VA","WA","WV","WI","WY","DC","PR","VI","GU","AS","MP",
-    "AE","AP","AA",
-})
+from scaffold.pipeline.matcher import _VALID_US_STATE_CODES  # noqa: E402
 
 
 # Entity-owner regex — operator-authoritative spec (REVIEW_GATE_4
@@ -315,31 +242,41 @@ def derive_attributes(
     owner = (parcel.get("owner_name") or "").upper()
     mailing_city = (parcel.get("owner_mailing_city") or "").strip().lower()
     mailing_state = (parcel.get("owner_mailing_state") or "").strip().upper()
-    mailing_addr = (parcel.get("owner_mailing_addr1") or "").strip().lower()
+    mailing_addr = (parcel.get("owner_mailing_address") or "").strip().lower()
     mailing_zip = (parcel.get("owner_mailing_zip") or "").strip()
-    situs_addr = (parcel.get("situs_address") or "").strip().lower()
-    situs_city = (parcel.get("situs_city") or "").strip().lower()
+    situs_addr = (parcel.get("address") or "").strip().lower()
+    situs_city = (parcel.get("city") or "").strip().lower()
     situs_state = (parcel.get("situs_state") or "").strip().upper()
 
-    # absentee — mailing address differs from situs address. The
-    # presence of a Homestead exemption is a strong negative signal
-    # (BCAD/CAD-published HS exemption confirms owner-occupied).
+    # absentee — mailing address differs from situs address. A homestead
+    # exemption is a strong negative signal (parcel-master HS flag
+    # confirms owner-occupied).
     has_hs_exemption = parcel.get("exempt_homestead") is True
     if not has_hs_exemption and mailing_addr and (
         mailing_addr != situs_addr or mailing_city != situs_city
     ):
         attrs.add("absentee")
 
-    # out_of_state — owner mailing state differs from situs state. Be
-    # conservative: only fire when the mailing state is a valid US
-    # 2-letter code AND the mailing ZIP isn't a Texas ZIP (otherwise
-    # we're likely looking at a BCAD data-entry artifact like
-    # "SAN ANTONI, OH 78252").
+    # out_of_state — owner mailing state differs from situs state. Fire
+    # only when the mailing state is a valid US 2-letter code that
+    # disagrees with the situs state. The accompanying mailing-ZIP
+    # heuristic catches the case where a parcel-master row carries an
+    # in-state ZIP with a typo state code; for those rows the in-state
+    # ZIP wins and the row is treated as in-state.
+    in_state_zip_prefixes = (overrides.get("in_state_zip_prefixes") or [])
+    in_state_code = (overrides.get("in_state_code") or "").upper()
     if mailing_state and situs_state and mailing_state != situs_state:
+        likely_zip_state_mismatch = (
+            in_state_zip_prefixes
+            and in_state_code
+            and mailing_zip
+            and any(mailing_zip.startswith(p) for p in in_state_zip_prefixes)
+            and mailing_state != in_state_code
+        )
         if (
             _VALID_US_STATE_CODES is not None
             and mailing_state in _VALID_US_STATE_CODES
-            and not (mailing_zip and mailing_zip.startswith("7") and mailing_state != "TX")
+            and not likely_zip_state_mismatch
         ):
             attrs.add("out_of_state")
             attrs.add("absentee")
@@ -359,10 +296,9 @@ def derive_attributes(
     if sale_date and (today.year - sale_date.year) >= threshold_years:
         attrs.add("long_term_owned")
 
-    # senior_owner — strongest signal is an over-65 (OV65) exemption on
-    # the parcel master (BCAD/CAD-published). Fall back to the
-    # long-held-parcel + estate-signal heuristic when no exemption
-    # data is available.
+    # senior_owner — strongest signal is an over-65 exemption on the
+    # parcel master. Fall back to the long-held-parcel + estate-signal
+    # heuristic when no exemption data is available.
     if parcel.get("exempt_over_65") is True:
         attrs.add("senior_owner")
     else:

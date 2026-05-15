@@ -1,144 +1,160 @@
 """
-Owner-name-pattern signal matcher.
+Owner-name pattern signal emitter (v5.1.2-beta+, county-agnostic).
 
-Parcel-master rows carry an `owner_name` field. The strings in that
-field — when they match specific patterns — are themselves leads:
+Reads a parcel-master parcel's owner_name field. If the string matches
+a registered pattern (estate, living_trust), emits a framework signal
+that stacks on any lead-generating signals already attached to that
+parcel.
 
-  - `ESTATE OF JOHN DOE` or `HEIRS OF JANE DOE` -> estate signal.
-    Heir-hunting opportunity, broader and faster than waiting for
-    probate court filings to surface.
-  - `DOE FAMILY LIVING TRUST` or `... REVOCABLE TRUST` -> transfer
-    signal. Trust ownership often implies deceased / incapacitated
-    original owner.
-  - `FAMSACA LLC`, `... HOLDINGS`, `... CORP` -> entity_owned
-    attribute (handled in `normalize.derive_attributes`, not here).
+CRITICAL INVARIANT (v5.1.2-beta defensive guard, audit Q9):
 
-This module emits the first two as proper framework signals so they
-stack onto leads alongside court / clerk / sheriff signals. The
-entity case stays an attribute because the framework already
-recognizes it; the operator's tightened regex is wired into
-`normalize._ENTITY_SUFFIXES`.
+  This module NEVER emits a signal for a parcel that is not already
+  linked to at least one lead-generating signal in the current run.
+  Standalone parcels — enrichment-only records the matcher hasn't
+  yet attached to a lead — cannot produce a lead row.
 
-The framework canonical entries for ESTATE_OWNER_NAME_PATTERN and
-LIVING_TRUST_OWNER_NAME_PATTERN are added by the in-code
-`CANONICAL.setdefault(...)` blocks in `normalize.py` so this module
-does NOT modify the framework knowledge base.
+  Callers must pass the set of parcel IDs that already carry a
+  lead-generating signal:
 
-See `runs/bexar_tx/backlog/v5.1.2-beta-framework-patches.md` for the
-proposed framework patch that would promote these entries to
-`knowledge_base/domain/canonical_doc_types.json`.
+      emitted = emit_owner_name_signals_for_parcel(
+          parcel=parcel,
+          parcels_with_lead_signals=parcels_with_lead_signals,
+          source_id="<id>",
+      )
+
+  If parcel["parcel_id"] is NOT in parcels_with_lead_signals, the
+  emitter returns []. The pipeline's clerk-driven product rule is
+  thus enforced at this layer, not just in the orchestrator.
+
+Patterns (operator spec, formalized in canonical_doc_types.json):
+
+  ESTATE_PATTERN:  \\b(ESTATE OF|EST OF|ESTATE|HEIRS OF|HEIRS)\\b
+  -> ESTATE_OWNER_NAME_PATTERN canonical, default_confidence 75
+
+  LIVING_TRUST_PATTERN: \\b(LIVING TRUST|FAMILY TRUST|REVOCABLE TRUST|
+                             REV TRUST|TRUST|TRUSTEE)\\b
+  -> LIVING_TRUST_OWNER_NAME_PATTERN canonical, default_confidence 70
+
+The patterns themselves are framework-canonical (declared in
+knowledge_base/domain/canonical_doc_types.json). Counties don't
+configure these patterns; they apply universally to any
+parcel-master source. If a county wants to disable owner-name-pattern
+signals, they can omit the emit_owner_name_signals call from their
+pipeline run (config-driven; not yet exposed but planned).
 """
 
 from __future__ import annotations
-
 import hashlib
 import re
-from typing import Optional
 
-
-# --- Regex patterns (operator-authoritative, REVIEW_GATE_4 follow-up) ---
 
 ESTATE_PATTERN = re.compile(
-    r"\b(ESTATE OF|EST OF|ESTATE|HEIRS OF|HEIRS)\b",
+    r"\b(ESTATE\s+OF|EST\s+OF|ESTATE|HEIRS\s+OF|HEIRS)\b",
     re.IGNORECASE,
 )
-
 LIVING_TRUST_PATTERN = re.compile(
-    r"\b(LIVING TRUST|FAMILY TRUST|REVOCABLE TRUST|REV TRUST|TRUST|TRUSTEE)\b",
+    r"\b(LIVING\s+TRUST|FAMILY\s+TRUST|REVOCABLE\s+TRUST|REV\s+TRUST|TRUST|TRUSTEE)\b",
     re.IGNORECASE,
 )
 
 
-# --- Pattern -> canonical type table ---
-
-_PATTERN_RULES = [
-    {
-        "name": "estate_owner_name_pattern",
-        "regex": ESTATE_PATTERN,
-        "canonical": "ESTATE_OWNER_NAME_PATTERN",
-        "pattern": "estate",
-        "subtype": "estate_owner_name_pattern",
-        "confidence": 75,
-        "subtype_label": "Estate owner-name pattern",
-    },
-    {
-        "name": "living_trust_owner_name_pattern",
-        "regex": LIVING_TRUST_PATTERN,
-        "canonical": "LIVING_TRUST_OWNER_NAME_PATTERN",
-        "pattern": "transfer",
-        "subtype": "living_trust_owner_name_pattern",
-        "confidence": 70,
-        "subtype_label": "Living-trust owner-name pattern",
-    },
-]
+def _signal_id(parts: tuple[str, ...]) -> str:
+    h = hashlib.sha1("|".join(parts).encode("utf-8")).hexdigest()[:16]
+    return f"sig_owner_{h}"
 
 
-def _matches(rule: dict, owner_name: str) -> Optional[str]:
-    """Return the literal match (verbatim from owner_name) or None."""
-    m = rule["regex"].search(owner_name or "")
-    return m.group(0) if m else None
-
-
-def emit_owner_name_signals(parcel: dict, *,
-                              event_date: str | None = None,
-                              source_id: str = "parcel_master_owner_name") -> list:
+def emit_owner_name_signals_for_parcel(
+    parcel: dict,
+    parcels_with_lead_signals: set[str],
+    source_id: str = "parcel_master",
+) -> list[dict]:
     """
-    Return 0+ derived signals for the parcel based on owner-name pattern
-    matches. Signals are emitted in the source-shaped envelope that
-    `scaffold/pipeline/build_leads.normalize_signal` understands so the
-    rest of the pipeline (normalize -> stack -> score -> classify)
-    treats them indistinguishably from scraper-emitted signals.
+    Emit framework signals based on parcel.owner_name patterns.
+
+    The DEFENSIVE GUARD (audit Q9 / v5.1.2-beta): standalone parcels
+    not already linked to a lead-generating signal CANNOT produce
+    a signal here. This enforces the clerk-driven product rule
+    at the emitter level.
+
+    Args:
+        parcel: A parcel dict with at least `parcel_id` and `owner_name`.
+        parcels_with_lead_signals: Set of parcel IDs that already carry
+            at least one lead-generating signal in the current run.
+            Pass an empty set to disable emission (testing only).
+        source_id: Source ID stamp for the emitted signals.
+
+    Returns:
+        List of emitted signal dicts (0, 1, or 2 entries).
     """
-    out: list = []
-    owner = (parcel.get("owner_name") or "").strip()
-    if not owner:
-        return out
+    if not parcel.get("owner_name"):
+        return []
+
     parcel_id = parcel.get("parcel_id")
-    bcad_id = parcel.get("bcad_prop_id")
+    if not parcel_id:
+        return []
 
-    for rule in _PATTERN_RULES:
-        literal = _matches(rule, owner)
-        if not literal:
-            continue
-        # Deterministic raw_record_id so re-runs on identical inputs
-        # produce identical evidence chains.
-        rid_seed = f"{rule['canonical']}|{parcel_id}|{owner}|{literal}".encode("utf-8")
-        rid = "raw_" + hashlib.sha1(rid_seed).hexdigest()[:16]
+    # DEFENSIVE GUARD — clerk-driven product rule.
+    if parcel_id not in parcels_with_lead_signals:
+        return []
 
-        # Synthesize a source_url that points to the parcel-master
-        # record this name pattern came from. Phase 5+ can swap this
-        # for the BCAD per-parcel public URL.
-        source_url = (
-            f"parcel_master_owner_name://{parcel_id}"
-            f"#pattern={rule['name']}"
-        )
+    owner = parcel["owner_name"].strip()
+    if not owner:
+        return []
 
-        signal = {
-            "parcel_id": parcel_id,
-            "source": source_id,
+    emitted: list[dict] = []
+
+    estate_match = ESTATE_PATTERN.search(owner)
+    if estate_match:
+        signal_id = _signal_id((parcel_id, "ESTATE_OWNER_NAME_PATTERN", owner))
+        source_url = f"about:owner-name/{source_id}/{parcel_id}#estate"
+        emitted.append({
+            "signal_id": signal_id,
+            "raw_record_id": f"raw_owner_name_{parcel_id}",
+            "source_id": source_id,
             "source_url": source_url,
-            "raw_record_id": rid,
-            "pattern": rule["pattern"],
-            "subtype": rule["subtype_label"],
-            "filing_date": event_date,
-            "_synthetic": False,
-            # The literal owner-name match becomes part of the audit
-            # trail so the operator can see WHY the signal fired.
-            "_owner_name_literal_match": literal,
+            "doc_type": "ESTATE_OWNER_NAME_PATTERN",
+            "doc_type_subtype_label": "Estate owner-name pattern",
+            "doc_number": f"OWNER-{parcel_id}",
+            "primary_parcel_id": parcel_id,
+            "filing_date": None,
+            "parser_confidence": 75,
+            "_owner_name_literal_match": estate_match.group(0),
             "_owner_name_full": owner,
-            "_bcad_prop_id": bcad_id,
-            # Confidence + canonical hint flows through the normalize
-            # step via the synthetic subtype map (see normalize.py).
-            "_pattern_confidence": rule["confidence"],
-        }
-        out.append(signal)
-    return out
+        })
+
+    trust_match = LIVING_TRUST_PATTERN.search(owner)
+    if trust_match:
+        signal_id = _signal_id((parcel_id, "LIVING_TRUST_OWNER_NAME_PATTERN", owner))
+        source_url = f"about:owner-name/{source_id}/{parcel_id}#trust"
+        emitted.append({
+            "signal_id": signal_id,
+            "raw_record_id": f"raw_owner_name_{parcel_id}",
+            "source_id": source_id,
+            "source_url": source_url,
+            "doc_type": "LIVING_TRUST_OWNER_NAME_PATTERN",
+            "doc_type_subtype_label": "Living-trust owner-name pattern",
+            "doc_number": f"OWNER-{parcel_id}",
+            "primary_parcel_id": parcel_id,
+            "filing_date": None,
+            "parser_confidence": 70,
+            "_owner_name_literal_match": trust_match.group(0),
+            "_owner_name_full": owner,
+        })
+
+    return emitted
 
 
-def detect_owner_name_classes(owner_name: str) -> set:
-    """Diagnostic helper — returns the rule names that match."""
-    out: set = set()
-    for rule in _PATTERN_RULES:
-        if _matches(rule, owner_name):
-            out.add(rule["name"])
+def emit_owner_name_signals_for_parcels(
+    parcels: list[dict],
+    parcels_with_lead_signals: set[str],
+    source_id: str = "parcel_master",
+) -> list[dict]:
+    """Batch helper. Same defensive guard applies per parcel."""
+    out: list[dict] = []
+    for p in parcels:
+        out.extend(
+            emit_owner_name_signals_for_parcel(
+                p, parcels_with_lead_signals, source_id
+            )
+        )
     return out

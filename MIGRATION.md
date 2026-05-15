@@ -251,7 +251,148 @@ Edit `domain/00_client_business_model.md` (persona), `domain/04_deal_path_classi
 
 ## Versioning
 
-This is **v5.1.1-beta**.
+This is **v5.1.2-beta-r3**.
+
+**v5.1.2-beta-r3 changes from v5.1.2-beta-r2** (field_map bridge for non-canonical scraper field names — no breaking changes):
+
+This revision activates the `field_map` bridge in both canonical translators. v5.1.2-beta added `sources.<id>.field_map` to the schema but the v5.1.2-beta-r2 translators did not actually read it — they assumed scrapers emit framework-canonical field names directly. The first parcel_master migration (Bexar) discovered that pre-existing scrapers commonly normalize to source-specific conventions (`situs_address`, `owner_mailing_addr1`, `property_class`) rather than canonical (`address`, `owner_mailing_address`, `property_use`).
+
+`field_map` is the universal bridge. The translator resolves canonical field names through `field_map` (if present) before reading from `raw_payload`. Canonical fields absent from `field_map` are read directly (identity mapping). No county-side shim required. No re-scrape required.
+
+Key changes:
+
+- **`foreclosure_notices` translator** now reads `source_config.field_map` and resolves all 7 canonical fields (`address`, `doc_number`, `recording_year`, `recording_month`, `city`, `zip`, `layer_id`) through it. Partial maps (only some keys mapped) work correctly; unlisted keys default to identity.
+- **`parcel_master` translator** now reads `source_config.field_map` and resolves all canonical parcel fields through it (`parcel_id`, `address`, `owner_name`, `owner_mailing_*`, `city`, `zip`, `assessed_value`, `land_value`, `improvement_value`, `year_built`, `property_use`, `acres`, `legal_description`, `exemptions`). Exemption booleans (`exempt_homestead` etc.) are explicitly NOT field-mapped — they are framework-canonical semantics, not source nomenclature.
+- **MASTER_PROMPT.md §4.32** updated with explicit `field_map` documentation, including the limitation that exemption keys are not field-mapped.
+- **test_translator_registry.py** extended from 39 → 55 tests. New cases: field_map full mapping (both translators), partial field_map, identity fallback for non-mapped keys.
+- **FRAMEWORK_VERSION.json** bumped to `v5.1.2-beta-r3`.
+- **scaffold/bootstrap_county.py** FRAMEWORK_VERSION constant bumped.
+- **All 4 gate tests PASS:** golden path (46/46), county-agnostic regression (zero violations), atomic config writer (18/18), translator registry (60/60).
+
+**No schema changes.** `sources.<id>.field_map` was already in `_schema.json` from v5.1.2-beta. r3 just makes translators honor it. r2 county configs work unchanged on r3 (field_map is optional).
+
+**No breaking changes.** Translators in r2 read canonical names directly. Translators in r3 do the same UNLESS `field_map` is present. Existing configs continue to work.
+
+**Bexar migration path with r3:**
+
+After overlaying r3 canonical into the Bexar repo, `bexar_tx.json` adds a `field_map` to the parcel_master source:
+
+```json
+"parcel_master": {
+  "translator": "parcel_master",
+  "parcel_id_prefix": "BCAD-",
+  "field_map": {
+    "address": "situs_address",
+    "city": "situs_city",
+    "zip": "situs_zip",
+    "owner_mailing_address": "owner_mailing_addr1",
+    "property_use": "property_class"
+  }
+}
+```
+
+The wrap script from r2 still applies (deterministic flat → wrapped transform of `data/raw/parcel_master.jsonl`). No changes to scrapers, no re-scrape. The 287-lead baseline is preserved because the underlying data is bit-identical inside the wrapper, and `field_map` bridges the field names at translator-read time.
+
+**Deferred to v5.1.2-beta-final:**
+
+- `scaffold/data/canonical_record_fields.json` — the canonical-field-name registry. v5.1.2-beta-r3 ships the bridge mechanism; v5.1.2-beta-final will publish the canonical vocabulary so new scrapers can avoid needing `field_map` at all.
+
+**v5.1.2-beta-r2 features preserved:** §4.32 Scraper-to-translator data contract, renamed translators, wrapped raw_payload contract, csv_static_list unchanged.
+
+---
+
+This is **v5.1.2-beta-r2**.
+
+**v5.1.2-beta-r2 changes from v5.1.2-beta** (translator data-contract correction — minor breaking change for `translator` config string):
+
+This revision corrects a data-contract ambiguity discovered during the Bexar in-place migration of v5.1.2-beta. The original v5.1.2-beta canonical translators assumed scrapers were pass-through wrappers around raw vendor protocol output. Bexar's scrapers (and likely all pre-v5.1.2-beta scrapers) instead normalize fields at scrape time before persisting. v5.1.2-beta-r2 reverses the assumption and locks the framework around **Path 1: scrapers normalize, translators consume normalized output**.
+
+Key corrections:
+
+- **MASTER_PROMPT.md §4.32 Scraper-to-Translator Data Contract.** New section. Declares the canonical wrapped raw-record shape that scrapers must produce and translators must consume:
+  ```json
+  {
+    "raw_record_id": "...",
+    "source_id": "...",
+    "source_url": "...",
+    "source_fetched_at": "...",
+    "raw_payload": {<lowercase framework-canonical field names>}
+  }
+  ```
+  Scrapers normalize source fields. Translators read normalized `raw_payload`. Translators are protocol-agnostic and never know whether the data came from a REST API, public-records portal, court e-portal, or static CSV. Portal protocol knowledge lives in the scraper or in `scaffold/scrapers/` protocol clients.
+- **Translator rename.** Vendor-protocol prefix dropped:
+  - `arcgis_foreclosure_notices` → `foreclosure_notices`
+  - `arcgis_parcel_master` → `parcel_master`
+  - `csv_static_list` unchanged (CSV isn't a vendor-specific protocol).
+  - Translator files renamed in `scaffold/pipeline/translators/`.
+  - Schema enum (`config/counties/_schema.json` `sources.<id>.translator`) updated to reflect new names; old names removed.
+  - This is a SMALL breaking change. County configs declaring `translator: "arcgis_foreclosure_notices"` must update to `translator: "foreclosure_notices"`. No code-side migration required because the v5.1.2-beta canonical translators were not in production use (only Bexar had v5.1.2-beta and Bexar was mid-migration).
+- **Translator implementations rewritten.** `foreclosure_notices` reads lowercase normalized fields (`address`, `doc_number`, `recording_year`, `recording_month`, `city`, `zip`, `layer_id` — no underscore) from `raw_payload`. `parcel_master` reads framework-canonical fields (`parcel_id`, `address`, `owner_name`, etc.) from `raw_payload` and prefers pre-parsed `exempt_*` boolean fields; legacy compatibility path parses raw `exemptions` string via `translator_config.exemption_codes` if booleans absent.
+- **`test_translator_registry.py` rewritten.** 39 tests covering the new contract: builtin registration under new names, normalized-payload consumption, cross-county-leak policy with lowercase city keys, sale_date_rule dispatch from normalized year/month, parcel_master boolean-exemption fast path, parcel_master legacy-string fallback, empty-parcel_id skip behavior. Old test cases referencing UPPERCASE ArcGIS attrs removed.
+- **`docs/v5.1.2-beta_bexar_migration_playbook.md`** updated to reflect new translator names + lowercase normalized translator_config field references + one-time `data/raw/parcel_master.jsonl` shape transform step (flat → wrapped).
+- **`FRAMEWORK_VERSION.json`** bumped to `v5.1.2-beta-r2`, `locked_at: 2026-05-15`.
+- **All 4 gate tests PASS:** golden path (46/46), county-agnostic regression (zero violations), atomic config writer (18/18), translator registry (39/39).
+
+**Why this is r2, not v5.1.3.** v5.1.2-beta was tagged on 2026-05-14 and pushed to canonical, but it had not propagated to any production county before Bexar's mid-migration exposed the data-contract ambiguity. r2 corrects the beta release in-place under the same minor version. The original v5.1.2-beta tag is preserved on the canonical repo for audit-trail purposes; v5.1.2-beta-r2 is the recommended version for any new county build or any in-progress migration.
+
+**Bexar migration impact.** Bexar's in-place migration paused at Step 5 of the v5.1.2-beta playbook when the contract ambiguity surfaced. With v5.1.2-beta-r2 canonical translators, Bexar resumes migration with:
+1. A one-time deterministic shape transform of `data/raw/parcel_master.jsonl` from flat to wrapped shape (no data drift; baseline reproducibility preserved).
+2. `bexar_tx.json` translator names updated (`foreclosure_notices` / `parcel_master`).
+3. `bexar_tx.json` `translator_config` field-name references updated from UPPERCASE ArcGIS attrs to lowercase normalized names.
+4. Resume Step 5 of the playbook with corrected translators.
+
+**v5.1.2-beta features preserved:** Universality Contract §4.31, schema additions, translator registry mechanics, sale_date_rules, owner_name_patterns defensive guard, upgraded regression test, scaffold/data/synthetic_attribute_overrides.json.
+
+---
+
+This is **v5.1.2-beta**.
+
+**v5.1.2-beta changes from v5.1.1-beta** (universality contract enforcement — schema additions, no breaking schema changes for existing configs):
+
+This release closes the universality drift identified by the May 2026 audit of a v5.1.1-beta-seeded Phase 1-4 county build. The audit found 11 specific county-specific leaks in `scaffold/pipeline/` and 4 in `dashboard/`: a hardcoded municipality frozenset, a state-specific sale-date helper, hardcoded source-id dispatch in the orchestrator, in-code doc-type aliases, county-mnemonic parcel ID prefixes baked into code, vendor-named comments, and a single-county translator module. The framework code knew it was running for a specific county. v5.1.2-beta locks the universality contract.
+
+Key additions:
+
+- **MASTER_PROMPT.md §4.31 Universality Contract.** Ten locked rules. No county name, city, statute, vendor, or portal hostname in `scaffold/pipeline/`. Cross-county portability. State rules via `sale_date_rules` registry. Doc-type synonyms from config. Field maps from config. Parcel-ID prefixes from config. Synthetic-fixture overrides isolated to `scaffold/data/synthetic_attribute_overrides.json`. Owner-name signal emitter requires the defensive guard (parcels not already linked to a lead-generating signal cannot produce a signal). Translator registry is the only source-dispatch path. County-specific comments are scrubbed.
+- **Schema additions** (`config/counties/_schema.json`):
+  - `geography.accepted_municipalities[]` — superset of municipalities including unincorporated communities, spelling variants, neighboring overlaps. Replaces hardcoded city frozensets in universal code.
+  - `geography.cross_county_policy` — `unknown_city_action` (drop | flag_for_review | accept_with_warning) plus optional `neighboring_county_municipalities`.
+  - `geography.sale_date_rule` — `rule_name` selects from the framework registry (`first_tuesday_of_month`, `first_monday_of_month`, `first_business_day_of_month`, `first_of_month`, etc.); `holiday_shift` parameterizes date-shift logic; `statute_reference` for operator-readable provenance.
+  - `state_rule_family` at config root — reserved for future per-state defaults.
+  - `sources.<id>.translator` — name of a registered translator (enum). Replaces hardcoded source dispatch.
+  - `sources.<id>.translator_config` — per-translator config (layer maps, field maps, etc.).
+  - `sources.<id>.field_map` — raw-field-name → canonical-field-name mapping. Replaces in-code source-specific field literals.
+  - `sources.<id>.parcel_id_prefix` — county-mnemonic prefix for synthetic parcel IDs. Replaces hardcoded prefixes.
+  - `sources.<id>.doc_type_synonyms` — per-source doc-type label → canonical-type mapping. Replaces in-code synonym tables.
+- **canonical_doc_types.json additions:** 71 → 74 types.
+  - `ESTATE_OWNER_NAME_PATTERN` (lead_pattern: estate, default_confidence: 75). Promotes owner-name-pattern signal class from synthetic-only to canonical.
+  - `LIVING_TRUST_OWNER_NAME_PATTERN` (lead_pattern: transfer, default_confidence: 70).
+  - `SHERIFF_SALE_SURPLUS` (lead_pattern: surplus_owed, default_confidence: 80). Promotes from synthetic-only to canonical.
+- **New framework modules** (county-agnostic; verified by upgraded regression test):
+  - `scaffold/pipeline/__init__.py` — package contract.
+  - `scaffold/pipeline/translators/__init__.py` — translator registry. `register(name, force=False)`, `lookup(name)`, `registered_names()`, `unregister(name)`, `clear()`. Raises `TranslatorAlreadyRegistered` on duplicate, `TranslatorNotFound` on missing.
+  - `scaffold/pipeline/translators/arcgis_foreclosure_notices.py` — built-in. Reads `translator_config.layer_doc_type_map`, honors `geography.accepted_municipalities`, `geography.cross_county_policy`, `geography.sale_date_rule`, `sources.<id>.parcel_id_prefix`.
+  - `scaffold/pipeline/translators/arcgis_parcel_master.py` — built-in. Reads `sources.<id>.field_map` and `translator_config.exemption_codes`. Returns parcels (no signals — parcel_master is enrichment).
+  - `scaffold/pipeline/translators/csv_static_list.py` — built-in. Per-source `doc_type_synonyms` for label → canonical mapping. Skips records with unmapped doc-types (never guesses).
+  - `scaffold/pipeline/sale_date_rules.py` — built-in rule registry (`first_tuesday_of_month`, `first_monday_of_month`, `first_business_day_of_month`, `first_of_month`) with configurable holiday_shift. County rules are NAMED, not encoded.
+  - `scaffold/pipeline/owner_name_patterns.py` — universal regex emitter. **Defensive guard**: `emit_owner_name_signals_for_parcel()` requires `parcels_with_lead_signals: set[str]` and refuses to emit for parcels not in that set. Closes audit Q9 fragility — standalone enrichment-only parcels cannot create lead rows.
+- **scaffold/data/synthetic_attribute_overrides.json** — placeholder isolating synthetic-fixture-only attribute overrides per §4.31.7. Production runs MUST NOT read this file.
+- **Upgraded `scaffold/tests/test_county_agnostic_regression.py`:** Now scans 15+ phrase patterns including vendor names (BCAD, HCAD, MCAD, etc.), portal hostnames (publicsearch.us, tylertech.cloud, etc.), state statute references (Tex. Prop. Code, Cal. Civ. Code, etc.). Exempts `data/`, `.claude/`, `dashboard/`, `scrapers/`, `scaffold/tests/fixtures/`, `scaffold/data/`, `sale_date_rules.py`, `MASTER_PROMPT.md`, `MIGRATION.md`, `LICENSE.md`, `START_HERE.md`, `README.md`, `bootstrap_county.py`, vendor portal library. PASSES on framework.
+- **New `scaffold/tests/test_translator_registry.py`:** 26 tests covering builtin registration, lookup, force-override semantics, duplicate-refusal, cross-county-leak policy (drop/flag), sale_date_rule dispatch, parcel_master field_map parsing, csv_static_list per-source doc_type_synonyms, unknown-doc-type skip behavior.
+- **`scaffold/tests/run_all.py`** wired in the translator registry test (4 tests in gate suite now).
+- **`README.md`** autonomy-boundaries section updated with the universality contract as the third boundary.
+- **`scaffold/bootstrap_county.py`** FRAMEWORK_VERSION stamp bumped to `v5.1.2-beta`.
+- **`FRAMEWORK_VERSION.json`** bumped to `v5.1.2-beta`, `locked_at: 2026-05-14`.
+
+**This is NOT a breaking schema change for existing configs.** A v5.1.1-beta county config validates against the v5.1.2-beta schema without modification — all new fields are optional. v5.1.1-beta counties continue to work; they just don't gain the universality-contract benefits until they migrate sources to use the translator field and pull municipality lists out of in-code constants.
+
+**v5.1.2-beta universal pipeline runtime modules are NOT in canonical yet.** The framework's `normalize.py`, `stack.py`, `score.py`, `classify.py`, `evidence.py`, `review.py`, `dashboard.py`, `manifest.py`, `matcher.py`, and `build_leads.py` still live as contaminated code inside the Bexar repo from the v5.1.1-beta-seeded build. v5.1.2-beta provides the architectural scaffolding (schema + contract + registry + sale_date_rules + owner_name_patterns + regression) plus a Bexar in-place migration playbook (`docs/v5.1.2-beta_bexar_migration_playbook.md`). The Bexar repo refactors its pipeline in-place against the new framework primitives, regression-tests against current Bexar output (287 leads, parcel_master coverage 79%), and the cleaned pipeline modules are then promoted back to canonical as **v5.1.2-beta-final**. Until then, the canonical framework runs the synthetic harness only.
+
+**v5.1.1-beta features preserved:** execution reliability, `write_county_config.py`, atomic config writer, Phase 0 + Phase 0.5 rules, Build Mode Approval Gate, Source Verification Gate, No False Dashboard rule, Evidence First Dashboard contract, Manual Assisted Pull Mode, operator override audit, vendor portal library, all tests already passing (golden path, county-agnostic regression, atomic config writer 18/18).
+
+**v5.1.0-beta features preserved:** Phase 0.5 Auto-Resolve Blockers, Build Mode Approval Gate, Partial Build Contract, Evidence-First Dashboard Row Contract, Lead lifecycle and suppression, Source freshness contract, Source kill switch and quarantine, production self-verification stubs, Manual Assisted Pull Mode, Vendor portal library, Cost guardrails, VIP-friendly failure messages, v5.2.0 deferred catalog.
+
+---
 
 **v5.1.1-beta changes from v5.1.0-beta** (execution reliability patch — no schema changes, no breaking changes):
 

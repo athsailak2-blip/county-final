@@ -83,3 +83,34 @@ knowledge surfaces. Each entry should be:
   - **Boerne is appraised by BCAD.** ZIP 78015 (Boerne) records exist in the Parcels layer with HS exemptions and typical residential PropUse codes. The Boerne records previously flagged `potential_cross_county_leak` ARE within BCAD's appraisal coverage — meaning the city/county-boundary case is more nuanced than "wrong county." Keep the flag for operator review semantics but reframe its meaning as "review whether this is a Bexar lead" rather than "drop because it's not Bexar."
   - **`last_sale_date` / `last_sale_price` NOT present** in this layer. These live in BCAD's sales-history dataset which is reachable via Harris Govern per-parcel (or via a paid bulk roll). Phase 4 will NOT populate these fields; `long_term_owned` and `high_equity` attribute derivations will be empty until a follow-up source wires them in. Honest empty buckets per framework spirit.
   - **Address-token fallback needed.** Foreclosure record addresses don't always literally match BCAD's Situs. Example: foreclosure says "13926 WOOL PARK" in 78247; BCAD's 13926 entries in 78247 are MOONCREST / GROVE PATCH / TREE CROSSING — no WOOL PARK. This could be a foreclosure data typo OR a recorded street alias. Matcher must support house# + street-token fallback with `address_match_uncertain` review_flag when fuzzy match fires.
+
+---
+
+- **2026-05-15 (v5.1.2-beta-r3 migration — Step 5'' wrap transform):** Ran a one-time deterministic shape transform on `data/raw/parcel_master.jsonl`. The pre-r2 Bexar scraper wrote flat records (no `raw_payload` wrapper); the v5.1.2-beta-r2 canonical translator contract requires the §4.32 wrapped envelope. Transform script wrapped each of 316 flat records into `{"raw_record_id": "raw_<parcel_id>", "source_id": "parcel_master", "source_url": "...", "source_fetched_at": <_fetched_at>, "parser_confidence": 100, "raw_payload": <original flat record>}`. Record content is bit-identical inside the wrapper; lead-count baseline is preserved.
+
+  Paired with the wrap: a per-source `field_map` in `config/counties/bexar_tx.json` `sources.parcel_master.field_map` bridges Bexar's scraper field names to canonical r3 translator names — `address` ← `situs_address`, `city` ← `situs_city`, `zip` ← `situs_zip`, `owner_mailing_address` ← `owner_mailing_addr1`, `property_use` ← `property_class`. The other parcel fields (`parcel_id`, `owner_name`, `exempt_homestead`, `exempt_over_65`, `exempt_disabled`, `assessed_value`, `land_value`, `improvement_value`, `year_built`, `acres`, `legal_description`) match identity and need no mapping. `exempt_veteran` defaults False — Bexar's scraper does not pre-parse it; the data's `exemptions: "DVHS, HS"` string is not re-parsed (translator boolean fast-path is triggered by presence of `exempt_homestead`).
+
+  Foreclosure scraper output (`data/raw/foreclosure_notices_map.jsonl`) needs no transform and no field_map — it already conforms to §4.32 with canonical field names.
+
+---
+
+- **2026-05-15 (v5.1.2-beta migration complete):** All 12 playbook steps executed against framework commit 6bb8796 (v5.1.2-beta-r3 canonical, with two prior r1→r2→r3 framework patches surfaced from migration and shipped upstream first). Strict output equivalence verified against `data/leads.baseline.json` on all four required metrics:
+
+  - **lead_total:** 287 (baseline 287)
+  - **pattern_counts:** {foreclosure: 273, tax: 15}
+  - **attribute_counts:** {absentee: 24, entity_owned: 3, senior_owner: 26}
+  - **score_tier_distribution:** {Strong: 258, Workable: 29}
+  - **stack_depth_distribution:** {1: 286, 2: 1}
+
+  Test-result summary (canonical gate suite + Bexar regression tests):
+  - Golden path: 46/46 PASS
+  - Atomic county config writer: 18/18 PASS
+  - Translator registry: 56/56 PASS (up from 26/26 in r1 after r2/r3 expansions)
+  - test_owner_name_patterns: 28/28 PASS (added one defensive-guard test)
+  - test_matcher: 27/27 PASS
+  - test_owner_name_signal_integration: 21/21 PASS
+  - verify_synthetic_harness: 110/110 PASS
+  - test_foreclosure_notices_map: 9/9 PASS
+  - County-agnostic regression: FAIL (58 violations — 9 universal US state codes + 49 Bexar-side test-fixture references). Accepted as known framework-scanner gap. Pipeline code (`scaffold/pipeline/*.py`) is contamination-free; remaining violations are scanner false-positives on the `_VALID_US_STATE_CODES` frozenset and Bexar-specific test files. Backlog captured in `runs/bexar_tx/backlog/v5.1.2-beta-framework-patches.md` for v5.1.2-beta-final.
+
+  One-time data shape transform applied to `data/raw/parcel_master.jsonl` (Step 5'' wrap script — 316 records preserved, bit-identical inside `raw_payload` envelope). Per-source `field_map` declared in `config/counties/bexar_tx.json` to bridge Bexar scraper field names (`situs_address`/`situs_city`/`situs_zip`/`owner_mailing_addr1`/`property_class`) to canonical r3 translator names. `scrapers/` directory untouched (out of playbook scope).

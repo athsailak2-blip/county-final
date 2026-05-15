@@ -7,7 +7,7 @@ multiple county adapters can reuse. Examples:
     _arcgis_featureserver.py — generic ArcGIS REST FeatureServer /
         MapServer pull pattern (pagination, retries, attribute
         extraction). Used by any county whose distress source is
-        ArcGIS-hosted (Bexar foreclosure map, GIS parcel layers,
+        ArcGIS-hosted (foreclosure-notice maps, GIS parcel layers,
         etc.).
 
 County-specific adapter modules live at the repo-root `scrapers/`

@@ -2,6 +2,7 @@
   "county_id": "bexar_tx",
   "county_name": "Bexar",
   "state": "TX",
+  "state_rule_family": "TX_non_judicial_foreclosure",
   "subject_state_full": "Texas",
   "fips_code": "48029",
   "timezone": "America/Chicago",
@@ -134,9 +135,161 @@
         "fips_place": "4879708"
       }
     ],
+    "accepted_municipalities": [
+      {
+        "name": "SAN ANTONIO",
+        "kind": "incorporated"
+      },
+      {
+        "name": "ALAMO HEIGHTS",
+        "kind": "incorporated"
+      },
+      {
+        "name": "BALCONES HEIGHTS",
+        "kind": "incorporated"
+      },
+      {
+        "name": "CASTLE HILLS",
+        "kind": "incorporated"
+      },
+      {
+        "name": "CHINA GROVE",
+        "kind": "incorporated"
+      },
+      {
+        "name": "CONVERSE",
+        "kind": "incorporated"
+      },
+      {
+        "name": "ELMENDORF",
+        "kind": "incorporated"
+      },
+      {
+        "name": "FAIR OAKS RANCH",
+        "kind": "incorporated"
+      },
+      {
+        "name": "GREY FOREST",
+        "kind": "incorporated"
+      },
+      {
+        "name": "HELOTES",
+        "kind": "incorporated"
+      },
+      {
+        "name": "HILL COUNTRY VILLAGE",
+        "kind": "incorporated"
+      },
+      {
+        "name": "HOLLYWOOD PARK",
+        "kind": "incorporated"
+      },
+      {
+        "name": "KIRBY",
+        "kind": "incorporated"
+      },
+      {
+        "name": "LEON VALLEY",
+        "kind": "incorporated"
+      },
+      {
+        "name": "LIVE OAK",
+        "kind": "incorporated"
+      },
+      {
+        "name": "OLMOS PARK",
+        "kind": "incorporated"
+      },
+      {
+        "name": "SAINT HEDWIG",
+        "kind": "incorporated"
+      },
+      {
+        "name": "ST HEDWIG",
+        "kind": "spelling_variant",
+        "canonical_name": "SAINT HEDWIG"
+      },
+      {
+        "name": "ST. HEDWIG",
+        "kind": "spelling_variant",
+        "canonical_name": "SAINT HEDWIG"
+      },
+      {
+        "name": "SANDY OAKS",
+        "kind": "incorporated"
+      },
+      {
+        "name": "SCHERTZ",
+        "kind": "incorporated"
+      },
+      {
+        "name": "SELMA",
+        "kind": "incorporated"
+      },
+      {
+        "name": "SHAVANO PARK",
+        "kind": "incorporated"
+      },
+      {
+        "name": "SOMERSET",
+        "kind": "incorporated"
+      },
+      {
+        "name": "TERRELL HILLS",
+        "kind": "incorporated"
+      },
+      {
+        "name": "UNIVERSAL CITY",
+        "kind": "incorporated"
+      },
+      {
+        "name": "VON ORMY",
+        "kind": "incorporated"
+      },
+      {
+        "name": "WINDCREST",
+        "kind": "incorporated"
+      },
+      {
+        "name": "ADKINS",
+        "kind": "unincorporated_community"
+      },
+      {
+        "name": "LACKLAND",
+        "kind": "unincorporated_community"
+      },
+      {
+        "name": "MACDONA",
+        "kind": "unincorporated_community"
+      },
+      {
+        "name": "ATASCOSA",
+        "kind": "unincorporated_community"
+      }
+    ],
+    "cross_county_policy": {
+      "unknown_city_action": "flag_for_review",
+      "neighboring_county_municipalities": [
+        "BOERNE",
+        "BULVERDE",
+        "NEW BRAUNFELS",
+        "FLORESVILLE"
+      ]
+    },
     "parcel_id_format": "^[0-9]{5}-[0-9]{3}-[0-9]{4}$",
     "parcel_id_normalization": "strip-dashes",
-    "address_format_notes": "Bexar parcel IDs are most commonly published as a 5-3-4 digit dotted pattern at BCAD; the normalized form strips delimiters. Bexar covers 25 municipalities plus extensive unincorporated area; situs municipality is not always present in the parcel master and must be inferred from the GIS overlay."
+    "address_format_notes": "Bexar parcel IDs are most commonly published as a 5-3-4 digit dotted pattern at BCAD; the normalized form strips delimiters. Bexar covers 25 municipalities plus extensive unincorporated area; situs municipality is not always present in the parcel master and must be inferred from the GIS overlay.",
+    "sale_date_rule": {
+      "rule_name": "first_tuesday_of_month",
+      "holiday_shift": {
+        "shift_dates": [
+          "01-01",
+          "07-04"
+        ],
+        "shift_to": "next_wednesday"
+      },
+      "statute_reference": "Tex. Prop. Code Sec. 51.002"
+    }
   },
   "sources": {
     "clerk_recordings": {
@@ -323,7 +476,23 @@
       "subtype": "sheriff_sales",
       "access_pattern": "spa_with_api",
       "scraper_module": "scrapers/foreclosure_notices_map.py",
-      "refresh_cadence": "daily"
+      "refresh_cadence": "daily",
+      "translator": "foreclosure_notices",
+      "translator_config": {
+        "layer_doc_type_map": {
+          "0": {
+            "canonical": "NOTICE_OF_SUBSTITUTE_TRUSTEE_SALE",
+            "subtype_label": "Notice of Substitute Trustee's Sale",
+            "pattern": "foreclosure"
+          },
+          "1": {
+            "canonical": "TAX_FORECLOSURE_NOTICE",
+            "subtype_label": "Tax Foreclosure Notice",
+            "pattern": "tax"
+          }
+        }
+      },
+      "parcel_id_prefix": "BX-ADDR-"
     },
     "court_civil": {
       "url": "https://portal-txbexar.tylertech.cloud/Portal/",
@@ -806,7 +975,16 @@
       "subtype": "parcel_master",
       "access_pattern": "spa_with_api",
       "scraper_module": "scrapers/parcel_master.py",
-      "refresh_cadence": "monthly"
+      "refresh_cadence": "monthly",
+      "translator": "parcel_master",
+      "parcel_id_prefix": "BCAD-",
+      "field_map": {
+        "address": "situs_address",
+        "city": "situs_city",
+        "zip": "situs_zip",
+        "owner_mailing_address": "owner_mailing_addr1",
+        "property_use": "property_class"
+      }
     },
     "gis_parcels": {
       "url": "https://gis-bexar.opendata.arcgis.com/",
@@ -905,7 +1083,11 @@
     "long_term_owned_years": 15,
     "senior_owner_proxy_years": 25,
     "favorable_loan_era_start": "2020-01-01",
-    "favorable_loan_era_end": "2022-06-30"
+    "favorable_loan_era_end": "2022-06-30",
+    "in_state_zip_prefixes": [
+      "7"
+    ],
+    "in_state_code": "TX"
   },
   "storage": {
     "mode": "STATIC_JSON_MODE",
