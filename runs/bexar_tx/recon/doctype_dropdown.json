@@ -1,0 +1,536 @@
+{
+  "source": "01_advanced_search.html embedded JSON (window state docTypeMappings)",
+  "widget": "TokenizedNestedSelect",
+  "department": "RP",
+  "department_label": "Land Records",
+  "url_param": "docTypes",
+  "groups": [
+    {
+      "group_code": "WRM",
+      "group_label": "Water Rights/Maps",
+      "doc_types": [
+        {
+          "code": "WRM",
+          "label": "Water Rights/Maps"
+        }
+      ]
+    },
+    {
+      "group_code": "UCC RP",
+      "group_label": "UCC RP",
+      "doc_types": [
+        {
+          "code": "UCC",
+          "label": "UCC"
+        },
+        {
+          "code": "UCC1 RP",
+          "label": "UCC 1 REAL PROPERTY"
+        },
+        {
+          "code": "UCC3RP",
+          "label": "UCC 3 REAL PROPERTY"
+        },
+        {
+          "code": "VOID UCCRP",
+          "label": "VOID UCC RP"
+        }
+      ]
+    },
+    {
+      "group_code": "STATE LIEN",
+      "group_label": "STATE TAX LIENS",
+      "doc_types": [
+        {
+          "code": "PART RL STL",
+          "label": "PARTIAL RELEASE STL"
+        },
+        {
+          "code": "RL STL",
+          "label": "RELEASE OF STATE TAX LIEN"
+        },
+        {
+          "code": "STL",
+          "label": "STATE TAX LIEN"
+        },
+        {
+          "code": "VOID STL",
+          "label": "VOID STL"
+        }
+      ]
+    },
+    {
+      "group_code": "OPR",
+      "group_label": "OPR",
+      "doc_types": [
+        {
+          "code": "ACKNOW",
+          "label": "ACKNOWLEDGEMENT"
+        },
+        {
+          "code": "ADDENDM",
+          "label": "ADDENDUM"
+        },
+        {
+          "code": "AFFIDAV",
+          "label": "AFFIDAVIT"
+        },
+        {
+          "code": "AGREEMT",
+          "label": "AGREEMENT"
+        },
+        {
+          "code": "AMEND",
+          "label": "AMENDMENT"
+        },
+        {
+          "code": "APPLICA",
+          "label": "APPLICATION"
+        },
+        {
+          "code": "APPT",
+          "label": "APPOINTMENT"
+        },
+        {
+          "code": "ART INC",
+          "label": "ARTICLES OF INC"
+        },
+        {
+          "code": "ASIGN J",
+          "label": "ASSIGNMENT OF JUDGMENT"
+        },
+        {
+          "code": "ASSN",
+          "label": "ASSIGNMENT"
+        },
+        {
+          "code": "ASUMPTN",
+          "label": "ASSUMPTION"
+        },
+        {
+          "code": "BFA",
+          "label": "BIRTH FROM ABROAD"
+        },
+        {
+          "code": "BILLOFS",
+          "label": "BILL OF SALE"
+        },
+        {
+          "code": "BOND",
+          "label": "BOND"
+        },
+        {
+          "code": "BTI",
+          "label": "BOND TO INDEMNIFY"
+        },
+        {
+          "code": "CANC J",
+          "label": "CANCELLATION OF JUDGMENT"
+        },
+        {
+          "code": "CANCEL",
+          "label": "CANCELLATION"
+        },
+        {
+          "code": "CEMTRY",
+          "label": "CEMETERY"
+        },
+        {
+          "code": "CERT",
+          "label": "CERTIFICATE"
+        },
+        {
+          "code": "CERT CP",
+          "label": "CERTIFIED COPY"
+        },
+        {
+          "code": "CIQ",
+          "label": "CONFLICT OF INTEREST QUESTIONNAIRE"
+        },
+        {
+          "code": "CONDAMC",
+          "label": "CONDOMINIUM ASSOCIATION MANAGEMENT CERTIFICATE"
+        },
+        {
+          "code": "CONTRAC",
+          "label": "CONTRACT"
+        },
+        {
+          "code": "CORP",
+          "label": "CORPORATE"
+        },
+        {
+          "code": "CORRECT",
+          "label": "CORRECTION"
+        },
+        {
+          "code": "CSUP LN",
+          "label": "CHILD SUPPORT LN"
+        },
+        {
+          "code": "DA",
+          "label": "DEED AFFIDAVIT"
+        },
+        {
+          "code": "DECLAR",
+          "label": "DECLARATION"
+        },
+        {
+          "code": "DECREE",
+          "label": "DECREE"
+        },
+        {
+          "code": "DEED",
+          "label": "DEED"
+        },
+        {
+          "code": "DESGN",
+          "label": "DESIGNATION"
+        },
+        {
+          "code": "DISMISS",
+          "label": "DISMISSAL"
+        },
+        {
+          "code": "DT",
+          "label": "DEED OF TRUST"
+        },
+        {
+          "code": "EASEMNT",
+          "label": "EASEMENT"
+        },
+        {
+          "code": "EXT",
+          "label": "EXTENSION"
+        },
+        {
+          "code": "HMST AF",
+          "label": "HOMESTEAD AFFIDAVIT"
+        },
+        {
+          "code": "HOSP LN",
+          "label": "HOSPITAL LIEN"
+        },
+        {
+          "code": "JUDG",
+          "label": "JUDGMENT"
+        },
+        {
+          "code": "LEASE",
+          "label": "LEASE"
+        },
+        {
+          "code": "LETTERS",
+          "label": "LETTERS"
+        },
+        {
+          "code": "LEVY",
+          "label": "LEVY"
+        },
+        {
+          "code": "LIEN",
+          "label": "LIEN"
+        },
+        {
+          "code": "LIS PEN",
+          "label": "LIS PENDENS"
+        },
+        {
+          "code": "LNLD LN",
+          "label": "LANDLORD LIEN"
+        },
+        {
+          "code": "LOAN",
+          "label": "LOAN"
+        },
+        {
+          "code": "M MORTG",
+          "label": "MASTER MORTGAGE"
+        },
+        {
+          "code": "MARRIAGE OPR",
+          "label": "MARRIAGE LICENSE OPR"
+        },
+        {
+          "code": "MECHLN",
+          "label": "MECHANICS LIEN"
+        },
+        {
+          "code": "MEMO",
+          "label": "MEMORANDUM"
+        },
+        {
+          "code": "MISC",
+          "label": "MISCELLANEOUS"
+        },
+        {
+          "code": "MOD",
+          "label": "MODIFICATION"
+        },
+        {
+          "code": "MORTG",
+          "label": "MORTGAGE"
+        },
+        {
+          "code": "NOTE",
+          "label": "NOTE"
+        },
+        {
+          "code": "NOTICE",
+          "label": "NOTICE"
+        },
+        {
+          "code": "ORDER",
+          "label": "ORDER"
+        },
+        {
+          "code": "ORDIN",
+          "label": "ORDINANCE"
+        },
+        {
+          "code": "OWNCERT",
+          "label": "PROPERTY OWNERS ASSOCIATION MANAGEMENT CERT"
+        },
+        {
+          "code": "P AS J",
+          "label": "PARTIAL ASSIGNMENT OF JUDGMENT"
+        },
+        {
+          "code": "P RL J",
+          "label": "PARTIAL RELEASE OF JUDGMENT"
+        },
+        {
+          "code": "P TR J",
+          "label": "PARTIAL TRANSFER OF JUDGMENT"
+        },
+        {
+          "code": "PA",
+          "label": "POWER OF ATTORNEY"
+        },
+        {
+          "code": "PART RL",
+          "label": "PARTIAL RELEASE"
+        },
+        {
+          "code": "PLY",
+          "label": "POLYGRAPH LICENSE"
+        },
+        {
+          "code": "PROBATE",
+          "label": "PROBATE"
+        },
+        {
+          "code": "PWB",
+          "label": "PUBLIC WEIGHER BOND"
+        },
+        {
+          "code": "RECONV",
+          "label": "RECONVEYANCE"
+        },
+        {
+          "code": "REINST",
+          "label": "REINSTATEMENT"
+        },
+        {
+          "code": "REL H LN",
+          "label": "RELEASE OF HL"
+        },
+        {
+          "code": "RELEASE",
+          "label": "RELEASE"
+        },
+        {
+          "code": "REMOVAL",
+          "label": "REMOVAL"
+        },
+        {
+          "code": "RENEW",
+          "label": "RENEWAL"
+        },
+        {
+          "code": "REPLACE",
+          "label": "REPLACEMENT"
+        },
+        {
+          "code": "RESCISS",
+          "label": "RESCISSION"
+        },
+        {
+          "code": "RESIGN",
+          "label": "RESIGNATION"
+        },
+        {
+          "code": "RESOLUT",
+          "label": "RESOLUTION"
+        },
+        {
+          "code": "REST LN",
+          "label": "AFFIDAVIT RESTITUTION LIEN"
+        },
+        {
+          "code": "RESTRICT",
+          "label": "RESTRICTIONS"
+        },
+        {
+          "code": "REVOCTN",
+          "label": "REVOCATION"
+        },
+        {
+          "code": "RFSHEET",
+          "label": "REFERENCE SHEET"
+        },
+        {
+          "code": "RIC",
+          "label": "RETAIL INST CONTRACT"
+        },
+        {
+          "code": "RL H LN",
+          "label": "RL OF HOSP LN"
+        },
+        {
+          "code": "RL J",
+          "label": "RELEASE OF JUDGMENT"
+        },
+        {
+          "code": "RT WAY",
+          "label": "RIGHT OF WAY AGREEMENT"
+        },
+        {
+          "code": "SAT",
+          "label": "SATISFACTION"
+        },
+        {
+          "code": "SAT J",
+          "label": "SATISFACTION OF JUDGMENT"
+        },
+        {
+          "code": "STATEMT",
+          "label": "STATEMENT"
+        },
+        {
+          "code": "SUB",
+          "label": "SUBSTITUTION"
+        },
+        {
+          "code": "SUBORD",
+          "label": "SUBORDINATION"
+        },
+        {
+          "code": "TERMIN",
+          "label": "TERMINATION"
+        },
+        {
+          "code": "TRANS",
+          "label": "TRANSFER"
+        },
+        {
+          "code": "TRANS J",
+          "label": "TRANSFER OF JUDGMENT"
+        },
+        {
+          "code": "TRSCR J",
+          "label": "TRANSCRIPT OF JUDGMENT"
+        },
+        {
+          "code": "TRUST",
+          "label": "TRUST"
+        },
+        {
+          "code": "TX HMST",
+          "label": "TX HOMESTEAD"
+        },
+        {
+          "code": "VARIANC",
+          "label": "VARIANCE"
+        },
+        {
+          "code": "VOID OPR",
+          "label": "VOID OPR"
+        },
+        {
+          "code": "WAIVER",
+          "label": "WAIVER"
+        },
+        {
+          "code": "WATER P",
+          "label": "WATER RIGHTS/PERMIT"
+        },
+        {
+          "code": "WILL",
+          "label": "WILL & TESTAMENT"
+        },
+        {
+          "code": "WP MAPS",
+          "label": "WATER PERMIT MAPS"
+        },
+        {
+          "code": "ASSN SEC",
+          "label": "ASSIGNMENT SECURED"
+        },
+        {
+          "code": "PA SEC",
+          "label": "POWER OF ATTORNEY SECURED"
+        },
+        {
+          "code": "DT SEC",
+          "label": "DEED OF TRUST SECURED"
+        },
+        {
+          "code": "FC",
+          "label": "FORECLOSURE"
+        },
+        {
+          "code": "WP",
+          "label": "WATER PERMIT"
+        },
+        {
+          "code": "CP",
+          "label": "CONDOMINIUM PLAN"
+        },
+        {
+          "code": "NC",
+          "label": "NURSING CERTIFICATE"
+        },
+        {
+          "code": "DR",
+          "label": "DENTAL RECORDS"
+        },
+        {
+          "code": "SR",
+          "label": "State-Release"
+        },
+        {
+          "code": "SJ",
+          "label": "State-Judgment"
+        }
+      ]
+    },
+    {
+      "group_code": "FED LIEN",
+      "group_label": "FEDERAL TAX LIENS",
+      "doc_types": [
+        {
+          "code": "FTL",
+          "label": "FEDERAL TAX LIEN"
+        },
+        {
+          "code": "FTLCERT",
+          "label": "FEDERAL TAX LIEN CERTIFICATE"
+        },
+        {
+          "code": "PART RL FTL",
+          "label": "PARTIAL RELEASE FTL"
+        },
+        {
+          "code": "RL FTL",
+          "label": "RELEASE OF FTL"
+        },
+        {
+          "code": "VOID FTL",
+          "label": "VOID FTL"
+        }
+      ]
+    }
+  ],
+  "flat_count": 124
+}

@@ -1,0 +1,91 @@
+{
+  "probe_started": "2026-05-16T18:00:49Z",
+  "advanced_search_loads": true,
+  "login_required": false,
+  "doc_types": [],
+  "network_xhr": [
+    {
+      "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-R8DLNV5LWZ&gtm=45je65d0v9119857232z8898072479za20gzb898072479zd898072479&_p=1778954450676&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=EA&are=1&cid=193237470.1778954451&frm=0&ir=1&pscdl=noapi&rcb=4&sr=1440x1000&uaa=x86&uab=64&uafvl=HeadlessChrome%3B147.0.7727.15%7CNot.A%252FBrand%3B8.0.0.0%7CChromium%3B147.0.7727.15&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115616985~115938465~115938468~118128923~119034493&sid=1778954451&sct=1&seg=0&dl=https%3A%2F%2Fbexar.tx.publicsearch.us%2F&dt=Official%20Record%20Search%20-%20Quick%20Search%20-%20Bexar%20County%2C%20Texas%20County%20Clerk&en=page_view&_fv=1&_ss=1&tfd=953",
+      "method": "POST",
+      "status": 204,
+      "resource_type": "fetch",
+      "content_type": "text/plain"
+    },
+    {
+      "url": "https://sessions.bugsnag.com/",
+      "method": "POST",
+      "status": 202,
+      "resource_type": "xhr",
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://bexar.tx.publicsearch.us/vendor/custom.4a0ba46ee0b6b964b44b2909b64ccbd5._hs",
+      "method": "GET",
+      "status": 200,
+      "resource_type": "fetch",
+      "content_type": "text/hyperscript; charset=utf-8"
+    },
+    {
+      "url": "https://bexar.tx.publicsearch.us/vendor/custom.4a0ba46ee0b6b964b44b2909b64ccbd5._hs",
+      "method": "GET",
+      "status": 200,
+      "resource_type": "fetch",
+      "content_type": "text/hyperscript; charset=utf-8"
+    },
+    {
+      "url": "https://sessions.bugsnag.com/",
+      "method": "POST",
+      "status": 202,
+      "resource_type": "xhr",
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-R8DLNV5LWZ&gtm=45je65d0v9119857232z8898072479za20gzb898072479zd898072479&_p=1778954455936&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=EAAAAAQ&are=1&cid=193237470.1778954451&frm=0&ir=1&pscdl=noapi&rcb=13&sr=1440x1000&uaa=x86&uab=64&uafvl=HeadlessChrome%3B147.0.7727.15%7CNot.A%252FBrand%3B8.0.0.0%7CChromium%3B147.0.7727.15&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115938466~115938469&sid=1778954451&sct=1&seg=1&dl=https%3A%2F%2Fbexar.tx.publicsearch.us%2F%3FsearchType%3DadvancedSearch&dt=Official%20Record%20Search%20-%20Quick%20Search%20-%20Bexar%20County%2C%20Texas%20County%20Clerk&en=page_view&tfd=5292",
+      "method": "POST",
+      "status": 204,
+      "resource_type": "fetch",
+      "content_type": "text/plain"
+    },
+    {
+      "url": "https://bexar.tx.publicsearch.us/vendor/custom.4a0ba46ee0b6b964b44b2909b64ccbd5._hs",
+      "method": "GET",
+      "status": 200,
+      "resource_type": "fetch",
+      "content_type": "text/hyperscript; charset=utf-8"
+    },
+    {
+      "url": "https://sessions.bugsnag.com/",
+      "method": "POST",
+      "status": 202,
+      "resource_type": "xhr",
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-R8DLNV5LWZ&gtm=45je65d0v9119857232z8898072479za20gzb898072479zd898072479&_p=1778954463893&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=EAAAAAQ&are=1&cid=193237470.1778954451&frm=0&ir=1&pscdl=noapi&rcb=16&sr=1440x1000&uaa=x86&uab=64&uafvl=HeadlessChrome%3B147.0.7727.15%7CNot.A%252FBrand%3B8.0.0.0%7CChromium%3B147.0.7727.15&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115616986~115938466~115938469&sid=1778954451&sct=1&seg=1&dl=https%3A%2F%2Fbexar.tx.publicsearch.us%2Fresults%3Fdepartment%3DRP%26recordedDateRange%3D20260116%252C20260516%26limit%3D50%26searchType%3DadvancedSearch&dt=Loading%20Search%20Results...&en=page_view&tfd=5219",
+      "method": "POST",
+      "status": 204,
+      "resource_type": "fetch",
+      "content_type": "text/plain"
+    }
+  ],
+  "search": {
+    "results_url": "https://bexar.tx.publicsearch.us/results?department=RP&recordedDateRange=20260116%2C20260516&limit=50&searchType=advancedSearch",
+    "row_selector": "tbody tr",
+    "sample_rows": [
+      "ROMERO ALAN BENJAMIN\tPUBLIC\tNOTICE\t1/20/2026\t20260010221\t--/--/--\tSubdivision - Name: CENTERO AT STONE OAK CONDOMINIUMS Lot: 709\t709\tN/A\tN/A\tN/A\tN/A",
+      "ROMERO ALAN BENJAMIN\tCLM MORTGAGE INC\tDEED OF TRUST\t1/20/2026\t20260010220\t--/--/--\tSubdivision - Name: CENTERO AT STONE OAK CONDOMINIUMS Lot: 709\t709\tN/A\tN/A\tN/A\t20675 HUEBNER ROAD #709, SAN ANTONIO, TEXAS, 78258",
+      "FROST BANK\tMORELL ANTHONY HARMON JR\tRELEASE\t1/20/2026\t20260010210\t--/--/--\tSubdivision - Name: BRAUN STATION WEST #2 Lot: 14 Block: 1 Reference - 7800/133\t14\t1\t17879\tN/A\tN/A",
+      "SECRETARY OF VETERANS AFFAIRS\tNATIONSTAR MORTGAGE LLC\tDEED\t1/20/2026\t20260010235\t--/--/--\tSubdivision - Name: MIRAMAR #3 Lot: 18 Block: 9 Reference - 9560/71\t18\t9\tN/A\tN/A\t9427 ANDERSON WAY, CONVERSE, TEXAS, 78109",
+      "US BANK NATIONAL ASSOCIATION\tORTIZ MARIA\tMODIFICATION\t1/20/2026\t20260010226\t--/--/--\tSubdivision - Lot: 22,23 Block: 2261 Reference - 368/237\t22,23\t2261\t2261\tN/A\t314 N SABINAS, SAN ANTONIO, TEXAS, 78207"
+    ],
+    "row_count_visible": 50,
+    "detail_link_samples": []
+  },
+  "detail": {
+    "detail_url": null
+  },
+  "errors": [
+    "phaseC: no detail link found in results"
+  ],
+  "page_title": "Official Record Search - Quick Search - Bexar County, Texas County Clerk"
+}

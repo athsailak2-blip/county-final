@@ -114,3 +114,9 @@ knowledge surfaces. Each entry should be:
   - County-agnostic regression: FAIL (58 violations — 9 universal US state codes + 49 Bexar-side test-fixture references). Accepted as known framework-scanner gap. Pipeline code (`scaffold/pipeline/*.py`) is contamination-free; remaining violations are scanner false-positives on the `_VALID_US_STATE_CODES` frozenset and Bexar-specific test files. Backlog captured in `runs/bexar_tx/backlog/v5.1.2-beta-framework-patches.md` for v5.1.2-beta-final.
 
   One-time data shape transform applied to `data/raw/parcel_master.jsonl` (Step 5'' wrap script — 316 records preserved, bit-identical inside `raw_payload` envelope). Per-source `field_map` declared in `config/counties/bexar_tx.json` to bridge Bexar scraper field names (`situs_address`/`situs_city`/`situs_zip`/`owner_mailing_addr1`/`property_class`) to canonical r3 translator names. `scrapers/` directory untouched (out of playbook scope).
+
+---
+
+## 2026-05-15 — Bexar PublicSearch access classification
+
+Operator verified that bexar.tx.publicsearch.us does not require login or paid subscription to run searches, view result lists, open detail pages, read index metadata, or view document information needed for lead signal extraction. PDF download may require payment, login, or a separate download flow, but Phase 5 does not depend on PDF downloads.
