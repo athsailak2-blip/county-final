@@ -1217,6 +1217,60 @@ The contract does NOT have a separate test that scans scraper output shape on di
 
 ---
 
+## 4.33. Lead origination contract (v5.2.0+)
+
+**Authoritative source: `knowledge_base/architecture/13_lead_origination_contract.md`.** This section is the hard-constraint summary every build session must obey. The architecture doc is the full contract — read it before any build that ingests a new source.
+
+§4.33 is a CONSOLIDATED CONTRACT. It is the authoritative statement of the lead origination principle, consolidating rules previously scattered across §4.10, §4.13, §4.14, §4.16, §4.17, and §4.21. Those sections are NOT deleted — they remain valid as detailed implementation references. Where this section and an earlier §4.x section appear to differ on the principle, §4.33 and the architecture contract govern.
+
+### The product
+
+The framework is a clerk-driven county lead intelligence harness — not a parcel dashboard, not an assessor dashboard, not a GIS dashboard, not a tax-roll viewer. Every lead originates from a primary recorded distress EVENT. Enrichment decorates leads; it never creates them. If primary sources are blocked, the system stops or ships a clearly labeled partial board — it never fills the dashboard with parcel records to look alive.
+
+### HARD RULE 13.4.1 — enrichment alone cannot create a lead row
+
+Every dashboard row, every CSV export row, and every operator-facing lead artifact MUST be born from at least one verified primary lead event. A row with only enrichment data and no primary lead event is FORBIDDEN as an active lead. A parcel record, assessor record, GIS polygon, tax-roll record (without delinquency), MOD IV / state parcel record, LLC-ownership detection, vacancy detection, or out-of-state-owner detection — alone — is NOT a lead.
+
+### HARD RULE 13.5.1 — row provenance
+
+Every Matched lead row (`09_output_schemas.md` record type 4) MUST contain at least one signal from a primary lead source, carrying source provenance — `source_id`, `source_url`, event date, raw document reference — sufficient for an operator to verify the event independently. If a row's signals contain zero primary-source signals, the row is INVALID and MUST NOT appear in any active lead output.
+
+### Primary lead sources (lead-originating) — one-line summary
+
+An EVENT recorded by an official authority (clerk, recorder, court, sheriff) signaling distress, transfer, encumbrance, or change of legal status on real property: clerk/recorder records, court events, foreclosure filings, sheriff sales, lis pendens, tax liens, tax delinquency, tax sale certificates, recorded judgments, probate and estate records, affidavits of heirship, executor/administrator deeds, construction/mechanic's liens, hospital liens, child support liens, code liens/violations, demolition, condemnation, distress-related recorded notices, and property-tied bankruptcy/divorce/eviction filings. Full list: contract §13.2.
+
+### Enrichment sources (lead-decorating only) — one-line summary
+
+STATE data about a property or owner — what it IS, not what HAPPENED: parcel data, GIS, assessor data, non-delinquent tax-roll data, MOD IV / state parcel records, ownership data, valuation, absentee/estate-owner/deceased-owner indicators, vacancy indicators, property attributes, equity proxies, skip-trace data. Enrichment attaches to and filters leads; it NEVER originates one. Full list: contract §13.3.
+
+### Build-status outcomes (5)
+
+Every build attempt is classified BEFORE building (Build Eligibility Gate, §4.10):
+
+- **`READY_TO_BUILD`** — primary sources verified; full active lead board buildable.
+- **`PARTIAL_LEAD_BOARD`** — some primary sources working; partial board buildable, partial-status banner required.
+- **`WAITING_ON_PRIMARY_SOURCE`** — primary sources pending auto-resolve or operator action; do not build yet.
+- **`RECON_ONLY`** — only recon / enrichment discovery is possible right now; NOT a lead board.
+- **`NOT_BUILDABLE_YET`** — no primary lead path available; no board.
+
+(§4.10 defines a closely-related `build_verdict` value set; vocabulary reconciliation is tracked in contract §13.12.)
+
+### FORBIDDEN patterns (contract §13.7)
+
+1. **HARD RULE** — Showing parcel, assessor, MOD IV, tax-roll, or any other enrichment as standalone lead rows.
+2. **HARD RULE** — Treating nominal transfer data (routine sales, family transfers, refinance recordings) as distress events.
+3. **HARD RULE** — Filling a dashboard with enrichment rows when the primary source is blocked.
+4. **HARD RULE** — Calling an enrichment-only output a "lead board" or "lead dashboard".
+5. **HARD RULE** — Producing dashboard output without a build-eligibility classification.
+6. **HARD RULE** — Showing internal source codes (`jfc`, `tax`, `lien`, `transfer`, etc.) in operator-facing or client-facing UI instead of operator-readable lead names.
+7. **HARD RULE** — Visually elevating enrichment to look equivalent to lead events (lead types are chips; enrichment attributes are smaller badges/icons).
+
+### Related sections (consolidated by this contract)
+
+§4.10 Build Eligibility Gate · §4.13 Operator-readable lead names · §4.14 Phase 0.5 Auto-Resolve Blockers · §4.16 Partial Build Contract · §4.17 Evidence-First Dashboard Row Contract · §4.21 Production self-verification + watchdog + rollback. See `13_lead_origination_contract.md` §13.10 for the full section-by-section mapping.
+
+---
+
 ## 5. Two-Truths invariant
 
 The dashboard's filter counts and the rendered table must come from the same `matches()` function. Header counts in `leads.json` (`pattern_counts`, `attribute_counts`, etc.) must equal counts re-derived from `records[]`. The pipeline writes both; the build script asserts equality before saving and exits non-zero on drift.
