@@ -38,6 +38,11 @@ LEADS_PATH = REPO_ROOT / "data" / "leads_synthetic.json"
 
 
 def _run_pipeline() -> int:
+    # No --county-config is passed: build_leads.py auto-discovers the active
+    # county config from config/counties/ (its single non-underscore *.json
+    # match). This verifier therefore expects exactly one county config to be
+    # present; zero or multiple configs make build_leads.py fail loud and the
+    # pipeline run below returns non-zero.
     completed = subprocess.run(
         [sys.executable, str(PIPELINE), "--synthetic"],
         cwd=str(REPO_ROOT),

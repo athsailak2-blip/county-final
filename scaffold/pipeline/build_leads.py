@@ -9,7 +9,7 @@ Usage:
 
     # Production mode (Phase 2+). Reads data/raw/<source>.jsonl and
     # writes data/leads.json.
-    python3 scaffold/pipeline/build_leads.py --county-config config/counties/bexar_tx.json
+    python3 scaffold/pipeline/build_leads.py --county-config config/counties/<county_slug>.json
 
 The orchestrator wires together the modular pipeline:
 
@@ -84,6 +84,37 @@ from scaffold.pipeline.matcher import (  # noqa: E402
 from scaffold.pipeline.owner_name_patterns import (  # noqa: E402
     emit_owner_name_signals_for_parcels,
 )
+
+
+def _auto_discover_county_config() -> str:
+    """Resolve the active county config when --county-config is not supplied.
+
+    Auto-discovery is for single-county working directories (the standard
+    distribution pattern). Multi-county repos must pass --county-config
+    explicitly per §02 Build Mode Protocol.
+
+    Scans config/counties/ for *.json files, ignoring underscore-prefixed
+    files (e.g. _template.json, _schema.json). Exactly one match is
+    returned as a repo-relative path; zero or multiple matches fail loud,
+    demanding an explicit --county-config.
+    """
+    counties_dir = REPO_ROOT / "config" / "counties"
+    matches = sorted(
+        p for p in counties_dir.glob("*.json")
+        if not p.name.startswith("_")
+    )
+    if len(matches) == 1:
+        return str(matches[0].relative_to(REPO_ROOT))
+    if not matches:
+        raise SystemExit(
+            "no county config found in config/counties/ — "
+            "pass --county-config explicitly"
+        )
+    names = sorted(p.name for p in matches)
+    raise SystemExit(
+        f"multiple county configs found in config/counties/: {names} — "
+        "pass --county-config explicitly to disambiguate"
+    )
 
 
 def _adapt_translator_signal(sig: dict, source_id: str) -> dict:
@@ -721,8 +752,10 @@ def main() -> int:
     parser.add_argument("--synthetic", action="store_true",
                         help="Run against scaffold/data/synthetic_*.jsonl fixtures.")
     parser.add_argument("--county-config",
-                        default="config/counties/bexar_tx.json",
-                        help="Path to populated county config (used for county_id/name/state).")
+                        default=None,
+                        help="Path to populated county config (used for county_id/name/state). "
+                             "When omitted, auto-discovered from config/counties/ "
+                             "(single non-underscore *.json match).")
     parser.add_argument("--out",
                         help="Output path. Defaults to data/leads_synthetic.json (synthetic) "
                              "or data/leads.json (production).")
@@ -730,6 +763,9 @@ def main() -> int:
                         help="ISO date (YYYY-MM-DD) used for TTL / recency calculations. "
                              "Defaults to 2026-05-14 in synthetic mode, today's date in production.")
     args = parser.parse_args()
+
+    if args.county_config is None:
+        args.county_config = _auto_discover_county_config()
 
     config_path = REPO_ROOT / args.county_config
     if not config_path.exists():
