@@ -1271,6 +1271,44 @@ Every build attempt is classified BEFORE building (Build Eligibility Gate, §4.1
 
 ---
 
+## 4.34. Build Mode Protocol (v5.3.0+)
+
+**Authoritative source: `knowledge_base/protocols/02_build_mode_protocol.md`.** Build Mode connects recon outputs (the §16 Source of Record Matrix and the §01 County Recon Protocol) to a deployed lead dashboard.
+
+### Build Mode entry preconditions
+
+Build Mode does not begin unless all hold: the §16 Source of Record Matrix validates against schema; all required SoR-matrix artifacts are present (matrix JSON, coverage map, API discovery report, build eligibility report, fingerprints); `county_build_status` is `READY_TO_BUILD` or `PARTIAL_BUILD_READY`; at least one `lead_type` has status `LIVE_SOURCE_FOUND`; and the §01 recon requirements are complete (PDF/sample inspection, documented API discovery, bulk-availability classification). A `county_build_status` of `RECON_ONLY`, `WAITING_ON_ACCESS`, or `NOT_BUILDABLE_YET` stops the build.
+
+### Build mode classifications
+
+- **`FULL_BUILD`** — `READY_TO_BUILD`, all primary event sources `LIVE_SOURCE_FOUND`; build all sources concurrently.
+- **`PARTIAL_BUILD`** — `PARTIAL_BUILD_READY`, ≥1 primary source live, others blocked; build the live sources, document the blocked ones, surface for the operator.
+- **`DEFERRED_BUILD`** — eligible but operator-flagged for a delayed build; Build Mode is entered, no work begins, the county is queued.
+
+### Pipeline contract (universal)
+
+Translators emit to `<source>_leads_base.json` — the stable per-source output — and never modify another source's base file. The aggregator reads ONLY from `*_leads_base.json` and NEVER from its own output (§19). The dashboard build reads only the aggregator's `matched_leads.json`. Every stage is idempotent — the same inputs produce the same outputs.
+
+### Translator obligations
+
+Apply the §17 debtor party rules, filer suppression, and `owner_type` classification; apply the §18 signal aggregation key and anti-collapse rule; decouple `parcel_resolution_status` from `enrichment_status` per §13.14 — never drop a lead because enrichment failed.
+
+### Aggregator obligations
+
+Apply the §18 cross-source aggregation; run the §19 idempotency self-check (run twice, compare byte-for-byte, refuse to deploy on mismatch); never read from its own output.
+
+### Deploy gate sequencing
+
+1. **Mechanical verification** — schema valid, lead count > 0, dashboard renders, no console errors.
+2. **Semantic verification** per §20 — the twelve check classes, three-state outcomes.
+3. **Deploy** — only on `DEPLOY_OK`; operator approval required on `NEEDS_OPERATOR_REVIEW`; halt on `DEPLOY_BLOCKED`.
+
+A halt condition triggers a work-in-progress commit, a `halt_log.md`, and operator surfacing; the build does not auto-resume.
+
+This protocol absorbs the concepts of the v5.2.0 Build Eligibility Gate (parked in `stash@{0}`) without applying the stash. The stash itself remains parked as historical reference and is not applied.
+
+---
+
 ## 4.35. Source of Record Engine (v5.3.0+)
 
 Recon MUST produce a complete Source of Record Matrix before Build Mode can begin. The matrix is the authoritative output of recon.
@@ -1292,8 +1330,6 @@ Required sub-steps within Phase 0 recon (per `knowledge_base/protocols/01_county
 - Lead Type Sweep — the 27 canonical lead types per §16.
 
 Recon completeness gate: a county recon that does not produce a complete Source of Record Matrix CANNOT proceed to Build Mode.
-
-(Section number note: §4.34 is reserved for the Build Eligibility Gate enforcement contract — to be authored in Session A4 (Build Mode Protocol). The v5.2.0 Patch 2 Build Eligibility Gate work is parked in `stash@{0}` and is never applied directly; A4 re-derives it. §4.35 is the Source of Record Engine.)
 
 ---
 
