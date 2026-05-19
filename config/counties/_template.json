@@ -391,5 +391,9 @@
   "build_verdict_at": "",
   "auto_resolve_status": "",
   "final_resolution_status": "",
-  "operator_override_audit": []
+  "operator_override_audit": [],
+  "source_of_record_matrix": null,
+  "source_coverage_map": null,
+  "api_discovery": null,
+  "enrichment_index_strategy": null
 }

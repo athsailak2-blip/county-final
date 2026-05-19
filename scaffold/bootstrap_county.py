@@ -179,9 +179,9 @@ Record every result in the source's proof packet (the 18 v5.0.0 fields). The
 schema enforces population. A source block missing required proof packet fields
 fails Phase 0 validation.
 
-## Product rule — clerk-driven lead intelligence
+## Product rule — official event source-driven lead intelligence
 
-This framework is a CLERK-DRIVEN lead intelligence system.
+This framework is an OFFICIAL EVENT SOURCE-DRIVEN lead intelligence system.
 
 LEADS come from EVENT-BASED / DISTRESS-BASED sources (Tier 1):
 
@@ -205,10 +205,14 @@ ENRICHMENT ONLY (Tier 3, NEVER treated as leads):
 - Owner mailing data, tax roll data, bulk property records
 - Valuation, beds, baths, year built, equity estimate, absentee, vacancy
 
-If clerk or recorder access is BLOCKED in {county}, mark it blocked, record the
-blocker and next_access_strategy in the source proof packet, and stop after the
-Build Eligibility Gate. Do NOT compensate by filling the dashboard with
-enrichment data. A parcel viewer is not a lead intelligence build.
+If no verified primary event source is accessible in {county} (clerk, recorder,
+court portal, district clerk, sheriff, tax office, tax collector, trustee sale
+portal, foreclosure listing portal, tax lien foreclosure listing, auction
+vendor, official vendor portal, or posted notices page), mark it blocked, record
+the blocker and next_access_strategy in the source proof packet, and stop after
+the Build Eligibility Gate. Clerk and recorder are the most common primary
+sources but not the only valid ones. Do NOT compensate by filling the dashboard
+with enrichment data. A parcel viewer is not a lead intelligence build.
 
 ## Phase 0.5 — Auto-Resolve Blockers (MASTER_PROMPT Section 4.14 — v5.1.0-beta+)
 
@@ -344,7 +348,7 @@ or PARTIALLY_RESOLVED_BUILDABLE AND the operator explicitly approves.
 
 Phase 0 stops (with a clean verdict, not a failure) if any of these fire:
 
-1. No clerk or recorder source found
+1. No verified primary event source found
 2. No primary lead source verified
 3. Only enrichment sources found
 4. All P0 sources are blocked

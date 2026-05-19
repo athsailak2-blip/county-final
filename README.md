@@ -72,7 +72,7 @@ Every county built on this framework inherits:
 **Infrastructure:**
 - GitHub private repo + GitHub Pages dashboard hosting (revocable client access)
 - Optional Supabase database storage for production scale
-- Live-browser verification with auto-rollback (broken dashboards never reach clients)
+- Live-browser verification and auto-rollback: contract defined in v5.3.0 (§20 Semantic Verification Contract). Production implementation deferred to a future harness release. v5.3.0 ships the contract surface and a documentation-grade reference implementation template (scaffold/ops/semantic_verify_template.py); production verifier and watchdog infrastructure are per-county responsibility until universal production tooling lands.
 - Synthetic test harness before real county data enters the system
 
 ## Who this is for
@@ -161,7 +161,7 @@ The framework's build sequence, phase by phase:
 5. **Build one thin vertical slice** — Phase 1 synthetic harness → Phase 2 first adapter (usually parcel master enrichment) → Phase 3 first lead source. Prove one source end-to-end before scaling.
 6. **Run tests** — `python scaffold/tests/run_all.py` must exit 0 (golden path + county-agnostic regression). Adapter fixture tests must pass per `engineering/05_verification_and_rollback.md`.
 7. **Build remaining sources** — Phase 4 property matcher + review queue. Add additional adapters in `build_priority` order.
-8. **Deploy dashboard** — Phase 5 dashboard customization → Phase 6 live verification gate (Playwright against GitHub Pages) → Phase 7 refresh harness + alerts → Phase 8 `BUILD_SUMMARY.md`.
+8. **Deploy dashboard** — Phase 5 dashboard customization → Phase 6 verification gate (mechanical verification + the §20 semantic verification contract; the production live-browser verifier is deferred to a future harness release) → Phase 7 refresh harness + alerts → Phase 8 `BUILD_SUMMARY.md`.
 
 ## How to run the gate tests
 

@@ -9,6 +9,13 @@ reusable, county-agnostic execution procedures — distinct from `architecture/`
 (which define contracts and schemas) and `domain/` docs (which define investor-side
 knowledge).
 
+**v5.3.0 amendment.** Every county recon MUST produce a complete **Source-of-Record
+Matrix** as its required output artifact — see `knowledge_base/architecture/16_source_of_
+record_matrix.md` and the v5.3.0 amendment block in §01.20–§01.26 of this protocol. The
+amendment adds the lead type sweep and three mandatory Phase 0 sub-steps (PDF/sample
+inspection, documented API discovery, bulk-data availability classification) that apply
+WITHIN Phases 0.A–0.H, before any source is classified deferred or limited-coverage.
+
 ---
 
 ## 01.0 Status and scope
@@ -552,3 +559,133 @@ Then:
 
 Protocol complete. The recon artifacts are operator-reviewable. The Build Eligibility
 Gate verdict in `recon_summary.md` determines the next phase or the stop.
+
+---
+
+## 01.20 v5.3.0 amendment — Source of Record Matrix recon requirements
+
+v5.3.0 extends this protocol. The requirements in §01.20–§01.26 are mandatory Phase 0
+recon requirements; they apply WITHIN Phases 0.A–0.H, before any source is classified
+deferred, limited-coverage, or not-buildable. They do not replace §01.0–§01.19 — they
+extend it.
+
+The required output artifact of every county recon is the **Source-of-Record Matrix**,
+defined by `knowledge_base/architecture/16_source_of_record_matrix.md` and schema-checked
+against the `sourceOfRecordMatrix` definition in `config/counties/_schema.json`. The
+matrix and its companion artifacts are written under `runs/<county_slug>/recon/`:
+`source_of_record_matrix.json`, `source_of_record_matrix.md`, `source_coverage_map.md`,
+`api_discovery_report.md`, `operator_verified_sources.yml`,
+`fingerprints/<source_id>.fingerprint.json`, and `build_eligibility_report.md`. A recon
+that does not produce a complete matrix cannot proceed to Build Mode.
+
+## 01.21 Lead Type Sweep requirement
+
+Every county recon MUST walk the full canonical lead type sweep — the 27 lead types
+enumerated in `§16.B` (Foreclosure, Trustee Sale, Notice of Trustee Sale, Notice of
+Substitute Trustee Sale, Sheriff Sale, Tax Lien Foreclosure, Tax Sale, Tax Sale
+Certificate, Tax Delinquency, Lis Pendens, Civil Judgment, Abstract of Judgment,
+Mechanic Lien, Construction Lien, Federal Tax Lien, State Tax Lien, Probate, Affidavit
+of Heirship, Executor Deed, Administrator Deed, Code Lien, Demolition, Condemnation,
+Eviction, Divorce, Bankruptcy, Surplus).
+
+For each lead type, recon MUST answer: where is the official source of record? what is
+its URL? what is its access pattern? is it buildable? A recon that does not produce a
+complete sweep — an entry per lead type — is incomplete and cannot proceed to Build
+Mode.
+
+## 01.22 Required Step — PDF/Sample Document Inspection (Gap 1)
+
+Before classifying any source as deferred or limited-coverage based on the listing/index
+page alone, recon MUST fetch and inspect at least 3 sample source documents (PDF,
+scanned image, downloaded XML, or whatever the underlying record format is).
+
+The inspection must answer:
+
+- What fields does the actual source document carry that the listing/index page does
+  not expose?
+- Does the document carry: property address (situs), debtor/owner name, parcel
+  identifier, sale/event date, document reference number, legal description?
+- Is the document text-extractable or scanned-image (OCR required)?
+- Does the layout vary across documents (multiple templates)?
+
+Classifying a source as deferred without sample-document inspection is a recon defect.
+The recon report must explicitly answer: "Sample documents inspected: Y/N. If N, evidence
+of why inspection was not possible (access blocked, document images locked, etc.)."
+
+Rationale: A source's listing/index page may expose only minimal metadata, while the
+underlying document carries the address, debtor, and event date directly. Deferring such
+a source based on listing-page inspection alone is a false negative — buildable sources
+get misclassified as not-buildable.
+
+## 01.23 Required Step — Documented API Discovery (Gap 2)
+
+For every candidate source, recon MUST explicitly search for documented APIs before
+settling on HTML scraping. Required search locations:
+
+- `<domain>/api`
+- `<domain>/api/swagger`
+- `<domain>/swagger`
+- `<domain>/docs`
+- `<domain>/api-docs`
+- Postman public collections (search vendor name + "postman")
+- GitHub (search "<county_name> api" / "<vendor_name> api")
+- Vendor documentation (if the portal is vendor-built)
+
+The recon report must explicitly answer: "Documented API found: Y/N. If N, list of
+search paths checked."
+
+If a documented API is found, prefer it over HTML scraping. Document the API in
+`runs/<county_slug>/recon/api_discovery_report.md` and link it from the
+Source-of-Record Matrix.
+
+Rationale: Documented APIs are more stable, faster, and exempt from anti-bot/WAF
+protections that block HTML scrapers. Stopping recon at HTML/WAF classification when a
+documented API exists is a false-negative recon outcome.
+
+## 01.24 Required Step — Bulk-Data Availability Classification (Gap 3)
+
+For every candidate source, recon MUST classify its bulk-data availability as one of:
+
+- `FULL_COUNTY_BULK`
+- `BATCH_QUERY`
+- `PER_RECORD_ONLY`
+- `UNKNOWN`
+
+Per-record-only sources are buildable, but their coverage is bounded by the
+externally-resolved parcel set. Recon must surface this constraint and document the
+coverage implication.
+
+The recon report must explicitly answer for each source: "Bulk availability: <class>.
+Coverage implication: <description>."
+
+Rationale: A per-record-only source cannot enumerate the universe of distressed
+properties — it can only be queried for known parcel identifiers. Discovering this
+constraint during build instead of recon causes scope re-estimation mid-build and
+undermines build_verdict accuracy.
+
+## 01.25 Operator-Verified Sources
+
+When the operator manually surfaces a direct source link that recon missed, the link
+must be captured in `runs/<county_slug>/recon/operator_verified_sources.yml` with:
+
+- `lead_type`
+- `discovered_by` (operator)
+- `official_url`
+- `official_origin_evidence` (how the operator confirmed the source is official)
+- `reason_added` (why recon missed it)
+- `review_status` (`accepted` | `rejected` | `pending`)
+- `notes`
+
+This is a recon supplement, not an override. Subsequent recon runs should still attempt
+to discover the source independently; the operator-verified entry is provenance, not
+exemption.
+
+## 01.26 Halt condition (v5.3.0)
+
+Recon halts when no verified primary event source is found across the complete lead type
+sweep. Clerk and recorder are the most common primary event sources but not the only
+valid ones — court portals, district clerks, sheriffs, tax offices, tax collectors,
+trustee-sale portals, foreclosure-listing portals, auction vendors, official vendor
+portals, and posted-notices pages are all valid primary event sources. Recon does not
+halt merely because clerk or recorder access is blocked, provided another verified
+primary event source exists for at least one lead type.

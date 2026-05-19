@@ -83,10 +83,38 @@ PHRASE_BLOCKLIST = [
 
 STATE_CODES = ["NJ", "TX", "CA", "AZ", "FL", "NY", "OH", "GA", "PA"]
 
+# v5.3.0 fix — directories whose contents are never framework files:
+# virtualenvs, vendored third-party packages, build artifacts, VCS
+# internals, and tool caches. The scanner walked .venv/ and flagged
+# strings inside packages like cryptography and pip as "county-specific
+# leaks" (174 false-positive hits at baseline), making the suite
+# unusable as a real gate. A path is exempt if ANY of its components
+# is one of these names. Resolves v5.1.2-beta-final-additions.md item G.
+EXCLUDED_DIR_COMPONENTS = {
+    ".venv",
+    "venv",
+    "site-packages",
+    "node_modules",
+    ".git",
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    "dist",
+    "build",
+    ".tox",
+    ".eggs",
+}
+
 
 def is_exempt_path(rel_path):
     """v5.1.2-beta exemption rules per MASTER_PROMPT §4.31."""
     rel_str = str(rel_path).replace("\\", "/")
+
+    # v5.3.0: virtualenvs, vendored dependencies, build artifacts, VCS
+    # internals, and tool caches are never universal framework files —
+    # exempt any path with such a component, never scan their contents.
+    if any(part in EXCLUDED_DIR_COMPONENTS for part in rel_str.split("/")):
+        return True
 
     # County-specific configs ARE exempt; universal templates NOT.
     if rel_str.startswith("config/counties/"):
@@ -115,8 +143,13 @@ def is_exempt_path(rel_path):
     if rel_str.startswith("dashboard/"):
         return True
 
-    # Test fixtures (intentionally county-shaped for tests) — exempt
-    if rel_str.startswith("scaffold/tests/fixtures/"):
+    # Test files and fixtures are intentionally county-shaped — exempt.
+    # v5.3.0: broadened from scaffold/tests/fixtures/ to all of
+    # scaffold/tests/. Test .py files (test_matcher.py,
+    # test_owner_name_*.py, etc.) legitimately carry concrete
+    # county-shaped data (parcel IDs, addresses, state codes) as test
+    # input; they are not universal pipeline code.
+    if rel_str.startswith("scaffold/tests/"):
         return True
 
     # Framework synthetic data — exempt
@@ -131,6 +164,13 @@ def is_exempt_path(rel_path):
     # a registry key. The string is a rule identifier, not a
     # state-specific assertion. Exempt this single file.
     if rel_str == "scaffold/pipeline/sale_date_rules.py":
+        return True
+
+    # v5.3.0: matcher.py carries an all-US-states code set
+    # (a 50-state validation frozenset). Every state code is present
+    # by design — this is universal validation data, not a
+    # county-specific assertion. Exempt this single file.
+    if rel_str == "scaffold/pipeline/matcher.py":
         return True
 
     # MASTER_PROMPT.md §4.31 documents the contract by citing

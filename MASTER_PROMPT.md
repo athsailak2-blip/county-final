@@ -119,7 +119,7 @@ This is the ONLY script Claude Code may run autonomously on first contact. The b
 
 When Claude Code requests permission to run the bootstrap, the operator approves once. After approval, the script runs to completion in seconds.
 
-**Step 4 — Read the launch file.** After bootstrap completes, Claude Code reads `runs/<county_slug>/LAUNCH_<COUNTY_SLUG>.md`. That launch file scopes the run to Phase 0 only and embeds the clerk-driven product rule. It also reads `runs/<county_slug>/operator_notes.md` (created empty by the bootstrap; see Section 4.30) so any prior operator-volunteered knowledge is in context.
+**Step 4 — Read the launch file.** After bootstrap completes, Claude Code reads `runs/<county_slug>/LAUNCH_<COUNTY_SLUG>.md`. That launch file scopes the run to Phase 0 only and embeds the official event source-driven product rule. It also reads `runs/<county_slug>/operator_notes.md` (created empty by the bootstrap; see Section 4.30) so any prior operator-volunteered knowledge is in context.
 
 **Step 5 — Proceed to Phase 0.** Claude Code prints `PHASE 0 STARTING` (Section 4.29) and begins Phase 0 Step 1 (Inspect) per Section 6 of this prompt. Phase 0 runs autonomously through its four steps with labeled phase boundaries and produces source proof packets per Section 4.7 (Verification Gate).
 
@@ -379,7 +379,7 @@ Claude Code stops at the Build Eligibility Gate, prints the VIP-friendly verdict
 
 The system stops after Phase 0 if **any** of these are true. Stopping is a diagnostic result, not a failure.
 
-1. No clerk or recorder source found.
+1. No verified primary event source found.
 2. No primary lead source verified.
 3. Only enrichment sources found.
 4. All P0 sources are blocked.
@@ -615,7 +615,7 @@ A partial-build dashboard must surface:
 - Which enrichment layers are attached
 - What the dashboard does NOT include
 
-Partial builds **cannot** fill the dashboard with enrichment records as leads. The clerk-driven product rule (Section 4) holds regardless of build label.
+Partial builds **cannot** fill the dashboard with enrichment records as leads. The official event source-driven product rule (Section 4) holds regardless of build label.
 
 ---
 
@@ -1096,7 +1096,7 @@ The synthetic harness is framework-canonical. Synthetic fixtures (`synthetic_sig
 
 **Locked rule 4.31.8 — Defensive guard on owner-name signal emission.**
 
-The owner-name pattern emitter (`scaffold/pipeline/owner_name_patterns.py`) MUST NOT emit signals for parcels that aren't already linked to a lead-generating signal in the current run. Standalone parcels — enrichment-only records — cannot produce lead rows. This rule is enforced by the emitter itself: callers pass the set of parcel IDs that already carry a lead-generating signal; the emitter refuses to emit for parcels outside that set. The clerk-driven product rule is thus enforced at three layers: orchestrator dispatch, signal emission, and dashboard projection (Two-Truths invariant in `dashboard.py`).
+The owner-name pattern emitter (`scaffold/pipeline/owner_name_patterns.py`) MUST NOT emit signals for parcels that aren't already linked to a lead-generating signal in the current run. Standalone parcels — enrichment-only records — cannot produce lead rows. This rule is enforced by the emitter itself: callers pass the set of parcel IDs that already carry a lead-generating signal; the emitter refuses to emit for parcels outside that set. The official event source-driven product rule is thus enforced at three layers: orchestrator dispatch, signal emission, and dashboard projection (Two-Truths invariant in `dashboard.py`).
 
 **Locked rule 4.31.9 — Translator registry is the only source-dispatch path.**
 
@@ -1268,6 +1268,148 @@ Every build attempt is classified BEFORE building (Build Eligibility Gate, §4.1
 ### Related sections (consolidated by this contract)
 
 §4.10 Build Eligibility Gate · §4.13 Operator-readable lead names · §4.14 Phase 0.5 Auto-Resolve Blockers · §4.16 Partial Build Contract · §4.17 Evidence-First Dashboard Row Contract · §4.21 Production self-verification + watchdog + rollback. See `13_lead_origination_contract.md` §13.10 for the full section-by-section mapping.
+
+---
+
+## 4.34. Build Mode Protocol (v5.3.0+)
+
+**Authoritative source: `knowledge_base/protocols/02_build_mode_protocol.md`.** Build Mode connects recon outputs (the §16 Source of Record Matrix and the §01 County Recon Protocol) to a deployed lead dashboard.
+
+### Build Mode entry preconditions
+
+Build Mode does not begin unless all hold: the §16 Source of Record Matrix validates against schema; all required SoR-matrix artifacts are present (matrix JSON, coverage map, API discovery report, build eligibility report, fingerprints); `county_build_status` is `READY_TO_BUILD` or `PARTIAL_BUILD_READY`; at least one `lead_type` has status `LIVE_SOURCE_FOUND`; and the §01 recon requirements are complete (PDF/sample inspection, documented API discovery, bulk-availability classification). A `county_build_status` of `RECON_ONLY`, `WAITING_ON_ACCESS`, or `NOT_BUILDABLE_YET` stops the build.
+
+### Build mode classifications
+
+- **`FULL_BUILD`** — `READY_TO_BUILD`, all primary event sources `LIVE_SOURCE_FOUND`; build all sources concurrently.
+- **`PARTIAL_BUILD`** — `PARTIAL_BUILD_READY`, ≥1 primary source live, others blocked; build the live sources, document the blocked ones, surface for the operator.
+- **`DEFERRED_BUILD`** — eligible but operator-flagged for a delayed build; Build Mode is entered, no work begins, the county is queued.
+
+### Pipeline contract (universal)
+
+Translators emit to `<source>_leads_base.json` — the stable per-source output — and never modify another source's base file. The aggregator reads ONLY from `*_leads_base.json` and NEVER from its own output (§19). The dashboard build reads only the aggregator's `matched_leads.json`. Every stage is idempotent — the same inputs produce the same outputs.
+
+### Translator obligations
+
+Apply the §17 debtor party rules, filer suppression, and `owner_type` classification; apply the §18 signal aggregation key and anti-collapse rule; decouple `parcel_resolution_status` from `enrichment_status` per §13.14 — never drop a lead because enrichment failed.
+
+### Aggregator obligations
+
+Apply the §18 cross-source aggregation; run the §19 idempotency self-check (run twice, compare byte-for-byte, refuse to deploy on mismatch); never read from its own output.
+
+### Deploy gate sequencing
+
+1. **Mechanical verification** — schema valid, lead count > 0, dashboard renders, no console errors.
+2. **Semantic verification** per §20 — the twelve check classes, three-state outcomes.
+3. **Deploy** — only on `DEPLOY_OK`; operator approval required on `NEEDS_OPERATOR_REVIEW`; halt on `DEPLOY_BLOCKED`.
+
+A halt condition triggers a work-in-progress commit, a `halt_log.md`, and operator surfacing; the build does not auto-resume.
+
+This protocol absorbs the concepts of the v5.2.0 Build Eligibility Gate (parked in `stash@{0}`) without applying the stash. The stash itself remains parked as historical reference and is not applied.
+
+---
+
+## 4.35. Source of Record Engine (v5.3.0+)
+
+Recon MUST produce a complete Source of Record Matrix before Build Mode can begin. The matrix is the authoritative output of recon.
+
+Required artifacts (per `knowledge_base/architecture/16_source_of_record_matrix.md`):
+
+- `runs/<slug>/recon/source_of_record_matrix.json`
+- `runs/<slug>/recon/source_of_record_matrix.md`
+- `runs/<slug>/recon/source_coverage_map.md`
+- `runs/<slug>/recon/api_discovery_report.md`
+- `runs/<slug>/recon/operator_verified_sources.yml` (if the operator surfaced sources)
+- `runs/<slug>/recon/build_eligibility_report.md`
+
+Required sub-steps within Phase 0 recon (per `knowledge_base/protocols/01_county_recon.md`):
+
+- PDF / Sample Document Inspection — at least 3 sample documents per source, before any deferral or limited-coverage classification.
+- Documented API Discovery — search `/api`, `/swagger`, `/docs`, `/api-docs`, Postman, vendor docs, GitHub.
+- Bulk-Data Availability Classification — `FULL_COUNTY_BULK` / `BATCH_QUERY` / `PER_RECORD_ONLY` / `UNKNOWN`.
+- Lead Type Sweep — the 27 canonical lead types per §16.
+
+Recon completeness gate: a county recon that does not produce a complete Source of Record Matrix CANNOT proceed to Build Mode.
+
+---
+
+## 4.36. Debtor Party Rules (v5.3.0+)
+
+Per `knowledge_base/architecture/17_debtor_party_rules.md`, every translator MUST apply doc-type-specific debtor party rules when extracting `owner_name` from raw source records.
+
+Required behaviors:
+
+- For each `canonical_doc_type`, the translator references the rules table to identify which `name_type` carries the debtor identity.
+- Known filer patterns are universally suppressed (governments, hospitals, mortgage entities, federal agencies, servicers, trustees).
+- When the expected debtor `name_type` is missing OR the proposed owner matches a known filer pattern, the matched lead is emitted with `parcel_resolution_status = REVIEW_REQUIRED`, `owner_name` set to a placeholder, and `filer_entity` captured separately.
+- Leads are never silently dropped — `REVIEW_REQUIRED` routing preserves them for operator triage.
+- Owner type classification (`ENTITY` / `ESTATE` / `TRUST` / `INDIVIDUAL` / `UNKNOWN`) uses word-boundary regex with explicit precedence; substring matching alone is prohibited.
+
+This contract is required for any source that originates leads. Translators that do not implement debtor party rules produce filer-as-owner inversions and fail semantic verification.
+
+---
+
+## 4.37. Signal Aggregation Contract (v5.3.0+)
+
+Per `knowledge_base/architecture/18_signal_aggregation_contract.md`, signal aggregation uses the universal aggregation key `(parcel_id, canonical_doc_type, signal_type)`.
+
+Required behaviors:
+
+- Signals matching the full aggregation key collapse into one signal with `count = N`.
+- `instrument_numbers`, `source_urls`, and `evidence_ids` are unioned within a signal group.
+- Cross-source aggregation uses the same key — clerk-sourced and portal-sourced records for the same parcel + doc type + signal type collapse into one signal with both sources represented.
+- Distinct `signal_type` values NEVER collapse into one (anti-collapse rule).
+- The aggregator unions by `instrument_number` within a group; legitimate stacking (multiple distinct instruments) preserves the count, dedup failures (repeated instruments) reduce the count to the true distinct value.
+- The dashboard displays count badges when `count > 1`; no truncation of high-count signals.
+
+Both legitimate stacking and dedup failure produce `count > 1`. The aggregator MUST distinguish them by checking `instrument_number` uniqueness within the group.
+
+---
+
+## 4.38. Aggregator Idempotency (v5.3.0+)
+
+Per `knowledge_base/architecture/19_aggregator_idempotency_rule.md`, aggregators MUST be idempotent.
+
+Required behaviors:
+
+- Aggregators read only from stable per-source base files (`<source>_leads_base.json`).
+- Aggregators NEVER read from their own output (`matched_leads.json`, `dashboard/data.json`).
+- Running the aggregator twice in succession on identical inputs MUST produce identical output.
+- Aggregator implementations MUST include a self-check: after writing the aggregate, re-run in dry-run mode and compare output byte-for-byte; refuse to deploy on mismatch.
+
+The pipeline contract: translators write to `*_base.json` files; the aggregator reads from those base files; the dashboard build reads from the aggregator's output. The aggregator's output is never used as input to itself.
+
+Violation of this rule produces lead inflation that compounds across runs and is subtle to detect by output diff alone.
+
+---
+
+## 4.39. Semantic Verification Contract (v5.3.0+)
+
+Per `knowledge_base/architecture/20_semantic_verification_contract.md`, every county build MUST pass semantic verification before it deploys.
+
+Mechanical verification — lead count > 0, schema valid, dashboard renders, no console errors — is necessary but insufficient. It confirms the system produces output; it cannot catch class-level data-integrity bugs. Semantic verification validates that the output is *meaningful*: owners are debtors not filers, entity types are classified correctly, parcel-to-record joins are plausible, signal aggregation counts reflect real distinct instruments, and dashboard counts reconcile with the underlying data.
+
+### The twelve universal check classes (§20.C)
+
+1. Debtor attribution · 2. Owner type classification · 3. Parcel resolution plausibility · 4. Enrichment decoupling · 5. Signal aggregation integrity · 6. Cross-source aggregation · 7. OCR confidence routing · 8. CSV output schema · 9. Source proof links · 10. Dashboard row integrity · 11. Methodology consistency · 12. Universal filer patterns.
+
+### Three-state outcome model (§20.D)
+
+Each check returns **`VALID`** (matches expected pattern), **`INVALID`** (definitive failure — must fix before deploy), or **`AMBIGUOUS`** (suspicious but possibly legitimate — route to operator review, never auto-reject). The AMBIGUOUS state preserves legitimate edge cases instead of false-rejecting them.
+
+### Three deploy verdicts (§20.F)
+
+- **`DEPLOY_OK`** — all checks VALID.
+- **`DEPLOY_BLOCKED`** — any check INVALID; the build MUST NOT deploy.
+- **`NEEDS_OPERATOR_REVIEW`** — at least one AMBIGUOUS, none INVALID; deploys only after explicit operator approval with the AMBIGUOUS rows surfaced for triage.
+
+### Sampling and sequencing
+
+Sample sizes scale to ≥ 1% of the lead population per check class, with a floor of 5 and a cap of 50 per class. Sampling is random with a recorded seed for reproducibility. Semantic verification runs AFTER mechanical verification passes — mechanical failure blocks it from running.
+
+### Reference implementation
+
+A documentation-grade, county-agnostic skeleton is provided at `scaffold/ops/semantic_verify_template.py`. Counties copy it to `runs/<slug>/build/semantic_verify_<slug>.py` and specialize the eleven county-specific checks; check 12 (universal filer patterns) carries a real implementation and needs no specialization. v5.3.0 does NOT ship a working production semantic verifier — the contract surface only; the production implementation is a per-county responsibility, and shared production-verifier infrastructure is deferred to v5.4.0 or later.
 
 ---
 

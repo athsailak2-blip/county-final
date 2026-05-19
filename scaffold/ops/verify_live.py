@@ -2,13 +2,21 @@
 """
 verify_live.py — Production self-verification (Phase 6.5)
 
-v5.1.0-beta status: STUB (CLI surface only).
-v5.2.0 ships the full Playwright-based dashboard verification.
+v5.3.0 status: STUB (CLI surface only). v5.3.0 does NOT ship a production
+self-verifier. Earlier docstrings stated the full implementation would ship
+"in v5.2.0"; v5.2.0 shipped without it. This disclosure corrects the record.
+
+What v5.3.0 DOES ship: the §20 Semantic Verification Contract
+(knowledge_base/architecture/20_semantic_verification_contract.md) defines the
+verification contract surface — the twelve check classes, the three-state
+outcome model, the deploy verdicts — and scaffold/ops/semantic_verify_template.py
+provides a documentation-grade, county-agnostic reference template. A working
+production verify_live.py is deferred to a future harness release.
 
 This stub exists so the framework's contract is honest: the CLI is wired up,
-the schema fields are reserved, the calling pattern is documented. The actual
-verification logic ships in v5.2.0 after the first county build exposes the
-real failure modes a watchdog needs to catch.
+the schema fields are reserved, the calling pattern is documented — but NO
+verification logic runs here. It returns a non-zero
+PRODUCTION_VERIFICATION_BLOCKED status so callers never mistake it for a pass.
 
 Usage:
     python scaffold/ops/verify_live.py \\
