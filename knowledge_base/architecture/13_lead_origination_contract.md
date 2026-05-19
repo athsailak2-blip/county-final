@@ -319,9 +319,11 @@ silently collapsing them.
   reused to mean the lead row. The row provenance rule (§13.5) and the evidence ledger
   are complementary: §13.5 governs row composition, the ledger records field provenance.
 - **Entity resolution** (`12_entity_resolution.md`) — how signals match to parcels. A
-  §13.2 signal must still resolve to a parcel to populate a Matched lead; this contract
-  does not change resolution, it adds the requirement that at least one resolved signal
-  be primary-sourced.
+  §13.2 signal is matched to a parcel where possible; this contract does not change
+  resolution, it adds the requirement that at least one signal on a Matched lead be
+  primary-sourced. Parcel resolution is NOT a gate on lead existence — a lead whose
+  parcel could not be resolved is still emitted (`parcel_resolution_status = UNRESOLVED`)
+  with its debtor name, signal, and source provenance retained. See §13.14.
 - **Signals** (translator output) — events emitted by translators. Signals from §13.2
   sources are lead-originating. Signals from §13.3 sources, if a translator emits any,
   are enrichment-only and CANNOT independently produce a Matched lead.
@@ -472,3 +474,60 @@ The subsequent v5.2.0 patches implement and enforce the rules defined here:
 
 Every one of those patches references this file. Get §13.4 and §13.5 right, and the rest
 of v5.2.0 has a foundation to stand on.
+
+---
+
+## 13.14 v5.3.0 amendment — primary sources are never enrichment-gated
+
+A primary event source originates a lead at the moment its record is recognized as a
+distress event. Subsequent parcel/owner enrichment from an enrichment-only source (CAD
+enrichment, GIS, tax-roll enrichment, assessor enrichment, a parcel/owner valuation API)
+attaches context to the lead but **never gates its existence**.
+
+Two status fields are tracked separately:
+
+- **`parcel_resolution_status`** — whether the primary-source record has been linked to
+  a county-canonical parcel identifier.
+- **`enrichment_status`** — whether enrichment sources have attached supplementary data
+  (situs address, assessed value, owner type, absentee / homestead flags).
+
+A lead MUST NOT be dropped or hidden because enrichment failed. A lead MAY be marked
+`UNRESOLVED` when no parcel can be linked, but the lead row remains in the dashboard with
+its identifying fields (debtor name, signal, source URL) and source provenance.
+
+### 13.14.1 Status decoupling matrix
+
+`parcel_resolution_status` has three values — `RESOLVED`, `UNRESOLVED`, and
+`REVIEW_REQUIRED` (the §17 routing value, distinct from both). `enrichment_status` has
+two — `ENRICHED`, `UNENRICHED`. The four valid combinations:
+
+    parcel_resolution_status   enrichment_status   meaning
+    ------------------------   -----------------   ------------------------------------
+    RESOLVED                   ENRICHED            fully enriched lead — parcel linked,
+                                                   enrichment data attached
+    RESOLVED                   UNENRICHED          parcel linked, but the enrichment
+                                                   source returned no data
+    UNRESOLVED                 UNENRICHED          neither — still emitted; debtor name,
+                                                   signal, and source URL retained
+    REVIEW_REQUIRED            UNENRICHED          debtor party could not be identified
+                                                   (§17); routed to operator triage
+
+`ENRICHED` requires a `RESOLVED` parcel — enrichment keys off the parcel identifier, so
+`UNRESOLVED + ENRICHED` and `REVIEW_REQUIRED + ENRICHED` are not valid states.
+
+### 13.14.2 Rationale
+
+Enrichment sources have inherent coverage limits — per-record-only constraints, name-only
+joins, page caps, suffix sensitivity. Gating leads on enrichment success means losing
+leads that the primary event source legitimately surfaced. Foreclosure notices, for
+example, carry property addresses in the source document directly — those leads are
+buildable regardless of whether a separate enrichment join succeeds.
+
+### 13.14.3 Cross-references
+
+- **§17** (`17_debtor_party_rules.md`) — the `REVIEW_REQUIRED` `parcel_resolution_status`
+  value and its routing contract are defined there.
+- **§16** (`16_source_of_record_matrix.md`) — source role classification
+  (`PRIMARY_EVENT_SOURCE` vs `ENRICHMENT_SOURCE`) is defined there; only a
+  `PRIMARY_EVENT_SOURCE` originates a lead, and an `ENRICHMENT_SOURCE` only ever
+  decorates one.
