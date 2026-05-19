@@ -1293,7 +1293,57 @@ Required sub-steps within Phase 0 recon (per `knowledge_base/protocols/01_county
 
 Recon completeness gate: a county recon that does not produce a complete Source of Record Matrix CANNOT proceed to Build Mode.
 
-(Section number note: §4.34 is reserved for the Build Eligibility Gate enforcement contract; §4.35 is the Source of Record Engine.)
+(Section number note: §4.34 is reserved for the Build Eligibility Gate enforcement contract — to be authored in Session A4 (Build Mode Protocol). The v5.2.0 Patch 2 Build Eligibility Gate work is parked in `stash@{0}` and is never applied directly; A4 re-derives it. §4.35 is the Source of Record Engine.)
+
+---
+
+## 4.36. Debtor Party Rules (v5.3.0+)
+
+Per `knowledge_base/architecture/17_debtor_party_rules.md`, every translator MUST apply doc-type-specific debtor party rules when extracting `owner_name` from raw source records.
+
+Required behaviors:
+
+- For each `canonical_doc_type`, the translator references the rules table to identify which `name_type` carries the debtor identity.
+- Known filer patterns are universally suppressed (governments, hospitals, mortgage entities, federal agencies, servicers, trustees).
+- When the expected debtor `name_type` is missing OR the proposed owner matches a known filer pattern, the matched lead is emitted with `parcel_resolution_status = REVIEW_REQUIRED`, `owner_name` set to a placeholder, and `filer_entity` captured separately.
+- Leads are never silently dropped — `REVIEW_REQUIRED` routing preserves them for operator triage.
+- Owner type classification (`ENTITY` / `ESTATE` / `TRUST` / `INDIVIDUAL` / `UNKNOWN`) uses word-boundary regex with explicit precedence; substring matching alone is prohibited.
+
+This contract is required for any source that originates leads. Translators that do not implement debtor party rules produce filer-as-owner inversions and fail semantic verification.
+
+---
+
+## 4.37. Signal Aggregation Contract (v5.3.0+)
+
+Per `knowledge_base/architecture/18_signal_aggregation_contract.md`, signal aggregation uses the universal aggregation key `(parcel_id, canonical_doc_type, signal_type)`.
+
+Required behaviors:
+
+- Signals matching the full aggregation key collapse into one signal with `count = N`.
+- `instrument_numbers`, `source_urls`, and `evidence_ids` are unioned within a signal group.
+- Cross-source aggregation uses the same key — clerk-sourced and portal-sourced records for the same parcel + doc type + signal type collapse into one signal with both sources represented.
+- Distinct `signal_type` values NEVER collapse into one (anti-collapse rule).
+- The aggregator unions by `instrument_number` within a group; legitimate stacking (multiple distinct instruments) preserves the count, dedup failures (repeated instruments) reduce the count to the true distinct value.
+- The dashboard displays count badges when `count > 1`; no truncation of high-count signals.
+
+Both legitimate stacking and dedup failure produce `count > 1`. The aggregator MUST distinguish them by checking `instrument_number` uniqueness within the group.
+
+---
+
+## 4.38. Aggregator Idempotency (v5.3.0+)
+
+Per `knowledge_base/architecture/19_aggregator_idempotency_rule.md`, aggregators MUST be idempotent.
+
+Required behaviors:
+
+- Aggregators read only from stable per-source base files (`<source>_leads_base.json`).
+- Aggregators NEVER read from their own output (`matched_leads.json`, `dashboard/data.json`).
+- Running the aggregator twice in succession on identical inputs MUST produce identical output.
+- Aggregator implementations MUST include a self-check: after writing the aggregate, re-run in dry-run mode and compare output byte-for-byte; refuse to deploy on mismatch.
+
+The pipeline contract: translators write to `*_base.json` files; the aggregator reads from those base files; the dashboard build reads from the aggregator's output. The aggregator's output is never used as input to itself.
+
+Violation of this rule produces lead inflation that compounds across runs and is subtle to detect by output diff alone.
 
 ---
 
