@@ -1347,6 +1347,36 @@ Violation of this rule produces lead inflation that compounds across runs and is
 
 ---
 
+## 4.39. Semantic Verification Contract (v5.3.0+)
+
+Per `knowledge_base/architecture/20_semantic_verification_contract.md`, every county build MUST pass semantic verification before it deploys.
+
+Mechanical verification — lead count > 0, schema valid, dashboard renders, no console errors — is necessary but insufficient. It confirms the system produces output; it cannot catch class-level data-integrity bugs. Semantic verification validates that the output is *meaningful*: owners are debtors not filers, entity types are classified correctly, parcel-to-record joins are plausible, signal aggregation counts reflect real distinct instruments, and dashboard counts reconcile with the underlying data.
+
+### The twelve universal check classes (§20.C)
+
+1. Debtor attribution · 2. Owner type classification · 3. Parcel resolution plausibility · 4. Enrichment decoupling · 5. Signal aggregation integrity · 6. Cross-source aggregation · 7. OCR confidence routing · 8. CSV output schema · 9. Source proof links · 10. Dashboard row integrity · 11. Methodology consistency · 12. Universal filer patterns.
+
+### Three-state outcome model (§20.D)
+
+Each check returns **`VALID`** (matches expected pattern), **`INVALID`** (definitive failure — must fix before deploy), or **`AMBIGUOUS`** (suspicious but possibly legitimate — route to operator review, never auto-reject). The AMBIGUOUS state preserves legitimate edge cases instead of false-rejecting them.
+
+### Three deploy verdicts (§20.F)
+
+- **`DEPLOY_OK`** — all checks VALID.
+- **`DEPLOY_BLOCKED`** — any check INVALID; the build MUST NOT deploy.
+- **`NEEDS_OPERATOR_REVIEW`** — at least one AMBIGUOUS, none INVALID; deploys only after explicit operator approval with the AMBIGUOUS rows surfaced for triage.
+
+### Sampling and sequencing
+
+Sample sizes scale to ≥ 1% of the lead population per check class, with a floor of 5 and a cap of 50 per class. Sampling is random with a recorded seed for reproducibility. Semantic verification runs AFTER mechanical verification passes — mechanical failure blocks it from running.
+
+### Reference implementation
+
+A documentation-grade, county-agnostic skeleton is provided at `scaffold/ops/semantic_verify_template.py`. Counties copy it to `runs/<slug>/build/semantic_verify_<slug>.py` and specialize the eleven county-specific checks; check 12 (universal filer patterns) carries a real implementation and needs no specialization. v5.3.0 does NOT ship a working production semantic verifier — the contract surface only; the production implementation is a per-county responsibility, and shared production-verifier infrastructure is deferred to v5.4.0 or later.
+
+---
+
 ## 5. Two-Truths invariant
 
 The dashboard's filter counts and the rendered table must come from the same `matches()` function. Header counts in `leads.json` (`pattern_counts`, `attribute_counts`, etc.) must equal counts re-derived from `records[]`. The pipeline writes both; the build script asserts equality before saving and exits non-zero on drift.
