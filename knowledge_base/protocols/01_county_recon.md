@@ -593,7 +593,7 @@ its URL? what is its access pattern? is it buildable? A recon that does not prod
 complete sweep — an entry per lead type — is incomplete and cannot proceed to Build
 Mode.
 
-## 01.22 Required Step — PDF / Sample Document Inspection (Gap 1)
+## 01.22 Required Step — PDF/Sample Document Inspection (Gap 1)
 
 Before classifying any source as deferred or limited-coverage based on the listing/index
 page alone, recon MUST fetch and inspect at least 3 sample source documents (PDF,
