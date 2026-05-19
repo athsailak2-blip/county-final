@@ -181,7 +181,36 @@ v5.3.1 patch cycle will address both classes with appropriate anchor cases, per-
 ## Distribution
 
 v5.3.0 is cut as `dist/framework_v5_3_0.zip` with a companion
-`dist/framework_v5_3_0.zip.sha256` checksum.
+`dist/framework_v5_3_0.zip.sha256` checksum. The zip is produced by
+`git archive` from the `v5.3.0` tag — it contains only committed, tracked
+content, and county-scoped tracked paths are stripped from the archive before
+it is finalized.
+
+---
+
+## Working tree state at v5.3.0 cut
+
+At release finalization the canonical harness working tree carried four
+untracked items, none of which are v5.3.0 framework changes:
+
+- `.claude/` — operator-side Claude Code settings.
+- `config/counties/el_paso_tx.json` — a separate (El Paso) county build's
+  config.
+- `data/el_paso_tx/` — that build's data.
+- `runs/el_paso_tx/` — that build's run folder.
+
+These were untracked in both `sync/v5.3.0-source-of-record` and `main`. The
+v5.3.0 commit set itself was complete and had no modified or staged tracked
+files. Because the release zip is cut with `git archive` from the `v5.3.0`
+tag, **none of these untracked items entered the release** — they are excluded
+by construction.
+
+Full strict-clean working-tree discipline is deferred to v5.3.1, specifically:
+
+- `.gitignore` additions for `.claude/`;
+- per-county-scoped artifact path conventions so a separate county build's
+  config, data, and run artifacts cannot accumulate untracked in the canonical
+  harness working tree.
 
 ---
 
