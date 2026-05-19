@@ -27,7 +27,7 @@ policy for non-compliant builds.
   CONSOLIDATED CONTRACT it is the authoritative statement of the lead origination
   principle over MASTER_PROMPT.md §4.10, §4.13, §4.14, §4.16, §4.17, and §4.21 — those
   sections are NOT deleted; they remain valid as detailed implementation references
-  (§13.10). Pre-v5.2.0 builds (e.g. Ocean) may not comply and must be re-evaluated or
+  (§13.10). Pre-v5.2.0 builds may not comply and must be re-evaluated or
   explicitly archived (§13.11).
 - **Scope:** defines what counts as a primary lead source, what counts as enrichment, the
   hard rule that enrichment alone cannot create a lead row, the row provenance rule,
@@ -113,7 +113,7 @@ The enrichment source categories:
     2.  GIS data (geographic boundaries, zoning, flood zones, etc.)
     3.  Assessor data (assessed value, property class, exemptions)
     4.  Tax roll data (tax bill records, payment history when NOT in delinquency)
-    5.  MOD IV data (NJ state parcel data) and equivalent state-level parcel records
+    5.  MOD IV data (a state-level parcel data extract) and equivalent state-level parcel records
         in other jurisdictions
     6.  Ownership data (current legal owner, mailing address)
     7.  Valuation data (assessed, market, equity estimates)
@@ -197,7 +197,7 @@ explicit that coverage is incomplete.
 - the label "Partial Lead Board";
 - the list of available primary sources (e.g. "Sheriff Sale only");
 - the list of blocked / pending primary sources, with reason (e.g. "Clerk records
-  blocked — pending OPRA / CAPTCHA resolution");
+  blocked — pending public-records request / CAPTCHA resolution");
 - the statement "Enrichment attached only to verified lead events";
 - the statement "Not full county coverage".
 
@@ -393,7 +393,7 @@ explicit organizing rule.
 
 ## 13.11 Migration of pre-v5.2.0 builds
 
-- Pre-v5.2.0 county builds (e.g. Ocean) may not comply with this contract.
+- Pre-v5.2.0 county builds may not comply with this contract.
 - Before any further client delivery, each pre-v5.2.0 build MUST be re-evaluated against
   §13.2 / §13.3 / §13.4 / §13.5.
 - A non-compliant build MUST be either:
@@ -406,7 +406,7 @@ explicit organizing rule.
   lead board.
 
 This contract does not perform any migration. It states the policy; the re-evaluation of
-specific counties (including Ocean) is separate operator work.
+specific pre-v5.2.0 counties is separate operator work.
 
 ---
 
