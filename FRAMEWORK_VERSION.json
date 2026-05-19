@@ -92,5 +92,5 @@
     "Do not silently rename folders, move files, replace approved rules, or add county-specific examples.",
     "If a proposed change conflicts with locked rules, stop and ask before patching."
   ],
-  "release_channel": "beta"
+  "release_channel": "stable"
 }
