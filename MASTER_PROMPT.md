@@ -119,7 +119,7 @@ This is the ONLY script Claude Code may run autonomously on first contact. The b
 
 When Claude Code requests permission to run the bootstrap, the operator approves once. After approval, the script runs to completion in seconds.
 
-**Step 4 — Read the launch file.** After bootstrap completes, Claude Code reads `runs/<county_slug>/LAUNCH_<COUNTY_SLUG>.md`. That launch file scopes the run to Phase 0 only and embeds the clerk-driven product rule. It also reads `runs/<county_slug>/operator_notes.md` (created empty by the bootstrap; see Section 4.30) so any prior operator-volunteered knowledge is in context.
+**Step 4 — Read the launch file.** After bootstrap completes, Claude Code reads `runs/<county_slug>/LAUNCH_<COUNTY_SLUG>.md`. That launch file scopes the run to Phase 0 only and embeds the official event source-driven product rule. It also reads `runs/<county_slug>/operator_notes.md` (created empty by the bootstrap; see Section 4.30) so any prior operator-volunteered knowledge is in context.
 
 **Step 5 — Proceed to Phase 0.** Claude Code prints `PHASE 0 STARTING` (Section 4.29) and begins Phase 0 Step 1 (Inspect) per Section 6 of this prompt. Phase 0 runs autonomously through its four steps with labeled phase boundaries and produces source proof packets per Section 4.7 (Verification Gate).
 
@@ -379,7 +379,7 @@ Claude Code stops at the Build Eligibility Gate, prints the VIP-friendly verdict
 
 The system stops after Phase 0 if **any** of these are true. Stopping is a diagnostic result, not a failure.
 
-1. No clerk or recorder source found.
+1. No verified primary event source found.
 2. No primary lead source verified.
 3. Only enrichment sources found.
 4. All P0 sources are blocked.
@@ -615,7 +615,7 @@ A partial-build dashboard must surface:
 - Which enrichment layers are attached
 - What the dashboard does NOT include
 
-Partial builds **cannot** fill the dashboard with enrichment records as leads. The clerk-driven product rule (Section 4) holds regardless of build label.
+Partial builds **cannot** fill the dashboard with enrichment records as leads. The official event source-driven product rule (Section 4) holds regardless of build label.
 
 ---
 
@@ -1096,7 +1096,7 @@ The synthetic harness is framework-canonical. Synthetic fixtures (`synthetic_sig
 
 **Locked rule 4.31.8 — Defensive guard on owner-name signal emission.**
 
-The owner-name pattern emitter (`scaffold/pipeline/owner_name_patterns.py`) MUST NOT emit signals for parcels that aren't already linked to a lead-generating signal in the current run. Standalone parcels — enrichment-only records — cannot produce lead rows. This rule is enforced by the emitter itself: callers pass the set of parcel IDs that already carry a lead-generating signal; the emitter refuses to emit for parcels outside that set. The clerk-driven product rule is thus enforced at three layers: orchestrator dispatch, signal emission, and dashboard projection (Two-Truths invariant in `dashboard.py`).
+The owner-name pattern emitter (`scaffold/pipeline/owner_name_patterns.py`) MUST NOT emit signals for parcels that aren't already linked to a lead-generating signal in the current run. Standalone parcels — enrichment-only records — cannot produce lead rows. This rule is enforced by the emitter itself: callers pass the set of parcel IDs that already carry a lead-generating signal; the emitter refuses to emit for parcels outside that set. The official event source-driven product rule is thus enforced at three layers: orchestrator dispatch, signal emission, and dashboard projection (Two-Truths invariant in `dashboard.py`).
 
 **Locked rule 4.31.9 — Translator registry is the only source-dispatch path.**
 

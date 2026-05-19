@@ -127,7 +127,7 @@ This is by design. Phase 0 is the gate that protects everything downstream.
 
 ## The product rule
 
-**This framework is a CLERK-DRIVEN lead intelligence system.**
+**This framework is an OFFICIAL EVENT SOURCE-DRIVEN lead intelligence system.**
 
 Leads come from event-based and distress-based sources:
 
@@ -139,7 +139,7 @@ Leads come from event-based and distress-based sources:
 
 Parcel data, GIS data, CAD data, assessor data, owner data, tax roll data, and bulk property records are **ENRICHMENT ONLY**. They are never the headline. They never get treated as leads.
 
-If a county's clerk or recorder access is blocked, Phase 0 will mark it blocked and stop. **It will not silently fill the dashboard with parcel data to fake productivity.** A blocked clerk means a blocked build — not a parcel viewer dressed up as a lead system.
+If no verified primary event source exists (clerk, recorder, court portal, district clerk, sheriff, tax office, tax collector, trustee sale portal, foreclosure listing portal, tax lien foreclosure listing, auction vendor, official vendor portal, or posted notices page), Phase 0 stops. Clerk and recorder are the most common primary sources but not the only valid ones. **It will not silently fill the dashboard with parcel data to fake productivity.** A blocked primary event source means a blocked build — not a parcel viewer dressed up as a lead system.
 
 ---
 
