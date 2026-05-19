@@ -2,13 +2,21 @@
 """
 watchdog.py — Production health watchdog
 
-v5.1.0-beta status: STUB (CLI surface only).
-v5.2.0 ships the full watchdog with alert dispatch and rollback execution.
+v5.3.0 status: STUB (CLI surface only). v5.3.0 does NOT ship a production
+watchdog, alert dispatch, or rollback execution. Earlier docstrings stated the
+full implementation would ship "in v5.2.0"; v5.2.0 shipped without it. This
+disclosure corrects the record.
+
+A working production watchdog — health checks, alert dispatch, last-known-good
+rollback — is deferred to a future harness release. The §20 Semantic
+Verification Contract defines the verification surface a future watchdog
+enforces; production watchdog infrastructure is a per-county responsibility
+until universal production tooling lands.
 
 This stub exists so the framework's contract is honest: the CLI is wired up,
-the schema fields are reserved, the calling pattern is documented. The actual
-watchdog logic ships in v5.2.0 after at least one county is in production and
-the real failure modes are observed.
+the schema fields are reserved, the calling pattern is documented — but NO
+watchdog logic runs here. It returns a non-zero WATCHDOG_STUB_MODE status so
+callers never mistake it for a pass.
 
 Usage:
     python scaffold/ops/watchdog.py \\
@@ -21,7 +29,7 @@ Returns:
     0 — all checks pass (build healthy)
     1 — one or more checks failed (build unhealthy)
     2 — usage error
-    3 — watchdog stub mode (v5.1.0-beta — not yet implemented)
+    3 — watchdog stub mode (stub — not yet implemented; see status note above)
 
 Copyright (c) 2026 Xcerebro LLC. All rights reserved.
 Proprietary VIP license. See LICENSE.md.
