@@ -1271,6 +1271,32 @@ Every build attempt is classified BEFORE building (Build Eligibility Gate, §4.1
 
 ---
 
+## 4.35. Source of Record Engine (v5.3.0+)
+
+Recon MUST produce a complete Source of Record Matrix before Build Mode can begin. The matrix is the authoritative output of recon.
+
+Required artifacts (per `knowledge_base/architecture/16_source_of_record_matrix.md`):
+
+- `runs/<slug>/recon/source_of_record_matrix.json`
+- `runs/<slug>/recon/source_of_record_matrix.md`
+- `runs/<slug>/recon/source_coverage_map.md`
+- `runs/<slug>/recon/api_discovery_report.md`
+- `runs/<slug>/recon/operator_verified_sources.yml` (if the operator surfaced sources)
+- `runs/<slug>/recon/build_eligibility_report.md`
+
+Required sub-steps within Phase 0 recon (per `knowledge_base/protocols/01_county_recon.md`):
+
+- PDF / Sample Document Inspection — at least 3 sample documents per source, before any deferral or limited-coverage classification.
+- Documented API Discovery — search `/api`, `/swagger`, `/docs`, `/api-docs`, Postman, vendor docs, GitHub.
+- Bulk-Data Availability Classification — `FULL_COUNTY_BULK` / `BATCH_QUERY` / `PER_RECORD_ONLY` / `UNKNOWN`.
+- Lead Type Sweep — the 27 canonical lead types per §16.
+
+Recon completeness gate: a county recon that does not produce a complete Source of Record Matrix CANNOT proceed to Build Mode.
+
+(Section number note: §4.34 is reserved for the Build Eligibility Gate enforcement contract; §4.35 is the Source of Record Engine.)
+
+---
+
 ## 5. Two-Truths invariant
 
 The dashboard's filter counts and the rendered table must come from the same `matches()` function. Header counts in `leads.json` (`pattern_counts`, `attribute_counts`, etc.) must equal counts re-derived from `records[]`. The pipeline writes both; the build script asserts equality before saving and exits non-zero on drift.
