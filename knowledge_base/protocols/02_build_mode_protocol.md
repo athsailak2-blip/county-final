@@ -71,8 +71,8 @@ Once the entry preconditions pass, the build is classified as one of:
 Build mode classification is the operational analog of the Build Eligibility Gate
 concept from `stash@{0}` (Patch 2) — absorbed here without applying the stash. The stash
 itself remains parked; the concepts are integrated, and the mechanics are independently
-rewritten in the context of v5.3.0's complete picture (Gaps 1–8, the EPCAD-optional
-amendment, and semantic verification).
+rewritten in the context of v5.3.0's complete picture (Gaps 1–8, the §13.14
+enrichment-decoupling amendment, and semantic verification).
 
 ---
 
@@ -246,9 +246,10 @@ recon→build transition gate. This protocol absorbs the underlying concept (bui
 entry preconditions, build classifications, escalation patterns) without applying the
 stash itself.
 
-Patch 2 was written before the broader v5.3.0 picture emerged — Gaps 1–8, the
-EPCAD-optional amendment, and semantic verification. The mechanics in this protocol are
-rewritten in the v5.3.0 context and integrated with the new architecture files (§16–§20).
+Patch 2 was written before the broader v5.3.0 picture emerged — Gaps 1–8, the §13.14
+enrichment-decoupling amendment, and semantic verification. The mechanics in this
+protocol are rewritten in the v5.3.0 context and integrated with the new architecture
+files (§16–§20).
 The stash itself remains parked in the repository as historical reference; it should NOT
 be applied. After v5.3.0 tags and ships, the stash may be retired in a future cleanup
 pass.
