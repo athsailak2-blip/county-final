@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""v5.3.0 EPCAD-optional invariant — §13 must decouple enrichment_status from
-parcel_resolution_status; primary sources are never enrichment-gated.
+"""v5.3.0 enrichment-decoupling invariant — §13 must decouple enrichment_status
+from parcel_resolution_status; primary sources are never enrichment-gated.
 
 Run: python3 scaffold/tests/v5_3_0/test_enrichment_status_decoupled.py
 Exit 0 = pass, non-zero = fail.
@@ -44,12 +44,12 @@ def main() -> int:
         failures.append("missing cross-reference to §17 (REVIEW_REQUIRED routing)")
 
     if failures:
-        print("FAIL: EPCAD-optional — §13 enrichment-decoupling invariant")
+        print("FAIL: enrichment-decoupling — §13 enrichment-decoupling invariant")
         for f in failures:
             print(f"  - {f}")
         return 1
 
-    print("PASS: EPCAD-optional — §13 decouples enrichment_status from "
+    print("PASS: enrichment-decoupling — §13 decouples enrichment_status from "
           "parcel_resolution_status")
     return 0
 
