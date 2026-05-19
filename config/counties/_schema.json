@@ -93,10 +93,13 @@
         },
         "accepted_municipalities": {
           "type": "array",
-          "description": "v5.1.2-beta+: Superset of municipalities[] including unincorporated communities, CDP designations, and spelling variants known to be in-county. Used by source translators to gate the potential_cross_county_leak review flag — addresses whose city is NOT in this list get flagged for operator review. Each entry has a `name` (uppercase canonical) and a `kind` describing why it's accepted. If omitted, cross-county detection falls back to municipalities[] only.",
+          "description": "v5.1.2-beta+: Superset of municipalities[] including unincorporated communities, CDP designations, and spelling variants known to be in-county. Used by source translators to gate the potential_cross_county_leak review flag \u2014 addresses whose city is NOT in this list get flagged for operator review. Each entry has a `name` (uppercase canonical) and a `kind` describing why it's accepted. If omitted, cross-county detection falls back to municipalities[] only.",
           "items": {
             "type": "object",
-            "required": ["name", "kind"],
+            "required": [
+              "name",
+              "kind"
+            ],
             "properties": {
               "name": {
                 "type": "string",
@@ -126,14 +129,20 @@
           "properties": {
             "unknown_city_action": {
               "type": "string",
-              "enum": ["drop", "flag_for_review", "accept_with_warning"],
+              "enum": [
+                "drop",
+                "flag_for_review",
+                "accept_with_warning"
+              ],
               "default": "flag_for_review",
               "description": "What to do with leads from a city not in accepted_municipalities[]. `flag_for_review` is recommended (sets review_flag=potential_cross_county_leak). `drop` discards the lead. `accept_with_warning` writes a note but still ships the lead."
             },
             "neighboring_county_municipalities": {
               "type": "array",
               "description": "Optional list of municipality names known to overlap the county boundary. Useful for operator review notes.",
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             }
           }
         },
@@ -168,7 +177,13 @@
                 },
                 "shift_to": {
                   "type": "string",
-                  "enum": ["next_weekday", "next_wednesday", "next_tuesday", "next_business_day", "previous_business_day"]
+                  "enum": [
+                    "next_weekday",
+                    "next_wednesday",
+                    "next_tuesday",
+                    "next_business_day",
+                    "previous_business_day"
+                  ]
                 }
               }
             },
@@ -277,7 +292,9 @@
           "field_map": {
             "type": "object",
             "description": "v5.1.2-beta+: Maps the source's raw field names to framework-canonical field names. Replaces hardcoded source-specific field name references in pipeline code. Example for an appraisal-district parcel source: {\"parcel_id\": \"<source's parcel ID field>\", \"situs_address\": \"<source's situs field>\", \"owner_name\": \"<source's owner field>\", \"exemptions\": \"<source's exemptions field>\"}. Keys are framework-canonical field names; values are the source's actual field names.",
-            "additionalProperties": {"type": "string"}
+            "additionalProperties": {
+              "type": "string"
+            }
           },
           "parcel_id_prefix": {
             "type": "string",
@@ -290,7 +307,9 @@
           "doc_type_synonyms": {
             "type": "object",
             "description": "v5.1.2-beta+: Maps source-specific document type strings to framework-canonical doc type names. Replaces hardcoded source aliases in scaffold/pipeline/normalize.py. Keys are the source's literal doc-type strings (case-insensitive lookup at runtime); values are canonical type names from knowledge_base/domain/canonical_doc_types.json. Example: {\"Notice of Substitute Trustee's Sale\": \"NOTICE_OF_SUBSTITUTE_TRUSTEE_SALE\", \"NSTS\": \"NOTICE_OF_SUBSTITUTE_TRUSTEE_SALE\"}.",
-            "additionalProperties": {"type": "string"}
+            "additionalProperties": {
+              "type": "string"
+            }
           },
           "refresh_cadence": {
             "type": "string",
@@ -1226,6 +1245,396 @@
           "dashboard_label_required": {
             "type": "string"
           }
+        }
+      }
+    },
+    "source_of_record_matrix": {
+      "description": "v5.3.0 \u2014 recon Source-of-Record Matrix (null until recon runs).",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/sourceOfRecordMatrix"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_coverage_map": {
+      "description": "v5.3.0 \u2014 recon source coverage summary (null until recon runs).",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/sourceCoverageMap"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "api_discovery": {
+      "description": "v5.3.0 \u2014 documented-API discovery report (null until recon runs).",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/apiDiscoveryReport"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "enrichment_index_strategy": {
+      "description": "v5.3.0 \u2014 enrichment index strategy (null until recon runs).",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/enrichmentIndexStrategy"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "candidateSource": {
+      "type": "object",
+      "description": "A single source investigated for a lead type during recon.",
+      "required": [
+        "source_id",
+        "official_url",
+        "authority_type",
+        "source_role",
+        "access_status",
+        "verification_layers"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "official_url": {
+          "type": "string"
+        },
+        "authority_type": {
+          "type": "string"
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "source_role": {
+          "type": "string",
+          "enum": [
+            "PRIMARY_EVENT_SOURCE",
+            "SUPPORTING_EVENT_SOURCE",
+            "ENRICHMENT_SOURCE",
+            "REFERENCE_SOURCE",
+            "BLOCKED_SOURCE"
+          ]
+        },
+        "access_status": {
+          "type": "string",
+          "enum": [
+            "OPEN_PUBLIC",
+            "SEARCH_ONLY_PUBLIC",
+            "FREE_ACCOUNT_REQUIRED",
+            "PAID_SUBSCRIPTION_REQUIRED",
+            "LOGIN_REQUIRED",
+            "CAPTCHA_PROTECTED",
+            "DOCUMENT_IMAGES_LOCKED",
+            "BLOCKED",
+            "UNKNOWN"
+          ]
+        },
+        "bulk_availability": {
+          "type": "string",
+          "enum": [
+            "FULL_COUNTY_BULK",
+            "BATCH_QUERY",
+            "PER_RECORD_ONLY",
+            "UNKNOWN"
+          ]
+        },
+        "verification_layers": {
+          "type": "object",
+          "description": "Five-layer verification status, one string per layer.",
+          "required": [
+            "authority",
+            "lead_type_relevance",
+            "access",
+            "extractability",
+            "refresh_provenance"
+          ],
+          "properties": {
+            "authority": {
+              "type": "string"
+            },
+            "lead_type_relevance": {
+              "type": "string"
+            },
+            "access": {
+              "type": "string"
+            },
+            "extractability": {
+              "type": "string"
+            },
+            "refresh_provenance": {
+              "type": "string"
+            }
+          }
+        },
+        "sample_record_path_confirmed": {
+          "type": "boolean"
+        },
+        "sample_document_view_possible": {
+          "type": "boolean"
+        },
+        "minimum_lead_fields_available": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "operator_verified": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "leadTypeEntry": {
+      "type": "object",
+      "description": "Recon result for one canonical lead type in this county.",
+      "required": [
+        "lead_type",
+        "expected_authorities",
+        "candidate_sources",
+        "selected_source_id",
+        "status"
+      ],
+      "properties": {
+        "lead_type": {
+          "type": "string"
+        },
+        "state_applicability": {
+          "type": "string",
+          "enum": [
+            "APPLICABLE",
+            "NOT_APPLICABLE_IN_STATE",
+            "UNKNOWN"
+          ]
+        },
+        "expected_authorities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "candidate_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/candidateSource"
+          }
+        },
+        "selected_source_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "LIVE_SOURCE_FOUND",
+            "LIVE_SOURCE_FOUND_LIMITED_COVERAGE",
+            "SOURCE_FOUND_BLOCKED",
+            "SOURCE_FOUND_NEEDS_LOGIN",
+            "SOURCE_FOUND_PAID",
+            "SOURCE_FOUND_CAPTCHA",
+            "SOURCE_NOT_FOUND",
+            "NOT_APPLICABLE_IN_STATE",
+            "NEEDS_OPERATOR_REVIEW",
+            "ENRICHMENT_ONLY"
+          ]
+        },
+        "coverage_notes": {
+          "type": "string"
+        }
+      }
+    },
+    "sourceOfRecordMatrix": {
+      "type": "object",
+      "description": "Recon Source-of-Record Matrix \u2014 maps each lead type to its official source for this county (see knowledge_base/architecture/16_source_of_record_matrix.md).",
+      "required": [
+        "county_slug",
+        "county_name",
+        "state",
+        "framework_version",
+        "generated_at",
+        "lead_types"
+      ],
+      "properties": {
+        "county_slug": {
+          "type": "string"
+        },
+        "county_name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "framework_version": {
+          "type": "string"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "county_build_status": {
+          "type": "string",
+          "enum": [
+            "READY_TO_BUILD",
+            "PARTIAL_BUILD_READY",
+            "RECON_ONLY",
+            "WAITING_ON_ACCESS",
+            "NOT_BUILDABLE_YET"
+          ]
+        },
+        "lead_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/leadTypeEntry"
+          }
+        }
+      }
+    },
+    "sourceCoverageMap": {
+      "type": "object",
+      "description": "Summary of recon coverage \u2014 live, blocked, limited, not-found, and operator-review sources/lead types.",
+      "properties": {
+        "live_sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blocked_sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limited_coverage_sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "not_found_lead_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "operator_review_required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "discoveredAPI": {
+      "type": "object",
+      "description": "A documented API discovered during recon.",
+      "properties": {
+        "api_url": {
+          "type": "string"
+        },
+        "api_type": {
+          "type": "string",
+          "enum": [
+            "REST",
+            "GraphQL",
+            "SOAP",
+            "OData",
+            "ArcGIS",
+            "Postman_Collection",
+            "Swagger_OpenAPI",
+            "Other",
+            "Unknown"
+          ]
+        },
+        "documentation_url": {
+          "type": "string"
+        },
+        "auth_required": {
+          "type": "boolean"
+        },
+        "rate_limited": {
+          "type": "boolean"
+        },
+        "source_role": {
+          "type": "string",
+          "enum": [
+            "PRIMARY_EVENT_SOURCE",
+            "SUPPORTING_EVENT_SOURCE",
+            "ENRICHMENT_SOURCE",
+            "REFERENCE_SOURCE",
+            "BLOCKED_SOURCE"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "apiDiscoveryReport": {
+      "type": "object",
+      "description": "Documented-API discovery search log and findings.",
+      "required": [
+        "searched",
+        "found"
+      ],
+      "properties": {
+        "searched": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "found": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/discoveredAPI"
+          }
+        },
+        "search_notes": {
+          "type": "string"
+        }
+      }
+    },
+    "enrichmentIndexStrategy": {
+      "type": "object",
+      "description": "Strategy for resolving the enrichment index \u2014 bulk vs per-record query.",
+      "properties": {
+        "bulk_index_available": {
+          "type": "boolean"
+        },
+        "bulk_index_source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "per_record_query_required": {
+          "type": "boolean"
+        },
+        "per_record_query_cost_estimate": {
+          "type": "string"
+        },
+        "recommended_strategy": {
+          "type": "string"
+        },
+        "deferred_to_version": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     }
