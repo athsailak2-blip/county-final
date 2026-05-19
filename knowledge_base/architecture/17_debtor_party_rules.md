@@ -155,8 +155,9 @@ record for an operator instead of asserting a false owner.
 Classifier rules for `owner_type`:
 
 - **ENTITY** — the name contains a corporate suffix: `LLC`, `INC`, `CORP`, `LP`, `LTD`,
-  `PA`, `PC`, `PLLC`, `COMPANY`, `CO.`, `GROUP`, `ASSOCIATES`, `ENTERPRISES`,
-  `PARTNERS`, `SERVICES`, `AUTHORITY`, `COMMISSION`, `DISTRICT`.
+  `P.A.` (professional association), `P.C.` (professional corporation), `PLLC`,
+  `COMPANY`, `CO.`, `GROUP`, `ASSOCIATES`, `ENTERPRISES`, `PARTNERS`, `SERVICES`,
+  `AUTHORITY`, `COMMISSION`, `DISTRICT`.
 - **ESTATE** — the name matches a decedent pattern (word-boundary regex):
   `ESTATE OF <name>`, `EST OF <name>`, `<name> ESTATE`, `<name> EST OF`,
   `HEIRS OF <name>`. It MUST NOT match if `REAL ESTATE` precedes `ESTATE`, or if
