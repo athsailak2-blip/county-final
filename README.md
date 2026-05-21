@@ -1,4 +1,4 @@
-# County Lead Intelligence Engine — Framework v4
+# Xcerebro County Intelligence Framework
 
 **Copyright © 2026 Xcerebro LLC. All rights reserved.**
 Licensed under the proprietary Xcerebro LLC VIP license. See `LICENSE.md`. This Framework is not open source; access is limited to active Xcerebro LLC VIP members and approved licensees.
@@ -9,7 +9,7 @@ This is not a county-specific build. It is a portable shell. The only file that 
 
 ---
 
-## Quick start (v5.0.0+) — one sentence install
+## Quick start — one sentence install
 
 **First time using this framework?** Read [`START_HERE.md`](START_HERE.md) for the full first-run walkthrough. The short version:
 
@@ -31,7 +31,7 @@ That's it. No PowerShell commands beyond `claude`. No JSON to edit by hand. No m
 
 > **Why the one-time approval click?** Claude Code asks before running shell commands by default — that's protection against destructive operations. The autonomous first-run grant is bounded to `scaffold/bootstrap_county.py` only, which creates a folder and a markdown file. Approve once and the bootstrap runs in seconds.
 
-### Autonomy boundaries (v5.1.2-beta)
+### Autonomy boundaries (v5.3.1)
 
 The first run is autonomous in the sense that you type one sentence and approve one bootstrap. Everything after that — source recon, 5-layer verification gate, auto-resolve of blockers, config writing, and the change manifest — runs hands-off.
 
@@ -39,7 +39,7 @@ There are three boundaries operators should know about:
 
 1. **Claude Code may ask for approval to run bounded scripts.** During Phase 0, Claude Code may request permission for `web_search`, `web_fetch` against official portal domains, and one Python script call to atomically write the populated county config (via `scaffold/ops/write_county_config.py` — see MASTER_PROMPT Section 4.28). Approve broadly; the scope is bounded to the current county repo.
 2. **Claude Code stops on config-write failure.** If the writer returns `JSON_INVALID` or `SCHEMA_INVALID`, Claude Code attempts exactly one structured repair and then stops with `CONFIG_WRITE_FAILED` if the second attempt also fails. It does NOT silently proceed. Open the resulting `runs/<slug>/CONFIG_WRITE_FAILED.md` for diagnosis.
-3. **The framework is universal; the county is configured.** v5.1.2-beta locks in a hard contract (MASTER_PROMPT Section 4.31) that universal pipeline code never contains county-specific data. Counties enter the pipeline through `config/counties/<slug>.json`, `scrapers/<source>.py`, and the translator registry — never through hardcoded source dispatch or in-code municipality lists. This means the same `scaffold/pipeline/` runs for any county.
+3. **The framework is universal; the county is configured.** A hard contract (MASTER_PROMPT §4.31) requires that universal pipeline code never contains county-specific data. Counties enter the pipeline through `config/counties/<slug>.json`, `scrapers/<source>.py`, and the translator registry — never through hardcoded source dispatch or in-code municipality lists. This means the same `scaffold/pipeline/` runs for any county.
 
 Phase 0 ends at a Build Mode Approval Gate. Build Mode (scrapers, dashboards, deployment) only starts when the operator explicitly authorizes it.
 
@@ -86,7 +86,7 @@ Do not hardcode a county. Do not hardcode a state. Do not carry assumptions from
 ## What's in this framework
 
 ```
-framework_v4/
+xcerebro-county-intel/
 ├── MASTER_PROMPT.md              # paste this into Claude Code to start a county build
 ├── MIGRATION.md                  # operator handoff — read this if you're using the framework
 ├── README.md                     # this file
@@ -111,16 +111,26 @@ framework_v4/
 │   │   ├── 09_output_schemas.md             # 10 strict record shapes
 │   │   ├── 10_source_heartbeat_and_cursors.md  # source health and freshness
 │   │   ├── 11_database_and_storage.md       # STATIC / SUPABASE / HYBRID
-│   │   └── 12_entity_resolution.md          # when records refer to the same entity
+│   │   ├── 12_entity_resolution.md          # when records refer to the same entity
+│   │   ├── 13_lead_origination_contract.md  # what events may originate a lead
+│   │   ├── 16_source_of_record_matrix.md    # the authoritative source per field
+│   │   ├── 17_debtor_party_rules.md         # debtor-party identification rules
+│   │   ├── 18_signal_aggregation_contract.md   # combining signals across sources
+│   │   ├── 19_aggregator_idempotency_rule.md   # re-runs never duplicate or drift
+│   │   └── 20_semantic_verification_contract.md  # semantic verification gate
 │   │
-│   └── engineering/              # the HOW — build-side knowledge
-│       ├── 00_tooling_decision_tree.md      # which tool for which job
-│       ├── 01_python_environment.md         # Python 3.12, pinned deps
-│       ├── 02_scraping_libraries.md         # requests, Playwright, etc.
-│       ├── 03_document_readers.md           # PDF, DOCX, XLSX, CSV, HTML
-│       ├── 04_blocked_source_strategies.md  # reCAPTCHA, WAF, paywalls, login walls
-│       ├── 05_verification_and_rollback.md  # live-browser gate + auto-rollback
-│       └── 06_deployment.md                 # GitHub Pages, scheduled tasks
+│   ├── engineering/              # the HOW — build-side knowledge
+│   │   ├── 00_tooling_decision_tree.md      # which tool for which job
+│   │   ├── 01_python_environment.md         # Python 3.12, pinned deps
+│   │   ├── 02_scraping_libraries.md         # requests, Playwright, etc.
+│   │   ├── 03_document_readers.md           # PDF, DOCX, XLSX, CSV, HTML
+│   │   ├── 04_blocked_source_strategies.md  # reCAPTCHA, WAF, paywalls, login walls
+│   │   ├── 05_verification_and_rollback.md  # live-browser gate + auto-rollback
+│   │   └── 06_deployment.md                 # GitHub Pages, scheduled tasks
+│   │
+│   └── protocols/                # the WHEN — phase sequencing
+│       ├── 01_county_recon.md               # Phase 0 county source recon
+│       └── 02_build_mode_protocol.md        # Build Mode phase sequencing
 │
 ├── config/counties/              # per-county config — only thing that varies
 │   ├── _schema.md                            # human-readable schema doc
@@ -139,7 +149,7 @@ framework_v4/
 **For first-time use, see the Quick Start at the top of this README or read `START_HERE.md`.** The flow below is the manual / advanced operator path used when bootstrap autonomy is not desired (e.g. CI environments, custom slug conventions, or scripted builds).
 
 1. Read `MIGRATION.md` end-to-end.
-2. Create a private GitHub repo named `<county_id>-intel-v4` (the `-v4` suffix is the framework-version convention).
+2. Create a private GitHub repo for the county build (e.g. `<county-slug>-intel`).
 3. Copy this directory into the new repo.
 4. **Either** run `python scaffold/bootstrap_county.py --county "<Name>" --state "<State>" --slug <slug> --phase phase0` (recommended), **or** manually copy `config/counties/_template.json` to `config/counties/<slug>.json` and populate it. The template is intentionally not valid as a live county config until placeholders are filled.
 5. Open Claude Code in the repo and paste this:
@@ -182,11 +192,31 @@ The runner exits 0 only when every test exits 0.
 
 ## Versioning
 
-This is **v5.0.0**.
+This is **v5.3.1 (stable)**.
 
 - Patch (5.0.1) — clarifications, doc fixes
 - Minor (5.1.0) — new patterns, sources, deal paths, architecture additions
 - Major (6.0.0) — breaking changes requiring migration of existing county builds
+
+**v5.3.1 added** (released 2026-05-19):
+
+- Removed the hardcoded county-slug default in `build_leads.py` and `verify_synthetic_harness.py`; both now auto-discover the active county config.
+
+**v5.3.0 added** (released 2026-05-18):
+
+- **§16 Source of Record Matrix** — the authoritative source for each field.
+- **§17 Debtor Party Rules** — debtor-party identification rules.
+- **§18 Signal Aggregation Contract** — combining signals across sources.
+- **§19 Aggregator Idempotency Rule** — re-runs never duplicate or drift records.
+- **§20 Semantic Verification Contract** — the semantic verification gate.
+- **§13.14 enrichment-decoupling amendment** — enrichment is decoupled from lead origination.
+- **§01 County Recon Protocol** upgrade and the new **§02 Build Mode Protocol**.
+- 10 new framework invariants.
+- Stub honesty disclosure for `verify_live.py` and `watchdog.py`.
+
+**v5.2.0 added** (released 2026-05-15):
+
+- **§13 Lead Origination Contract** — what events may originate a lead.
 
 **v5.0.0 added** (released 2026-05-13):
 
