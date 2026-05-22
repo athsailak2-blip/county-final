@@ -224,7 +224,11 @@ class RawEventRecord:
 @dataclass(frozen=True, kw_only=True)
 class DebtorResolvedRecord:
     """A raw event record with the 17 debtor identity attached. Mirror of
-    debtor_resolved_record.schema.json."""
+    debtor_resolved_record.schema.json.
+
+    v5.4.0 finding F-1, RATIFIED Session 2: the 17 engine's verdict lives in
+    `debtor_resolution_status` only. This record carries NO parcel-stage field
+    — `parcel_resolution_status` first appears on LeadsBaseRecord."""
 
     raw_event_id: str
     source_id: str
@@ -240,7 +244,6 @@ class DebtorResolvedRecord:
     debtor_resolution_status: DebtorResolutionStatus
     review_reason: Optional[str]
     debtor_extraction_method: DebtorExtractionMethod
-    parcel_resolution_status: Optional[ParcelResolutionStatus]
     expected_debtor_name_type: Optional[str] = None
     event_date: Optional[str] = None
     evidence_ids: tuple[str, ...] = ()

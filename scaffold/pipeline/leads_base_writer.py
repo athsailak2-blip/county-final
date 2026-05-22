@@ -53,9 +53,12 @@ def build_base_record(
         `aggregation_key_engine.compute_aggregation_key`;
       - carry forward owner_name, owner_type, filer_entity, review_reason
         from the debtor-resolved record;
-      - set `parcel_resolution_status` (§13.14 — REVIEW_REQUIRED carried from
-        §17 routing, else RESOLVED / UNRESOLVED) and `enrichment_status`
-        independently; never drop a lead for enrichment failure;
+      - set `parcel_resolution_status` (§13.14) and `enrichment_status`
+        independently; per ratified finding F-1, the §17 engine does not write
+        `parcel_resolution_status` — the writer sets it to REVIEW_REQUIRED when
+        the debtor-resolved record's `debtor_resolution_status` is
+        REVIEW_REQUIRED, else RESOLVED / UNRESOLVED; never drop a lead for
+        enrichment failure;
       - carry forward source_url, instrument_number, recorded_date, and
         evidence_ids — all mandatory on every base record (§02.4).
 

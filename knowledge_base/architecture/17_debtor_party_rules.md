@@ -196,3 +196,52 @@ matched leads.
 
 This file therefore contains no county name, no state name, and no county-specific
 example. The county-agnostic regression scanner enforces this.
+
+---
+
+## 17.K Amendment note — v5.4.0 Session 2 reconciliations
+
+v5.4.0 Session 2 implemented the §17 debtor party engine
+(`scaffold/pipeline/debtor_party_engine.py`). Three findings were ratified and
+reconciled against this contract during that build. The sections above are left
+unchanged for history; this note records the deltas and is authoritative where
+it supersedes them.
+
+### F-1 — `parcel_resolution_status` is out of scope for the §17 engine
+
+§17.E above expresses REVIEW_REQUIRED routing by emitting
+`parcel_resolution_status = REVIEW_REQUIRED`. Ratified finding F-1 supersedes
+that wording: the §17 debtor party engine records its verdict ONLY in its own
+field, `debtor_resolution_status` (`RESOLVED` / `REVIEW_REQUIRED`), and MUST NOT
+write `parcel_resolution_status` or any other parcel-stage field. Each pipeline
+stage owns its own fields — `parcel_resolution_status` is owned by the
+downstream §13.14 parcel-resolution stage and first appears on the leads-base
+record, where the leads-base writer propagates the REVIEW_REQUIRED verdict. The
+inter-stage schema `debtor_resolved_record.schema.json`, its dataclass mirror in
+`contracts/records.py`, and the behavioral spec
+`test_filer_suppression_behavior.py` were reconciled to F-1 in Session 2: the
+`parcel_resolution_status` property, its `required` entry, the `allOf` clause
+constraining it, and the spec assertion on it were removed.
+
+### F-5 — `probate` is a mapped doc type; nine doc types remain unmapped
+
+The §17.C table maps 17 canonical doc types, and all 17 are implemented —
+`probate` included (row 17; debtor extracted from the document body). A
+`canonical_doc_type` with no §17.C rule row is never guessed: the engine applies
+a default rule that routes it to `REVIEW_REQUIRED` with
+`review_reason = "no_debtor_rule_for_doc_type"`, and never silently passes it
+through as resolved. Nine doc types are known to be unmapped and are a
+documented operator-input follow-up — they require operator-supplied debtor
+logic and no rule is invented for them: `tax_sale`, `tax_delinquency`,
+`tax_certificate`, `surplus`, `eviction`, `divorce`, `bankruptcy`,
+`condemnation`, `demolition`.
+
+### F-6 — §17.D defines seven filer-suppression groups; all are implemented
+
+§17.D concretely enumerates seven filer-suppression groups: government
+entities, state agencies, hospital entities, mortgage / lender entities, federal
+mortgage agencies, servicers, and trustee patterns. All seven are implemented in
+the engine. The filer pattern-sets that §17.C references but §17.D never
+concretely defines — contractor / construction, plaintiff, judgment-creditor,
+heir-affiant, sheriff / marshal, and executor / administrator patterns — remain
+a documented gap: they are flagged here, and no patterns are invented for them.

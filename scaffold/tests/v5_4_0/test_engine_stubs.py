@@ -2,12 +2,14 @@
 """v5.4.0 Group A (green) — engine module stubs are importable, carry the
 declared signatures, and raise NotImplementedError when called.
 
-This is a SHAPE / SCAFFOLDING test, not a behavioral test. It asserts only
-what Session 1 produces: the four engine modules exist, expose the declared
-functions with the declared parameter names, and every function is an
-unimplemented stub (`raise NotImplementedError`). It does NOT assert any
-engine behaves correctly — that is the job of the quarantined behavioral
-specs under scaffold/tests/v5_4_0_pending/.
+This is a SHAPE / SCAFFOLDING test, not a behavioral test. It asserts that the
+engine modules still awaiting implementation exist, expose the declared
+functions with the declared parameter names, and every such function is an
+unimplemented stub (`raise NotImplementedError`). It does NOT assert any engine
+behaves correctly. Per the rule below, once a stage is implemented its
+NotImplementedError check is removed here: v5.4.0 Session 2 implemented the §17
+debtor_party_engine, so that module is no longer covered by this test — its
+behavior is gated by the §17 specs in scaffold/tests/v5_4_0/.
 
 This test is wired into scaffold/tests/run_all.py and must pass at the end of
 Session 1. It will KEEP passing through Sessions 2-5 only for stubs that are
@@ -28,15 +30,6 @@ if str(REPO_ROOT) not in sys.path:
 
 # module path -> {function name -> expected parameter names (in order)}.
 ENGINE_SPEC = {
-    "scaffold.pipeline.debtor_party_engine": {
-        "resolve_debtor_party": ["raw_event", "debtor_party_rules",
-                                 "additional_suppressions"],
-        "classify_owner_type": ["name"],
-        "match_known_filer": ["name", "additional_suppressions"],
-        "extract_debtor_from_document_body": ["document_body_text",
-                                              "canonical_doc_type"],
-        "route_to_review": ["raw_event", "review_reason", "filer_entity"],
-    },
     "scaffold.pipeline.aggregation_key_engine": {
         "resolve_signal_type": ["canonical_doc_type", "signal_type_labels"],
         "compute_aggregation_key": ["parcel_id", "canonical_doc_type",
@@ -59,16 +52,6 @@ ENGINE_SPEC = {
 # before using them.
 _P = Path("unused_stub_path")
 CALL_THUNKS = {
-    ("scaffold.pipeline.debtor_party_engine", "resolve_debtor_party"):
-        lambda m: m.resolve_debtor_party({}, debtor_party_rules={}),
-    ("scaffold.pipeline.debtor_party_engine", "classify_owner_type"):
-        lambda m: m.classify_owner_type(""),
-    ("scaffold.pipeline.debtor_party_engine", "match_known_filer"):
-        lambda m: m.match_known_filer(""),
-    ("scaffold.pipeline.debtor_party_engine", "extract_debtor_from_document_body"):
-        lambda m: m.extract_debtor_from_document_body("", ""),
-    ("scaffold.pipeline.debtor_party_engine", "route_to_review"):
-        lambda m: m.route_to_review({}, review_reason="", filer_entity=""),
     ("scaffold.pipeline.aggregation_key_engine", "resolve_signal_type"):
         lambda m: m.resolve_signal_type("", signal_type_labels={}),
     ("scaffold.pipeline.aggregation_key_engine", "compute_aggregation_key"):
@@ -162,7 +145,7 @@ def main() -> int:
         return 1
 
     print("PASS: v5.4.0 engine module stubs present and well-formed")
-    print(f"  4 engine modules importable; {stub_count} stub functions with "
+    print(f"  {len(ENGINE_SPEC)} engine modules importable; {stub_count} stub functions with "
           f"declared signatures, all raising NotImplementedError")
     return 0
 

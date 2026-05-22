@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""v5.4.0 PENDING behavioral spec — §17.D / §17.E filer suppression.
+"""v5.4.0 behavioral spec — §17.D / §17.E filer suppression.
 
-EXPECTED TO FAIL until v5.4.0 Session 2 implements debtor_party_engine.
-Quarantined from run_all.py — see this directory's README.md.
+PROMOTED in v5.4.0 Session 2 — debtor_party_engine is implemented and this
+spec passes. Wired into run_all.py via scaffold/tests/v5_4_0/.
 
 This is a behavioral spec, not a doc-presence check. It calls the real
 engine and asserts a known filer is never emitted as owner_name.
@@ -16,8 +16,8 @@ The case:
   becomes the placeholder, filer_entity captures CITY OF EXAMPLE, and the lead
   is NOT dropped.
 
-Run: python3 scaffold/tests/v5_4_0_pending/test_filer_suppression_behavior.py
-Exit 0 = pass, non-zero = fail (expected until Session 2).
+Run: python3 scaffold/tests/v5_4_0/test_filer_suppression_behavior.py
+Exit 0 = pass, non-zero = fail.
 """
 import sys
 from pathlib import Path
@@ -107,8 +107,6 @@ def main() -> int:
          "CITY OF EXAMPLE" not in owner_u),
         ("debtor_resolution_status is REVIEW_REQUIRED",
          resolved.get("debtor_resolution_status") == "REVIEW_REQUIRED"),
-        ("parcel_resolution_status is REVIEW_REQUIRED (§17.E)",
-         resolved.get("parcel_resolution_status") == "REVIEW_REQUIRED"),
         ("owner_name is the §17.E unidentified-party placeholder",
          "unidentified party" in owner.lower()),
         ("filer_entity captures CITY OF EXAMPLE",
