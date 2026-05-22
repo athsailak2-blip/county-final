@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""v5.4.0 PENDING behavioral spec — §19 aggregator idempotency.
+"""v5.4.0 behavioral spec — §19 aggregator idempotency.
 
-EXPECTED TO FAIL until v5.4.0 Session 4 implements the aggregator.
-Quarantined from run_all.py — see this directory's README.md.
+PROMOTED in v5.4.0 Session 4 — the aggregator is implemented and this spec
+passes. Wired into run_all.py via scaffold/tests/v5_4_0/.
 
 This is a behavioral spec, not a doc-presence check. It writes real
 <source>_leads_base.json files, runs the real aggregator against them, and
@@ -15,8 +15,8 @@ The cases:
     (raise ValueError) when handed matched_leads.json as input — reading its
     own output is the bug §19 exists to prevent.
 
-Run: python3 scaffold/tests/v5_4_0_pending/test_aggregator_idempotent_behavior.py
-Exit 0 = pass, non-zero = fail (expected until Session 4).
+Run: python3 scaffold/tests/v5_4_0/test_aggregator_idempotent_behavior.py
+Exit 0 = pass, non-zero = fail.
 """
 import json
 import sys
@@ -49,6 +49,7 @@ def _base_record(base_id, raw_id, source_id, doc_type, signal_type,
         "review_reason": None,
         "parcel_resolution_status": "RESOLVED",
         "enrichment_status": "UNENRICHED",
+        "confidence_status": "Confirmed",
         "instrument_number": instrument,
         "recorded_date": recorded_date,
         "source_url": f"https://example.source/{source_id}/{instrument}",

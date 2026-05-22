@@ -1,22 +1,17 @@
 #!/usr/bin/env python3
-"""v5.4.0 Group A (green) — engine module stubs are importable, carry the
-declared signatures, and raise NotImplementedError when called.
+"""v5.4.0 Group A (green) — contract dataclasses present; engine stubs retired.
 
-This is a SHAPE / SCAFFOLDING test, not a behavioral test. It asserts that the
-engine modules still awaiting implementation exist, expose the declared
-functions with the declared parameter names, and every such function is an
-unimplemented stub (`raise NotImplementedError`). It does NOT assert any engine
-behaves correctly. Per the rule below, once a stage is implemented its
-NotImplementedError check is removed here: v5.4.0 Session 2 implemented the §17
-debtor_party_engine and Session 3 implemented the §18 aggregation_key_engine
-and the leads_base_writer, so those modules are no longer covered by this test
-— their behavior is gated by the §17 / §18 specs in scaffold/tests/v5_4_0/.
-Only the §19 aggregator remains a stub.
+This is a SHAPE / SCAFFOLDING test, not a behavioral test. Through Sessions 1-3
+it asserted that the not-yet-implemented engine modules exposed the declared
+function signatures and were still `raise NotImplementedError` stubs; each
+session removed its module once implemented (Session 2 — §17 debtor_party_engine;
+Session 3 — §18 aggregation_key_engine and leads_base_writer; Session 4 — §19
+aggregator). As of Session 4 ALL v5.4.0 engine stages are implemented and no
+stub remains, so ENGINE_SPEC is empty. The test now guards only that the
+contracts package and its inter-stage dataclasses import — engine behavior is
+gated by the §17 / §18 / §19 specs in scaffold/tests/v5_4_0/.
 
-This test is wired into scaffold/tests/run_all.py and must pass at the end of
-Session 1. It will KEEP passing through Sessions 2-5 only for stubs that are
-still stubs; once a function is implemented its NotImplementedError check is
-moved out of this file by that session.
+This test is wired into scaffold/tests/run_all.py and must stay green.
 
 Run: python3 scaffold/tests/v5_4_0/test_engine_stubs.py
 Exit 0 = pass, non-zero = fail.
@@ -31,26 +26,12 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 # module path -> {function name -> expected parameter names (in order)}.
-ENGINE_SPEC = {
-    "scaffold.pipeline.aggregator": {
-        "aggregate": ["base_file_paths", "output_path"],
-        "merge_signal_group": ["base_records"],
-        "idempotency_self_check": ["base_file_paths", "output_path"],
-    },
-}
+# Empty as of Session 4 — all v5.4.0 engine stages are implemented; their
+# behavior is gated by the §17 / §18 / §19 specs, not by this stub test.
+ENGINE_SPEC: dict[str, dict] = {}
 
 # How to invoke each stub so it reaches its `raise NotImplementedError`.
-# Keyed (module, function) -> thunk. Args are throwaway — the stubs raise
-# before using them.
-_P = Path("unused_stub_path")
-CALL_THUNKS = {
-    ("scaffold.pipeline.aggregator", "aggregate"):
-        lambda m: m.aggregate([]),
-    ("scaffold.pipeline.aggregator", "merge_signal_group"):
-        lambda m: m.merge_signal_group([]),
-    ("scaffold.pipeline.aggregator", "idempotency_self_check"):
-        lambda m: m.idempotency_self_check([], output_path=_P),
-}
+CALL_THUNKS: dict = {}
 
 # The contract dataclasses that must exist alongside the engine stubs.
 EXPECTED_DATACLASSES = [
@@ -124,9 +105,13 @@ def main() -> int:
             print(f"  - {f}")
         return 1
 
-    print("PASS: v5.4.0 engine module stubs present and well-formed")
-    print(f"  {len(ENGINE_SPEC)} engine modules importable; {stub_count} stub functions with "
-          f"declared signatures, all raising NotImplementedError")
+    if ENGINE_SPEC:
+        print("PASS: v5.4.0 engine module stubs present and well-formed")
+        print(f"  {len(ENGINE_SPEC)} engine modules importable; {stub_count} "
+              f"stub functions, all raising NotImplementedError")
+    else:
+        print("PASS: all v5.4.0 engine stages implemented — no stubs remain; "
+              "contract package and inter-stage dataclasses import cleanly")
     return 0
 
 

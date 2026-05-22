@@ -1,55 +1,34 @@
 # v5.4.0 pending behavioral specs
 
-The tests in this directory are **pending v5.4.0 behavioral specifications**.
-They are **expected to fail today** and that is correct.
+**All v5.4.0 behavioral specs have been promoted.** This directory holds no
+pending specs — every executable behavioral spec for the v5.4.0 staged pipeline
+engine now lives in `scaffold/tests/v5_4_0/` and runs in the default gate
+(`scaffold/tests/run_all.py`).
 
-## What these are
+## What these were
 
-These are executable behavioral specs for the v5.4.0 staged pipeline engine.
-Each test imports a real engine module, calls it on a real input, and asserts
-on the real output. They are **not** doc-presence checks — they do not scan
-markdown for phrases. (The doc-presence pattern in `scaffold/tests/v5_3_0/` is
-exactly the gap that escalation ESC-002 exposed: the §16-§20 contracts were
-shipped as documentation with passing doc-presence tests, while the executable
-pipeline behind them was never built. v5.4.0 builds that engine; these tests
-prove it behaves.)
+These were executable behavioral specs for the v5.4.0 staged pipeline engine —
+each imports a real engine module, calls it on a real input, and asserts on the
+real output. They are **not** doc-presence checks. (The doc-presence pattern in
+`scaffold/tests/v5_3_0/` is exactly the gap escalation ESC-002 exposed: the
+§16-§20 contracts shipped as documentation with passing doc-presence tests
+while the executable pipeline behind them was never built. v5.4.0 built that
+engine; these specs prove it behaves.)
 
-## Why they fail right now
+Through Sessions 1-3 the specs were quarantined here, red, until the engine
+stage each one binds was implemented — wiring a red spec into `run_all.py`
+would have broken the default gate. Each session promoted its spec(s) once the
+stage was implemented and the spec passed.
 
-v5.4.0 Session 1 delivered the interface contracts and the engine **stubs**.
-Every engine function currently does `raise NotImplementedError`. So every test
-here fails today — they have nothing implemented to exercise yet. That is the
-point of quarantining them here.
+## Promotion schedule — complete
 
-## Why they are NOT in run_all.py
-
-`scaffold/tests/run_all.py` is the default regression gate and must stay green.
-These specs are red until the engine is built, so wiring them into `run_all.py`
-now would make the default suite red. They are deliberately excluded.
-
-## Promotion schedule
-
-As each engine stage is implemented, that session moves its spec(s) out of this
-directory into `scaffold/tests/v5_4_0/` and wires them into `run_all.py`, so the
-default suite grows to gate real engine behavior:
-
-| Session | Implements | Promotes |
+| Session | Implements | Spec(s) — all promoted to `scaffold/tests/v5_4_0/` |
 |---|---|---|
-| Session 2 ✅ | §17 debtor party engine | `test_debtor_party_engine_behavior.py`, `test_filer_suppression_behavior.py` — **promoted to `scaffold/tests/v5_4_0/`** |
-| Session 3 ✅ | §18 aggregation key engine + leads-base writer | `test_aggregation_key_behavior.py` — **promoted to `scaffold/tests/v5_4_0/`** |
-| Session 4 | §19 idempotent aggregator | `test_aggregator_idempotent_behavior.py` |
-| Session 5 | cutover | (all promoted; monolith retired) |
+| Session 2 ✅ | §17 debtor party engine | `test_debtor_party_engine_behavior.py`, `test_filer_suppression_behavior.py` |
+| Session 3 ✅ | §18 aggregation key engine + leads-base writer | `test_aggregation_key_behavior.py` |
+| Session 4 ✅ | §19 idempotent aggregator | `test_aggregator_idempotent_behavior.py` |
+| Session 5 | cutover | (all specs promoted; monolith retired) |
 
-A spec is promoted only once the stage it covers is implemented and the spec
-passes. Until then it stays here, red, as the binding spec for that stage.
-
-## The tests
-
-(The §17 specs — `test_debtor_party_engine_behavior.py`,
-`test_filer_suppression_behavior.py` — and the §18 spec
-`test_aggregation_key_behavior.py` were promoted to `scaffold/tests/v5_4_0/` in
-v5.4.0 Sessions 2 and 3 and now run in the default gate.)
-
-- `test_aggregator_idempotent_behavior.py` — the §19 aggregator produces
-  identical output on a second run and refuses to read `matched_leads.json` as
-  input (§19.C / §19.D).
+The §17 / §18 / §19 engine behavior is now gated by those promoted specs plus
+the per-stage unit tests in `scaffold/tests/v5_4_0/`. The Session 5 cutover
+retires the monolith; no behavioral spec remains pending.
