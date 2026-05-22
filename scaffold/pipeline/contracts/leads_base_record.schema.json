@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xcerebro.framework/v5.4.0/contracts/leads_base_record.schema.json",
+  "title": "Leads-base record (v5.4.0 pipeline stage 3 output — one record in <source>_leads_base.json)",
+  "description": "A record in the stable per-source base file <source>_leads_base.json, written by the leads-base writer. It is a debtor-resolved record (debtor_resolved_record.schema.json) decorated with the 18.B aggregation key, the resolved signal_type, and the 13.14 status pair (parcel_resolution_status, enrichment_status). The base file is the ONLY input the aggregator reads (19_aggregator_idempotency_rule.md 19.C); the aggregator never reads its own matched_leads.json output. One record per debtor-resolved event — within-source and cross-source grouping is performed by the aggregator, not pre-collapsed here, so that aggregation stays idempotent from a stable base.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "base_record_id",
+    "raw_event_id",
+    "source_id",
+    "source_role",
+    "canonical_doc_type",
+    "signal_type",
+    "aggregation_key",
+    "owner_name",
+    "owner_type",
+    "filer_entity",
+    "review_reason",
+    "parcel_resolution_status",
+    "enrichment_status",
+    "instrument_number",
+    "recorded_date",
+    "source_url",
+    "evidence_ids",
+    "property_refs"
+  ],
+  "properties": {
+    "base_record_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique id for this base record. Stable across runs given a stable raw_event_id."
+    },
+    "raw_event_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Back-reference to the originating raw_event_record."
+    },
+    "source_id": { "type": "string", "minLength": 1 },
+    "source_role": {
+      "type": "string",
+      "enum": [
+        "PRIMARY_EVENT_SOURCE",
+        "SUPPORTING_EVENT_SOURCE",
+        "ENRICHMENT_SOURCE",
+        "REFERENCE_SOURCE",
+        "BLOCKED_SOURCE"
+      ]
+    },
+    "canonical_doc_type": { "type": "string", "minLength": 1 },
+    "signal_type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The operator-facing semantic category (18.B), resolved from canonical_doc_type via the county's signal_type_labels map. The third component of the 18.B aggregation key."
+    },
+    "aggregation_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The 18.B aggregation key tuple (parcel_id, canonical_doc_type, signal_type). The dedup boundary: records sharing the full key collapse into one signal in matched_leads.json; records differing in any component stay distinct (18.F anti-collapse rule).",
+      "required": ["parcel_id", "canonical_doc_type", "signal_type"],
+      "properties": {
+        "parcel_id": {
+          "type": ["string", "null"],
+          "description": "Resolved parcel id, or null when parcel_resolution_status is UNRESOLVED / REVIEW_REQUIRED. WARNING: 18.B assumes a non-null parcel_id; aggregating null-parcel records by key alone would over-collapse distinct UNRESOLVED properties — see contract finding F-3. The aggregator MUST fall back to a per-record identity (instrument_number) for null-parcel records."
+        },
+        "canonical_doc_type": { "type": "string", "minLength": 1 },
+        "signal_type": { "type": "string", "minLength": 1 }
+      }
+    },
+    "owner_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Resolved debtor per 17, carried from the debtor-resolved record. Never a filer."
+    },
+    "owner_type": {
+      "type": "string",
+      "enum": ["ENTITY", "ESTATE", "TRUST", "INDIVIDUAL", "UNKNOWN"]
+    },
+    "filer_entity": {
+      "type": ["string", "null"],
+      "description": "Filer name carried from the debtor-resolved record. Non-null when parcel_resolution_status is REVIEW_REQUIRED."
+    },
+    "review_reason": {
+      "type": ["string", "null"],
+      "description": "17.E routing reason, carried forward. Non-null when parcel_resolution_status is REVIEW_REQUIRED."
+    },
+    "parcel_resolution_status": {
+      "type": "string",
+      "enum": ["RESOLVED", "UNRESOLVED", "REVIEW_REQUIRED"],
+      "description": "13.14.1 parcel resolution status. REVIEW_REQUIRED is the 17.E debtor-routing value carried forward."
+    },
+    "enrichment_status": {
+      "type": "string",
+      "enum": ["ENRICHED", "UNENRICHED"],
+      "description": "13.14.1 enrichment status. Tracked independently of parcel_resolution_status — a lead is never dropped because enrichment failed."
+    },
+    "instrument_number": {
+      "type": ["string", "null"],
+      "description": "Recording instrument number. The 18.E within-group dedup unions by this value."
+    },
+    "recorded_date": { "type": ["string", "null"], "format": "date" },
+    "event_date": { "type": ["string", "null"], "format": "date" },
+    "source_url": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Mandatory per Build Mode Protocol 02.4."
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Evidence ledger entry ids backing this record. Mandatory per Build Mode Protocol 02.4."
+    },
+    "property_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "parcel_id": { "type": ["string", "null"] },
+        "situs_address": { "type": ["string", "null"] },
+        "legal_description": { "type": ["string", "null"] },
+        "case_number": { "type": ["string", "null"] }
+      },
+      "required": ["parcel_id", "situs_address", "legal_description", "case_number"]
+    }
+  },
+  "allOf": [
+    {
+      "description": "13.14.1: ENRICHED requires a RESOLVED parcel — enrichment keys off the parcel identifier.",
+      "if": {
+        "properties": { "enrichment_status": { "const": "ENRICHED" } }
+      },
+      "then": {
+        "properties": { "parcel_resolution_status": { "const": "RESOLVED" } }
+      }
+    },
+    {
+      "description": "17.E: a REVIEW_REQUIRED parcel_resolution_status must carry filer_entity and review_reason.",
+      "if": {
+        "properties": { "parcel_resolution_status": { "const": "REVIEW_REQUIRED" } }
+      },
+      "then": {
+        "properties": {
+          "filer_entity": { "type": "string", "minLength": 1 },
+          "review_reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  ]
+}

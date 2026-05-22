@@ -2,22 +2,32 @@
 run_all.py — single entry point to run all framework gate tests.
 
 Runs:
-  1. scaffold/tests/test_golden_path.py
-  2. scaffold/tests/test_county_agnostic_regression.py
-  3. scaffold/tests/test_write_county_config.py   (v5.1.1-beta+)
-  4. scaffold/tests/test_translator_registry.py    (v5.1.2-beta+)
+  1. The monolith gate tests:
+       scaffold/tests/test_golden_path.py
+       scaffold/tests/test_county_agnostic_regression.py
+       scaffold/tests/test_write_county_config.py   (v5.1.1-beta+)
+       scaffold/tests/test_translator_registry.py    (v5.1.2-beta+)
+  2. Every scaffold/tests/v5_3_0/test_*.py — the §16-§20 / §02 architecture-
+     contract invariant tests (auto-discovered; v5.3.0+).
+  3. Every scaffold/tests/v5_4_0/test_*.py — the v5.4.0 pipeline-engine
+     contract-shape / scaffolding tests, "Group A" (auto-discovered; v5.4.0+).
 
-All must pass for the framework to be shippable. Exits 0 only when every
-test exits 0. Operator-friendly output preserved from each underlying script.
+NOT run: scaffold/tests/v5_4_0_pending/ — the v5.4.0 "Group B" behavioral
+specs. They are red until the staged engine is built and are intentionally
+quarantined out of the default gate. Each is promoted into v5_4_0/ by the
+session that implements its stage (see v5_4_0_pending/README.md).
+
+All wired tests must pass for the framework to be shippable. Exits 0 only when
+every test exits 0. Operator-friendly output preserved from each underlying
+script.
 
 Usage:
   python scaffold/tests/run_all.py
 
-Each underlying script can still be run directly for focused work:
+Each underlying script can still be run directly for focused work, e.g.:
   python scaffold/tests/test_golden_path.py
-  python scaffold/tests/test_county_agnostic_regression.py
-  python scaffold/tests/test_write_county_config.py
-  python scaffold/tests/test_translator_registry.py
+  python scaffold/tests/v5_3_0/test_debtor_party_rules_present.py
+  python scaffold/tests/v5_4_0/test_contract_schemas.py
 """
 
 import subprocess
@@ -33,6 +43,21 @@ TESTS = [
     ("Atomic county config writer (v5.1.1-beta)", TESTS_DIR / "test_write_county_config.py"),
     ("Translator registry (v5.1.2-beta)", TESTS_DIR / "test_translator_registry.py"),
 ]
+
+# v5.3.0+ — §16-§20 / §02 architecture-contract invariant tests. Auto-discovered
+# so newly added invariants are gated without editing this file. (These shipped
+# in v5.3.0 but were never wired into run_all.py; wired here in v5.4.0 so the
+# default gate covers them.)
+for _script in sorted((TESTS_DIR / "v5_3_0").glob("test_*.py")):
+    TESTS.append((f"v5.3.0 invariant — {_script.stem}", _script))
+
+# v5.4.0+ — pipeline-engine contract-shape / scaffolding tests ("Group A").
+# Auto-discovered. v5_4_0_pending/ ("Group B" behavioral specs) is deliberately
+# NOT discovered here — see v5_4_0_pending/README.md.
+_v5_4_0_dir = TESTS_DIR / "v5_4_0"
+if _v5_4_0_dir.is_dir():
+    for _script in sorted(_v5_4_0_dir.glob("test_*.py")):
+        TESTS.append((f"v5.4.0 contract-shape — {_script.stem}", _script))
 
 
 def main():

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xcerebro.framework/v5.4.0/contracts/debtor_resolved_record.schema.json",
+  "title": "Debtor-party-resolved record (v5.4.0 pipeline stage 2 output)",
+  "description": "The output of the debtor party engine (knowledge_base/architecture/17_debtor_party_rules.md). It is a raw event record (raw_event_record.schema.json) with the 17-derived debtor identity attached: owner_name, owner_type, filer_entity, and the resolution verdict. When 17.E routing fires (expected debtor missing OR a known filer matches the proposed owner), debtor_resolution_status is REVIEW_REQUIRED, owner_name is the 17.E placeholder, and filer_entity / review_reason are populated.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "raw_event_id",
+    "source_id",
+    "source_role",
+    "canonical_doc_type",
+    "source_url",
+    "recorded_date",
+    "instrument_number",
+    "property_refs",
+    "owner_name",
+    "owner_type",
+    "filer_entity",
+    "debtor_resolution_status",
+    "review_reason",
+    "parcel_resolution_status",
+    "debtor_extraction_method"
+  ],
+  "properties": {
+    "raw_event_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Back-reference to the raw_event_record this was resolved from."
+    },
+    "source_id": { "type": "string", "minLength": 1 },
+    "source_role": {
+      "type": "string",
+      "enum": [
+        "PRIMARY_EVENT_SOURCE",
+        "SUPPORTING_EVENT_SOURCE",
+        "ENRICHMENT_SOURCE",
+        "REFERENCE_SOURCE",
+        "BLOCKED_SOURCE"
+      ]
+    },
+    "canonical_doc_type": { "type": "string", "minLength": 1 },
+    "instrument_number": { "type": ["string", "null"] },
+    "recorded_date": { "type": ["string", "null"], "format": "date" },
+    "event_date": { "type": ["string", "null"], "format": "date" },
+    "source_url": { "type": "string", "minLength": 1 },
+    "property_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "parcel_id": { "type": ["string", "null"] },
+        "situs_address": { "type": ["string", "null"] },
+        "legal_description": { "type": ["string", "null"] },
+        "case_number": { "type": ["string", "null"] }
+      },
+      "required": ["parcel_id", "situs_address", "legal_description", "case_number"]
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "owner_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The resolved debtor / lead subject per 17.C. When debtor_resolution_status is REVIEW_REQUIRED this is the 17.E placeholder '<canonical_doc_type> against unidentified party' — never a filer name."
+    },
+    "owner_type": {
+      "type": "string",
+      "enum": ["ENTITY", "ESTATE", "TRUST", "INDIVIDUAL", "UNKNOWN"],
+      "description": "Owner-type classification per 17.F. Precedence ENTITY > ESTATE > TRUST > INDIVIDUAL; UNKNOWN only when the name is empty or pure punctuation."
+    },
+    "filer_entity": {
+      "type": ["string", "null"],
+      "description": "The original filer / lienholder / claimant name from the raw record (17.E). Populated whenever a filer is identifiable; MUST be non-null when debtor_resolution_status is REVIEW_REQUIRED. A known-filer pattern may appear here and ONLY here — never in owner_name (20_semantic_verification_contract.md Check 12)."
+    },
+    "debtor_resolution_status": {
+      "type": "string",
+      "enum": ["RESOLVED", "REVIEW_REQUIRED"],
+      "description": "The debtor party engine's own verdict. RESOLVED = a real debtor was extracted per 17.C. REVIEW_REQUIRED = 17.E routing fired. This is an inter-stage field introduced by the v5.4.0 contract: 17.E expresses the failure verdict only via parcel_resolution_status, which conflates a 17-stage outcome with a parcel-resolution-stage field — see contract finding F-1."
+    },
+    "review_reason": {
+      "type": ["string", "null"],
+      "description": "The 17.E rule that triggered REVIEW_REQUIRED routing — e.g. 'expected_debtor_name_type TP missing' or 'known_filer_pattern match on STATE OF <*>'. Null when debtor_resolution_status is RESOLVED."
+    },
+    "expected_debtor_name_type": {
+      "type": ["string", "null"],
+      "description": "The name_type the 17.C rule designated as the debtor source for this canonical_doc_type. Audit field; null for document-body extraction."
+    },
+    "debtor_extraction_method": {
+      "type": "string",
+      "enum": [
+        "STRUCTURED_NAME_TYPE",
+        "FALLBACK_NAME_TYPE",
+        "DOCUMENT_BODY",
+        "REVIEW_ROUTED"
+      ],
+      "description": "How owner_name was derived: from the 17.C expected name_type, from the fallback name_type, extracted from document_body_text, or REVIEW_ROUTED when 17.E fired."
+    },
+    "parcel_resolution_status": {
+      "type": ["string", "null"],
+      "enum": ["RESOLVED", "UNRESOLVED", "REVIEW_REQUIRED", null],
+      "description": "13.14.1 parcel resolution status. The debtor party engine sets this to REVIEW_REQUIRED when debtor_resolution_status is REVIEW_REQUIRED (17.E). Otherwise null at this stage — the downstream parcel-resolution stage sets RESOLVED or UNRESOLVED."
+    }
+  },
+  "allOf": [
+    {
+      "description": "17.E: a REVIEW_REQUIRED debtor verdict must carry filer_entity, review_reason, REVIEW_ROUTED extraction, and parcel_resolution_status REVIEW_REQUIRED.",
+      "if": {
+        "properties": { "debtor_resolution_status": { "const": "REVIEW_REQUIRED" } }
+      },
+      "then": {
+        "properties": {
+          "filer_entity": { "type": "string", "minLength": 1 },
+          "review_reason": { "type": "string", "minLength": 1 },
+          "debtor_extraction_method": { "const": "REVIEW_ROUTED" },
+          "parcel_resolution_status": { "const": "REVIEW_REQUIRED" }
+        }
+      }
+    },
+    {
+      "description": "A RESOLVED debtor verdict carries no review_reason and is not REVIEW_ROUTED.",
+      "if": {
+        "properties": { "debtor_resolution_status": { "const": "RESOLVED" } }
+      },
+      "then": {
+        "properties": {
+          "review_reason": { "type": "null" },
+          "debtor_extraction_method": {
+            "enum": ["STRUCTURED_NAME_TYPE", "FALLBACK_NAME_TYPE", "DOCUMENT_BODY"]
+          }
+        }
+      }
+    }
+  ]
+}
