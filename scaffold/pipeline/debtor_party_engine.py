@@ -47,6 +47,7 @@ from typing import Optional
 from jsonschema import Draft202012Validator
 
 from scaffold.pipeline.contracts import schema_path
+from scaffold.pipeline.contracts.records import single_owner_block
 
 # ---------------------------------------------------------------------------
 # §17.C — the universal debtor_party_rules table.
@@ -496,9 +497,10 @@ def route_to_review(
         conforming to debtor_resolved_record.schema.json.
     """
     doc_type = raw_event.get("canonical_doc_type") or "unknown_doc_type"
+    placeholder = _PLACEHOLDER.format(doc_type=doc_type)
     record = _carry_forward(raw_event)
     record.update({
-        "owner_name": _PLACEHOLDER.format(doc_type=doc_type),
+        "owner_name": placeholder,
         "owner_type": "UNKNOWN",
         "filer_entity": filer_entity,
         "debtor_resolution_status": "REVIEW_REQUIRED",
@@ -506,6 +508,16 @@ def route_to_review(
         "expected_debtor_name_type": None,
         "debtor_extraction_method": "REVIEW_ROUTED",
     })
+    # v5.4.0 Session 7A — a review-routed record has one (unidentified) owner
+    # slot: the 17.E placeholder. multi_owner_status SINGLE_OWNER is descriptive
+    # cardinality only; the needs-review verdict stays debtor_resolution_status.
+    record.update(single_owner_block(
+        placeholder,
+        name_type=None,
+        role="unresolved",
+        resolution_status="REVIEW_REQUIRED",
+        source_field=None,
+    ))
     return record
 
 
@@ -697,6 +709,16 @@ def _build_resolved(
         "expected_debtor_name_type": expected_name_type,
         "debtor_extraction_method": method,
     })
+    # v5.4.0 Session 7A — the 17 engine resolves one owner per record; wrap it
+    # as the SINGLE_OWNER multi-owner block. Multi-owner resolution (the 9
+    # deferred rules) is Session 7, which keys off this same block.
+    record.update(single_owner_block(
+        owner_name,
+        name_type=expected_name_type,
+        role="debtor",
+        resolution_status="RESOLVED",
+        source_field=expected_name_type or "document_body",
+    ))
     return record
 
 

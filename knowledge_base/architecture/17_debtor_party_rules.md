@@ -245,3 +245,56 @@ the engine. The filer pattern-sets that §17.C references but §17.D never
 concretely defines — contractor / construction, plaintiff, judgment-creditor,
 heir-affiant, sheriff / marshal, and executor / administrator patterns — remain
 a documented gap: they are flagged here, and no patterns are invented for them.
+
+### v5.4.0 Session 7A — the multi-owner contract extension
+
+Co-ownership is the norm in distressed property — married couples, heirs,
+siblings, partners, LLC members, probate, partition, divorce. A single
+`owner_name` string silently drops real co-owners. Session 7A extends three
+inter-stage records — `debtor_resolved_record`, `leads_base_record`,
+`matched_lead_record` (the JSON Schemas and their `records.py` dataclass
+mirrors) — to represent multiple distressed owners. This is a GENERAL
+multi-owner extension, not divorce-specific.
+
+**Shape.** `owner_name` is unchanged — it stays the required PRIMARY display
+owner, so all pre-7A single-owner code and records remain valid. Each of the
+three records additionally carries the **multi-owner block**: an `owners`
+array (each owner: `name`, `role`, `name_type`, `is_primary`, `confidence`,
+`source_field`, `resolution_status`, `notes` — `name_type` uses the existing
+unextended `TP/DF/GR/GE/PL/OTHER` enum) plus the scalars `primary_owner_name`,
+`additional_owner_names`, `owner_count`, and `multi_owner_status`. The block is
+schema-optional for backward compatibility; the staged engine always emits it.
+
+**`multi_owner_status` is descriptive, never a verdict.** It has exactly three
+values — `SINGLE_OWNER`, `MULTIPLE_OWNERS_PRIMARY_CLEAR`,
+`MULTIPLE_OWNERS_PRIMARY_UNCLEAR` — and describes owner cardinality and
+primary-clarity ONLY. It deliberately has no `REVIEW_REQUIRED` value. The single
+source of truth for "needs review" remains `debtor_resolution_status` (the
+F-1-ratified field on the debtor-resolved record; `parcel_resolution_status`
+REVIEW_REQUIRED downstream) — unchanged. When the primary owner is unclear,
+`multi_owner_status` is `MULTIPLE_OWNERS_PRIMARY_UNCLEAR` AND the existing review
+mechanic independently sets the verdict field to `REVIEW_REQUIRED`. One field
+describes, the other decides; the schema's `allOf` consistency rules make it
+impossible for them to contradict.
+
+**Consistency, enforced.** The schemas (`allOf` + `dependentRequired`) and the
+`records.py` dataclasses (`__post_init__` + `multi_owner_consistency_errors`)
+jointly enforce: `SINGLE_OWNER` → exactly one owner, marked primary,
+`owner_count` 1, `additional_owner_names` empty, `primary_owner_name` ==
+`owner_name`; `MULTIPLE_OWNERS_PRIMARY_CLEAR` → more than one owner, exactly one
+primary; `MULTIPLE_OWNERS_PRIMARY_UNCLEAR` → more than one owner, NONE marked
+primary, verdict field REVIEW_REQUIRED. `owner_count` always equals
+`len(owners)` — every identified owner is counted; **co-owners are never
+dropped**. **Ownership priority is never invented** — if the source document
+does not make a primary clear, the status is `MULTIPLE_OWNERS_PRIMARY_UNCLEAR`,
+not a guess, and `owner_name` / `primary_owner_name` take the §17.E
+unidentified-party placeholder (the existing review-placeholder mechanic, not a
+new one).
+
+**Engine adaptation.** The §17 engine resolves one owner per record today, so it
+emits a `SINGLE_OWNER` block (the resolved debtor, or the §17.E placeholder on a
+review-routed record). The leads-base writer and the §19 aggregator carry the
+block forward unchanged — co-owners survive every stage. Multi-owner *resolution*
+(populating `owners` with co-owners for the 9 deferred doc types) is Session 7,
+which keys off this contract. Session 7A is contract + schema + thin
+backward-compatible adaptation only — no debtor-rule logic.

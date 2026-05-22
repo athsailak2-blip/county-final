@@ -50,6 +50,7 @@ from jsonschema import Draft202012Validator
 
 from scaffold.pipeline import aggregation_key_engine
 from scaffold.pipeline.contracts import schema_path
+from scaffold.pipeline.contracts.records import owner_block_from
 
 # §18.J confidence roll-up tables.
 #
@@ -254,6 +255,16 @@ def build_base_record(
             "case_number": property_refs.get("case_number"),
         },
     }
+    # v5.4.0 Session 7A — carry the debtor-resolved record's multi-owner block
+    # forward (co-owners are never dropped between stages); derive SINGLE_OWNER
+    # for a pre-7A single-owner debtor-resolved record.
+    record.update(owner_block_from(
+        drr,
+        owner_name=drr.get("owner_name"),
+        name_type=drr.get("expected_debtor_name_type"),
+        role="debtor",
+        resolution_status=drr.get("debtor_resolution_status"),
+    ))
     return _validate_base_record(record)
 
 

@@ -61,6 +61,7 @@ from jsonschema import Draft202012Validator
 
 from scaffold.pipeline import aggregation_key_engine
 from scaffold.pipeline.contracts import schema_path
+from scaffold.pipeline.contracts.records import owner_block_from
 
 # §19.C — names the aggregator must never accept as input (its own output).
 _OWN_OUTPUT_NAMES = {"matched_leads.json"}
@@ -270,7 +271,7 @@ def _build_matched_lead(property_identity: tuple, signal_groups: list) -> dict:
     source_ids = sorted({s for sig in signals for s in sig["source_ids"]})
     evidence_ids = sorted({e for sig in signals for e in sig["evidence_ids"]})
 
-    return {
+    record = {
         "lead_id": lead_id,
         "primary_parcel_id": primary_parcel_id,
         "owner_name": representative.get("owner_name"),
@@ -285,6 +286,17 @@ def _build_matched_lead(property_identity: tuple, signal_groups: list) -> dict:
         "source_ids": source_ids,
         "evidence_ids": evidence_ids,
     }
+    # v5.4.0 Session 7A — carry the representative leads-base record's
+    # multi-owner block onto the matched lead; derive SINGLE_OWNER for a pre-7A
+    # single-owner representative.
+    record.update(owner_block_from(
+        representative,
+        owner_name=representative.get("owner_name"),
+        name_type=None,
+        role="debtor",
+        resolution_status=representative.get("parcel_resolution_status"),
+    ))
+    return record
 
 
 def _build_matched_leads(records: list[dict]) -> list[dict]:

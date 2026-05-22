@@ -110,6 +110,18 @@ CONFIDENCE_STATUSES: tuple[str, ...] = (
 prime-directive labels. Derived from a record's evidence-ledger entries by the
 weakest-evidence roll-up rule (leads_base_writer.derive_confidence_status)."""
 
+MULTI_OWNER_STATUSES: tuple[str, ...] = (
+    "SINGLE_OWNER",
+    "MULTIPLE_OWNERS_PRIMARY_CLEAR",
+    "MULTIPLE_OWNERS_PRIMARY_UNCLEAR",
+)
+"""v5.4.0 Session 7A multi-owner cardinality status (see 17.K). DESCRIPTIVE
+only — owner count and primary clarity. NOT a review verdict: the needs-review
+verdict stays debtor_resolution_status (debtor-resolved record) / a
+REVIEW_REQUIRED parcel_resolution_status (downstream). There is deliberately no
+REVIEW_REQUIRED value here; the descriptive and verdict fields can never
+contradict."""
+
 SOURCE_CLASSES: tuple[str, ...] = (
     "lead_generating",
     "enrichment",
@@ -155,6 +167,11 @@ EvidenceStatus = Literal[
     "Confirmed", "Estimated", "Possible", "Unknown", "Needs Review", "Unsupported"
 ]
 ConfidenceStatus = Literal["Confirmed", "Estimated", "Possible", "Unknown"]
+MultiOwnerStatus = Literal[
+    "SINGLE_OWNER",
+    "MULTIPLE_OWNERS_PRIMARY_CLEAR",
+    "MULTIPLE_OWNERS_PRIMARY_UNCLEAR",
+]
 
 
 # ---------------------------------------------------------------------------
@@ -197,6 +214,24 @@ class AggregationKey:
     parcel_id: Optional[str]
     canonical_doc_type: str
     signal_type: str
+
+
+@dataclass(frozen=True, kw_only=True)
+class Owner:
+    """One distressed owner on a record's multi-owner block (v5.4.0 Session 7A).
+
+    Co-owners are never dropped — every owner the engine identifies is an Owner
+    in the record's `owners` tuple. `name_type` uses the existing NAME_TYPES
+    enum, unextended (None when the document gives no role code)."""
+
+    name: str
+    is_primary: bool
+    role: Optional[str] = None
+    name_type: Optional[NameType] = None
+    confidence: Optional[str] = None
+    source_field: Optional[str] = None
+    resolution_status: Optional[str] = None
+    notes: Optional[str] = None
 
 
 # ---------------------------------------------------------------------------
@@ -258,6 +293,14 @@ class DebtorResolvedRecord:
     expected_debtor_name_type: Optional[str] = None
     event_date: Optional[str] = None
     evidence_ids: tuple[str, ...] = ()
+    owners: tuple[Owner, ...] = ()
+    primary_owner_name: Optional[str] = None
+    additional_owner_names: tuple[str, ...] = ()
+    owner_count: Optional[int] = None
+    multi_owner_status: Optional[MultiOwnerStatus] = None
+
+    def __post_init__(self) -> None:
+        _enforce_multi_owner_consistency(self)
 
 
 # ---------------------------------------------------------------------------
@@ -289,6 +332,14 @@ class LeadsBaseRecord:
     property_refs: PropertyRefs
     evidence_ids: tuple[str, ...] = ()
     event_date: Optional[str] = None
+    owners: tuple[Owner, ...] = ()
+    primary_owner_name: Optional[str] = None
+    additional_owner_names: tuple[str, ...] = ()
+    owner_count: Optional[int] = None
+    multi_owner_status: Optional[MultiOwnerStatus] = None
+
+    def __post_init__(self) -> None:
+        _enforce_multi_owner_consistency(self)
 
 
 # ---------------------------------------------------------------------------
@@ -330,6 +381,14 @@ class MatchedLeadRecord:
     source_ids: tuple[str, ...]
     evidence_ids: tuple[str, ...] = ()
     lead_status: Optional[str] = None
+    owners: tuple[Owner, ...] = ()
+    primary_owner_name: Optional[str] = None
+    additional_owner_names: tuple[str, ...] = ()
+    owner_count: Optional[int] = None
+    multi_owner_status: Optional[MultiOwnerStatus] = None
+
+    def __post_init__(self) -> None:
+        _enforce_multi_owner_consistency(self)
 
 
 # ---------------------------------------------------------------------------
@@ -384,3 +443,173 @@ CONTRACT_DATACLASSES: dict[str, type] = {
     "evidence_ledger_entry": EvidenceLedgerEntry,
 }
 """Contract name -> frozen dataclass mirror."""
+
+
+# ---------------------------------------------------------------------------
+# v5.4.0 Session 7A — multi-owner block: consistency enforcement and helpers.
+#
+# Three records (DebtorResolvedRecord, LeadsBaseRecord, MatchedLeadRecord) carry
+# the multi-owner block: owners[], primary_owner_name, additional_owner_names,
+# owner_count, multi_owner_status. owner_name stays the required primary display
+# owner (backward compatible). multi_owner_status is DESCRIPTIVE — owner
+# cardinality and primary clarity — and never carries a review verdict; the
+# needs-review verdict is debtor_resolution_status / parcel_resolution_status.
+# ---------------------------------------------------------------------------
+
+def _mo_get(record: Any, key: str) -> Any:
+    """Read a field from a dict OR a contract dataclass instance."""
+    if isinstance(record, dict):
+        return record.get(key)
+    return getattr(record, key, None)
+
+
+def multi_owner_consistency_errors(record: Any) -> list:
+    """Return the list of Session 7A multi-owner consistency violations.
+
+    Empty when `record` carries no multi-owner block (multi_owner_status unset)
+    — old single-owner records are valid (backward compatibility). Otherwise it
+    enforces the 17.K rules: SINGLE_OWNER / MULTIPLE_OWNERS_PRIMARY_CLEAR /
+    MULTIPLE_OWNERS_PRIMARY_UNCLEAR cardinality and primary clarity,
+    owner_count == len(owners) (every identified owner is counted — co-owners
+    are never dropped), and the no-contradiction guarantee: a
+    MULTIPLE_OWNERS_PRIMARY_UNCLEAR record's needs-review verdict field
+    (debtor_resolution_status, or parcel_resolution_status downstream) MUST be
+    REVIEW_REQUIRED. Accepts a dict or a contract dataclass instance.
+    """
+    status = _mo_get(record, "multi_owner_status")
+    if status is None:
+        return []
+    errors: list = []
+    if status not in MULTI_OWNER_STATUSES:
+        errors.append(f"multi_owner_status {status!r} is not a valid value")
+        return errors
+
+    owners = list(_mo_get(record, "owners") or [])
+    owner_count = _mo_get(record, "owner_count")
+    primary_owner_name = _mo_get(record, "primary_owner_name")
+    owner_name = _mo_get(record, "owner_name")
+    additional = list(_mo_get(record, "additional_owner_names") or [])
+    n_primary = sum(1 for o in owners if bool(_mo_get(o, "is_primary")))
+
+    if owner_count != len(owners):
+        errors.append(
+            f"owner_count {owner_count} != len(owners) {len(owners)} — every "
+            f"identified owner must be counted (co-owners are never dropped)"
+        )
+
+    if status == "SINGLE_OWNER":
+        if len(owners) != 1:
+            errors.append("SINGLE_OWNER requires exactly one owner")
+        if n_primary != 1:
+            errors.append("SINGLE_OWNER requires exactly one is_primary owner")
+        if primary_owner_name != owner_name:
+            errors.append(
+                "SINGLE_OWNER requires primary_owner_name == owner_name"
+            )
+        if additional:
+            errors.append("SINGLE_OWNER requires additional_owner_names empty")
+    elif status == "MULTIPLE_OWNERS_PRIMARY_CLEAR":
+        if len(owners) < 2:
+            errors.append(
+                "MULTIPLE_OWNERS_PRIMARY_CLEAR requires more than one owner"
+            )
+        if n_primary != 1:
+            errors.append(
+                "MULTIPLE_OWNERS_PRIMARY_CLEAR requires exactly one is_primary "
+                "owner"
+            )
+        if primary_owner_name != owner_name:
+            errors.append(
+                "MULTIPLE_OWNERS_PRIMARY_CLEAR requires primary_owner_name == "
+                "owner_name"
+            )
+    elif status == "MULTIPLE_OWNERS_PRIMARY_UNCLEAR":
+        if len(owners) < 2:
+            errors.append(
+                "MULTIPLE_OWNERS_PRIMARY_UNCLEAR requires more than one owner"
+            )
+        if n_primary != 0:
+            errors.append(
+                "MULTIPLE_OWNERS_PRIMARY_UNCLEAR requires NO owner marked "
+                "is_primary (ownership priority is never guessed)"
+            )
+        verdict = _mo_get(record, "debtor_resolution_status")
+        if verdict is None:
+            verdict = _mo_get(record, "parcel_resolution_status")
+        if verdict != "REVIEW_REQUIRED":
+            errors.append(
+                "MULTIPLE_OWNERS_PRIMARY_UNCLEAR requires the needs-review "
+                "verdict field (debtor_resolution_status / "
+                "parcel_resolution_status) to be REVIEW_REQUIRED — "
+                "multi_owner_status describes, it never decides; the two "
+                "fields must never contradict"
+            )
+    return errors
+
+
+def _enforce_multi_owner_consistency(record: Any) -> None:
+    """Raise ValueError if `record` violates the Session 7A multi-owner rules."""
+    errors = multi_owner_consistency_errors(record)
+    if errors:
+        raise ValueError(
+            "multi-owner contract violation (v5.4.0 Session 7A): "
+            + "; ".join(errors)
+        )
+
+
+def single_owner_block(
+    owner_name: str,
+    *,
+    name_type: Optional[str] = None,
+    role: Optional[str] = None,
+    resolution_status: Optional[str] = None,
+    source_field: Optional[str] = None,
+    confidence: Optional[str] = None,
+) -> dict:
+    """Build the SINGLE_OWNER multi-owner block — the five Session 7A fields.
+
+    The backward-compatibility path: an engine that resolves exactly one owner
+    wraps it here. Produces a consistent SINGLE_OWNER block — one owner,
+    is_primary true, owner_count 1, no additional owners. The block is a dict
+    (the staged engines build dict records); its `owners` entry is a dict
+    carrying all eight owner-object fields.
+    """
+    owner = {
+        "name": owner_name,
+        "role": role,
+        "name_type": name_type,
+        "is_primary": True,
+        "confidence": confidence,
+        "source_field": source_field,
+        "resolution_status": resolution_status,
+        "notes": None,
+    }
+    return {
+        "owners": [owner],
+        "primary_owner_name": owner_name,
+        "additional_owner_names": [],
+        "owner_count": 1,
+        "multi_owner_status": "SINGLE_OWNER",
+    }
+
+
+def owner_block_from(source_record: dict, **single_owner_kwargs: Any) -> dict:
+    """Carry a record's multi-owner block forward, or derive SINGLE_OWNER.
+
+    If `source_record` already carries a multi-owner block (multi_owner_status
+    set), the block is copied verbatim — co-owners are never dropped between
+    stages. Otherwise a SINGLE_OWNER block is derived via `single_owner_block`
+    from `single_owner_kwargs` (which must include `owner_name`), so a pre-7A
+    single-owner record upgrades cleanly.
+    """
+    if isinstance(source_record, dict) and source_record.get("multi_owner_status"):
+        return {
+            "owners": [dict(o) for o in (source_record.get("owners") or [])],
+            "primary_owner_name": source_record.get("primary_owner_name"),
+            "additional_owner_names": list(
+                source_record.get("additional_owner_names") or []
+            ),
+            "owner_count": source_record.get("owner_count"),
+            "multi_owner_status": source_record.get("multi_owner_status"),
+        }
+    return single_owner_block(**single_owner_kwargs)

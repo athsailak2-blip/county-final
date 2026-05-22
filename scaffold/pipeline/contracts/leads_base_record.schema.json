@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://xcerebro.framework/v5.4.0/contracts/leads_base_record.schema.json",
   "title": "Leads-base record (v5.4.0 pipeline stage 3 output — one record in <source>_leads_base.json)",
-  "description": "A record in the stable per-source base file <source>_leads_base.json, written by the leads-base writer. It is a debtor-resolved record (debtor_resolved_record.schema.json) decorated with the 18.B aggregation key, the resolved signal_type, and the 13.14 status pair (parcel_resolution_status, enrichment_status). The base file is the ONLY input the aggregator reads (19_aggregator_idempotency_rule.md 19.C); the aggregator never reads its own matched_leads.json output. One record per debtor-resolved event — within-source and cross-source grouping is performed by the aggregator, not pre-collapsed here, so that aggregation stays idempotent from a stable base.",
+  "description": "A record in the stable per-source base file <source>_leads_base.json, written by the leads-base writer. It is a debtor-resolved record (debtor_resolved_record.schema.json) decorated with the 18.B aggregation key, the resolved signal_type, and the 13.14 status pair (parcel_resolution_status, enrichment_status). The base file is the ONLY input the aggregator reads (19_aggregator_idempotency_rule.md 19.C); the aggregator never reads its own matched_leads.json output. One record per debtor-resolved event — within-source and cross-source grouping is performed by the aggregator, not pre-collapsed here, so that aggregation stays idempotent from a stable base. v5.4.0 Session 7A (see 17.K) adds the multi-owner block, carried forward from the debtor-resolved record; owner_name stays the required primary display owner and old single-owner records remain valid.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -71,7 +71,7 @@
     "owner_name": {
       "type": "string",
       "minLength": 1,
-      "description": "Resolved debtor per 17, carried from the debtor-resolved record. Never a filer."
+      "description": "Resolved debtor per 17 — the PRIMARY display owner — carried from the debtor-resolved record. Never a filer. Backward-compatible: required, unchanged by Session 7A."
     },
     "owner_type": {
       "type": "string",
@@ -88,7 +88,7 @@
     "parcel_resolution_status": {
       "type": "string",
       "enum": ["RESOLVED", "UNRESOLVED", "REVIEW_REQUIRED"],
-      "description": "13.14.1 parcel resolution status. REVIEW_REQUIRED is the 17.E debtor-routing value carried forward."
+      "description": "13.14.1 parcel resolution status. REVIEW_REQUIRED is the 17.E debtor-routing value carried forward. Session 7A: this is the downstream needs-review verdict field (the leads-base equivalent of the debtor-resolved record's debtor_resolution_status, per F-1); multi_owner_status never carries a review verdict."
     },
     "enrichment_status": {
       "type": "string",
@@ -126,7 +126,48 @@
         "case_number": { "type": ["string", "null"] }
       },
       "required": ["parcel_id", "situs_address", "legal_description", "case_number"]
+    },
+    "owners": {
+      "type": "array",
+      "description": "v5.4.0 Session 7A multi-owner block — every distressed owner identified, carried forward from the debtor-resolved record. Co-owners are NEVER dropped. A single-owner record carries exactly one entry, is_primary true. Optional for backward compatibility; old single-owner records that omit the multi-owner block remain valid.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "role", "name_type", "is_primary", "confidence", "source_field", "resolution_status", "notes"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "role": { "type": ["string", "null"] },
+          "name_type": { "type": ["string", "null"], "enum": ["TP", "DF", "GR", "GE", "PL", "OTHER", null] },
+          "is_primary": { "type": "boolean" },
+          "confidence": { "type": ["string", "null"] },
+          "source_field": { "type": ["string", "null"] },
+          "resolution_status": { "type": ["string", "null"] },
+          "notes": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "primary_owner_name": {
+      "type": ["string", "null"],
+      "description": "v5.4.0 Session 7A — the primary display owner; equals owner_name when multi_owner_status is SINGLE_OWNER or MULTIPLE_OWNERS_PRIMARY_CLEAR; the 17.E placeholder when MULTIPLE_OWNERS_PRIMARY_UNCLEAR."
+    },
+    "additional_owner_names": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "v5.4.0 Session 7A — names of every non-primary owner. Empty for SINGLE_OWNER."
+    },
+    "owner_count": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "v5.4.0 Session 7A — count of entries in owners."
+    },
+    "multi_owner_status": {
+      "type": ["string", "null"],
+      "enum": ["SINGLE_OWNER", "MULTIPLE_OWNERS_PRIMARY_CLEAR", "MULTIPLE_OWNERS_PRIMARY_UNCLEAR", null],
+      "description": "v5.4.0 Session 7A — DESCRIPTIVE owner-cardinality status, NOT a review verdict. The needs-review verdict on a leads-base record is parcel_resolution_status (= REVIEW_REQUIRED), the downstream F-1 propagation of the debtor-resolved record's debtor_resolution_status. multi_owner_status has no REVIEW_REQUIRED value; when the primary owner is unclear it is MULTIPLE_OWNERS_PRIMARY_UNCLEAR and parcel_resolution_status is independently REVIEW_REQUIRED — the descriptive and verdict fields never contradict."
     }
+  },
+  "dependentRequired": {
+    "multi_owner_status": ["owners", "primary_owner_name", "additional_owner_names", "owner_count"]
   },
   "allOf": [
     {
@@ -148,6 +189,50 @@
           "review_reason": { "type": "string", "minLength": 1 }
         },
         "required": ["review_reason"]
+      }
+    },
+    {
+      "description": "v5.4.0 Session 7A — SINGLE_OWNER: exactly one owner, marked primary; owner_count 1; no additional owners.",
+      "if": { "required": ["multi_owner_status"], "properties": { "multi_owner_status": { "const": "SINGLE_OWNER" } } },
+      "then": {
+        "properties": {
+          "owner_count": { "const": 1 },
+          "owners": {
+            "minItems": 1,
+            "maxItems": 1,
+            "contains": { "required": ["is_primary"], "properties": { "is_primary": { "const": true } } }
+          },
+          "additional_owner_names": { "maxItems": 0 }
+        }
+      }
+    },
+    {
+      "description": "v5.4.0 Session 7A — MULTIPLE_OWNERS_PRIMARY_CLEAR: more than one owner, exactly one marked primary; owner_count > 1.",
+      "if": { "required": ["multi_owner_status"], "properties": { "multi_owner_status": { "const": "MULTIPLE_OWNERS_PRIMARY_CLEAR" } } },
+      "then": {
+        "properties": {
+          "owner_count": { "type": "integer", "minimum": 2 },
+          "owners": {
+            "minItems": 2,
+            "contains": { "required": ["is_primary"], "properties": { "is_primary": { "const": true } } },
+            "minContains": 1,
+            "maxContains": 1
+          }
+        }
+      }
+    },
+    {
+      "description": "v5.4.0 Session 7A — MULTIPLE_OWNERS_PRIMARY_UNCLEAR: more than one owner, NONE marked primary; owner_count > 1. multi_owner_status only describes; the verdict is separate — parcel_resolution_status MUST independently be REVIEW_REQUIRED, so the descriptive and verdict fields never contradict.",
+      "if": { "required": ["multi_owner_status"], "properties": { "multi_owner_status": { "const": "MULTIPLE_OWNERS_PRIMARY_UNCLEAR" } } },
+      "then": {
+        "properties": {
+          "owner_count": { "type": "integer", "minimum": 2 },
+          "owners": {
+            "minItems": 2,
+            "items": { "properties": { "is_primary": { "const": false } } }
+          },
+          "parcel_resolution_status": { "const": "REVIEW_REQUIRED" }
+        }
       }
     }
   ]
