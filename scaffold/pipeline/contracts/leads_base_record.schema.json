@@ -19,6 +19,7 @@
     "review_reason",
     "parcel_resolution_status",
     "enrichment_status",
+    "confidence_status",
     "instrument_number",
     "recorded_date",
     "source_url",
@@ -78,7 +79,7 @@
     },
     "filer_entity": {
       "type": ["string", "null"],
-      "description": "Filer name carried from the debtor-resolved record. Non-null when parcel_resolution_status is REVIEW_REQUIRED."
+      "description": "Filer name carried from the debtor-resolved record (17.E). Null when no filer could be identified — including REVIEW_REQUIRED records produced by the 17 F-5 default rule (no 17.C rule for the doc type). A known-filer pattern may appear here and ONLY here, never in owner_name."
     },
     "review_reason": {
       "type": ["string", "null"],
@@ -93,6 +94,11 @@
       "type": "string",
       "enum": ["ENRICHED", "UNENRICHED"],
       "description": "13.14.1 enrichment status. Tracked independently of parcel_resolution_status — a lead is never dropped because enrichment failed."
+    },
+    "confidence_status": {
+      "type": "string",
+      "enum": ["Confirmed", "Estimated", "Possible", "Unknown"],
+      "description": "Rolled-up 08 prime-directive confidence label for this record, computed once by the leads-base writer (the dashboard never computes confidence itself). Added in v5.4.0 Session 3 (see 18.J). DERIVED deterministically from the 08 evidence-ledger entries this record's evidence_ids point to: each entry's status maps to a prime-directive label (Confirmed/Estimated/Possible/Unknown; 'Needs Review' and 'Unsupported' map to Unknown), and confidence_status is the WEAKEST such label — Confirmed > Estimated > Possible > Unknown. A record with no evidence entries is Unknown. A lead is never labelled more confident than its least-supported claim."
     },
     "instrument_number": {
       "type": ["string", "null"],
@@ -133,15 +139,15 @@
       }
     },
     {
-      "description": "17.E: a REVIEW_REQUIRED parcel_resolution_status must carry filer_entity and review_reason.",
+      "description": "17.E / v5.4.0 F-5: a REVIEW_REQUIRED parcel_resolution_status carries a non-empty review_reason. filer_entity is NOT required non-null — the 17 F-5 default rule (no 17.C rule for the doc type) routes to REVIEW_REQUIRED with filer_entity null. The pre-F-5 filer_entity constraint here was stale; relaxed in v5.4.0 Session 3 (see 18.J).",
       "if": {
         "properties": { "parcel_resolution_status": { "const": "REVIEW_REQUIRED" } }
       },
       "then": {
         "properties": {
-          "filer_entity": { "type": "string", "minLength": 1 },
           "review_reason": { "type": "string", "minLength": 1 }
-        }
+        },
+        "required": ["review_reason"]
       }
     }
   ]

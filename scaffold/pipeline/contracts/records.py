@@ -100,6 +100,16 @@ EVIDENCE_STATUSES: tuple[str, ...] = (
 )
 """08 evidence status labels."""
 
+CONFIDENCE_STATUSES: tuple[str, ...] = (
+    "Confirmed",
+    "Estimated",
+    "Possible",
+    "Unknown",
+)
+"""18.J rolled-up confidence label for a leads-base record — the four 08
+prime-directive labels. Derived from a record's evidence-ledger entries by the
+weakest-evidence roll-up rule (leads_base_writer.derive_confidence_status)."""
+
 SOURCE_CLASSES: tuple[str, ...] = (
     "lead_generating",
     "enrichment",
@@ -144,6 +154,7 @@ EnrichmentStatus = Literal["ENRICHED", "UNENRICHED"]
 EvidenceStatus = Literal[
     "Confirmed", "Estimated", "Possible", "Unknown", "Needs Review", "Unsupported"
 ]
+ConfidenceStatus = Literal["Confirmed", "Estimated", "Possible", "Unknown"]
 
 
 # ---------------------------------------------------------------------------
@@ -271,6 +282,7 @@ class LeadsBaseRecord:
     review_reason: Optional[str]
     parcel_resolution_status: ParcelResolutionStatus
     enrichment_status: EnrichmentStatus
+    confidence_status: ConfidenceStatus
     instrument_number: Optional[str]
     recorded_date: Optional[str]
     source_url: str

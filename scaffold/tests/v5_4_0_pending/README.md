@@ -36,7 +36,7 @@ default suite grows to gate real engine behavior:
 | Session | Implements | Promotes |
 |---|---|---|
 | Session 2 ✅ | §17 debtor party engine | `test_debtor_party_engine_behavior.py`, `test_filer_suppression_behavior.py` — **promoted to `scaffold/tests/v5_4_0/`** |
-| Session 3 | §18 aggregation key engine + leads-base writer | `test_aggregation_key_behavior.py` |
+| Session 3 ✅ | §18 aggregation key engine + leads-base writer | `test_aggregation_key_behavior.py` — **promoted to `scaffold/tests/v5_4_0/`** |
 | Session 4 | §19 idempotent aggregator | `test_aggregator_idempotent_behavior.py` |
 | Session 5 | cutover | (all promoted; monolith retired) |
 
@@ -45,12 +45,11 @@ passes. Until then it stays here, red, as the binding spec for that stage.
 
 ## The tests
 
-(The two §17 specs — `test_debtor_party_engine_behavior.py` and
-`test_filer_suppression_behavior.py` — were promoted to `scaffold/tests/v5_4_0/`
-in v5.4.0 Session 2 and now run in the default gate.)
+(The §17 specs — `test_debtor_party_engine_behavior.py`,
+`test_filer_suppression_behavior.py` — and the §18 spec
+`test_aggregation_key_behavior.py` were promoted to `scaffold/tests/v5_4_0/` in
+v5.4.0 Sessions 2 and 3 and now run in the default gate.)
 
-- `test_aggregation_key_behavior.py` — the §18.B key groups same-key records
-  and keeps distinct `signal_type` values distinct (§18.F anti-collapse rule).
 - `test_aggregator_idempotent_behavior.py` — the §19 aggregator produces
   identical output on a second run and refuses to read `matched_leads.json` as
   input (§19.C / §19.D).

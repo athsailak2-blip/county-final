@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""v5.4.0 PENDING behavioral spec — §18 aggregation key engine.
+"""v5.4.0 behavioral spec — §18 aggregation key engine.
 
-EXPECTED TO FAIL until v5.4.0 Session 3 implements aggregation_key_engine.
-Quarantined from run_all.py — see this directory's README.md.
+PROMOTED in v5.4.0 Session 3 — aggregation_key_engine is implemented and this
+spec passes. Wired into run_all.py via scaffold/tests/v5_4_0/.
 
 This is a behavioral spec, not a doc-presence check. It calls the real
 engine and asserts the §18.B key behaves and the §18.F anti-collapse rule
@@ -15,8 +15,8 @@ The cases:
     produces TWO distinct keys, not one — distinct signal_type values must not
     collapse even when they share parcel_id.
 
-Run: python3 scaffold/tests/v5_4_0_pending/test_aggregation_key_behavior.py
-Exit 0 = pass, non-zero = fail (expected until Session 3).
+Run: python3 scaffold/tests/v5_4_0/test_aggregation_key_behavior.py
+Exit 0 = pass, non-zero = fail.
 """
 import sys
 from pathlib import Path

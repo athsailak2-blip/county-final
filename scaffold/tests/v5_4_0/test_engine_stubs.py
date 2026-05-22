@@ -8,8 +8,10 @@ functions with the declared parameter names, and every such function is an
 unimplemented stub (`raise NotImplementedError`). It does NOT assert any engine
 behaves correctly. Per the rule below, once a stage is implemented its
 NotImplementedError check is removed here: v5.4.0 Session 2 implemented the §17
-debtor_party_engine, so that module is no longer covered by this test — its
-behavior is gated by the §17 specs in scaffold/tests/v5_4_0/.
+debtor_party_engine and Session 3 implemented the §18 aggregation_key_engine
+and the leads_base_writer, so those modules are no longer covered by this test
+— their behavior is gated by the §17 / §18 specs in scaffold/tests/v5_4_0/.
+Only the §19 aggregator remains a stub.
 
 This test is wired into scaffold/tests/run_all.py and must pass at the end of
 Session 1. It will KEEP passing through Sessions 2-5 only for stubs that are
@@ -30,20 +32,10 @@ if str(REPO_ROOT) not in sys.path:
 
 # module path -> {function name -> expected parameter names (in order)}.
 ENGINE_SPEC = {
-    "scaffold.pipeline.aggregation_key_engine": {
-        "resolve_signal_type": ["canonical_doc_type", "signal_type_labels"],
-        "compute_aggregation_key": ["parcel_id", "canonical_doc_type",
-                                    "signal_type"],
-        "aggregation_key_tuple": ["aggregation_key"],
-    },
     "scaffold.pipeline.aggregator": {
         "aggregate": ["base_file_paths", "output_path"],
         "merge_signal_group": ["base_records"],
         "idempotency_self_check": ["base_file_paths", "output_path"],
-    },
-    "scaffold.pipeline.leads_base_writer": {
-        "build_base_record": ["debtor_resolved_record", "signal_type_labels"],
-        "write_leads_base": ["source_id", "base_records", "output_dir"],
     },
 }
 
@@ -52,24 +44,12 @@ ENGINE_SPEC = {
 # before using them.
 _P = Path("unused_stub_path")
 CALL_THUNKS = {
-    ("scaffold.pipeline.aggregation_key_engine", "resolve_signal_type"):
-        lambda m: m.resolve_signal_type("", signal_type_labels={}),
-    ("scaffold.pipeline.aggregation_key_engine", "compute_aggregation_key"):
-        lambda m: m.compute_aggregation_key(parcel_id=None,
-                                            canonical_doc_type="",
-                                            signal_type=""),
-    ("scaffold.pipeline.aggregation_key_engine", "aggregation_key_tuple"):
-        lambda m: m.aggregation_key_tuple({}),
     ("scaffold.pipeline.aggregator", "aggregate"):
         lambda m: m.aggregate([]),
     ("scaffold.pipeline.aggregator", "merge_signal_group"):
         lambda m: m.merge_signal_group([]),
     ("scaffold.pipeline.aggregator", "idempotency_self_check"):
         lambda m: m.idempotency_self_check([], output_path=_P),
-    ("scaffold.pipeline.leads_base_writer", "build_base_record"):
-        lambda m: m.build_base_record({}, signal_type_labels={}),
-    ("scaffold.pipeline.leads_base_writer", "write_leads_base"):
-        lambda m: m.write_leads_base("", [], output_dir=_P),
 }
 
 # The contract dataclasses that must exist alongside the engine stubs.
