@@ -24,25 +24,66 @@ The universality contract (MASTER_PROMPT §4.31, added in v5.1.2-beta) is:
      only when --synthetic is passed. Production code paths never
      read synthetic fixtures.
 
-Modules:
-    normalize          Doc-type normalization (canonical + per-source synonyms).
-    stack              Signal stacking, TTL filtering, negative-signal suppression.
-    score              Base score + stack-depth bonus + recency + attribute bonus.
-    classify           Deal-path classifier.
-    evidence           Evidence ledger per architecture/08.
-    review             Review-queue rule engine.
-    dashboard          Payload projection + Two-Truths invariant.
-    manifest           Run manifest + per-source heartbeat.
-    matcher            Parcel-master matcher with confidence-tiered hierarchy.
-    owner_name_patterns
-                       Generic regex-based signal emitter for parcel-master
-                       owner-name strings (estate, living_trust patterns).
-    sale_date_rules    State-statute rule registry for expected_sale_date
-                       derivation (first_tuesday_of_month, etc.).
-    build_leads        CLI orchestrator. Reads county config, dispatches
-                       translators, runs pipeline, writes data/leads.json.
-    translators        Translator registry. Hybrid framework + county
-                       adapter pattern (v5.1.2-beta+).
+Modules (v5.4.0 post-cutover):
+
+  ── Staged engine (v5.4.0 §17 → §18 → §19 → §20) ────────────────────────
+    contracts/                 Inter-stage data contracts — JSON Schemas +
+                               frozen dataclass mirrors (raw_event_record,
+                               debtor_resolved_record, leads_base_record,
+                               matched_lead_record, scored_lead_record,
+                               evidence_ledger_entry).
+    debtor_party_engine        §17 — debtor party engine. Resolves the lead
+                               subject from raw_event_record per §17.C.
+    aggregation_key_engine     §18 — (parcel_id, canonical_doc_type,
+                               signal_type) key + signal_type resolution.
+    leads_base_writer          §18 — writes <source>_leads_base.json.
+    aggregator                 §19 — idempotent matched_leads.json builder.
+    semantic_verify            §20 — semantic verification gate
+                               (DEPLOY_OK / DEPLOY_BLOCKED / NEEDS_REVIEW).
+    evidence_ledger            §08 — evidence_ledger.json builder +
+                               traceability check.
+    doc_type_bridge            Session 8 — three-namespace doc-type bridge
+                               (monolith UPPERCASE ↔ registry lowercased ↔
+                               §16 Title-Case lead_type).
+
+  ── Option-Y scoring seam (v5.4.0 Session 9) ────────────────────────────
+    scoring_seam               Adapter from matched_lead → score input;
+                               R3(iii) enrichment-optional path; §20 gate.
+    run_pipeline_staged        Drives §17→§18→§19→§20 + seam end-to-end.
+
+  ── RETAINED upstream / downstream stages ───────────────────────────────
+    normalize                  Doc-type normalization (canonical + per-
+                               source synonyms). Feeds the staged engine
+                               via build_leads' signal → raw_event adapter.
+    translators                Per-source raw-record → signal adapters.
+                               Hybrid framework + county pattern.
+    matcher                    Parcel-master matcher (§13.14 parcel-
+                               resolution stage). Runs before §17.
+    owner_name_patterns        Regex signal emitter for parcel-master
+                               owner-name strings (estate / living_trust).
+    score                      Base + stack + recency + attribute scoring;
+                               invoked by scoring_seam.
+    classify                   Deal-path classifier; invoked by scoring_seam.
+    review                     Review-queue rule engine; invoked by
+                               scoring_seam.
+    dashboard                  Dashboard projection + Two-Truths invariant
+                               (assert_two_truths invoked by build_leads).
+    manifest                   Run manifest + per-source heartbeat.
+    stack                      multi-property-owner detection helper.
+                               (Note: `stack.stack_signals` — the monolith's
+                               per-parcel TTL / lifecycle / collapse stacker
+                               — was retired in Session 10. The §17→§19
+                               staged engine replaces its role.)
+    sale_date_rules            State-statute rule registry for
+                               expected_sale_date derivation.
+
+  ── Orchestrator ────────────────────────────────────────────────────────
+    build_leads                v5.4.0 staged-pipeline orchestrator (CLI).
+                               Reads county config, dispatches translators,
+                               adapts signals → raw_event_records, runs the
+                               staged engine + seam, writes matched_leads /
+                               scored_leads / evidence_ledger /
+                               dashboard.json + manifest + heartbeat.
 
 v5.1.2-beta CRITICAL CHANGES from earlier in-county Phase 1-4 work
 (captured during the May 2026 universality audit):
