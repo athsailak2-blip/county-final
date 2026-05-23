@@ -138,3 +138,80 @@ either genuine high engagement with the property OR a dedup failure to investiga
 
 This file contains no county name, no state name, and no county-specific example. The
 county-agnostic regression scanner enforces this.
+
+---
+
+## 18.J Amendment note — v5.4.0 Session 3 reconciliations
+
+v5.4.0 Session 3 implemented the §18 aggregation key engine
+(`scaffold/pipeline/aggregation_key_engine.py`) and the leads-base writer
+(`scaffold/pipeline/leads_base_writer.py`). The findings resolved during that
+build are recorded here; the sections above are left unchanged for history and
+this note is authoritative where it supersedes them.
+
+### F-3 — null-parcel records must not over-collapse
+
+§18.B keys signals on `(parcel_id, canonical_doc_type, signal_type)`, but
+§13.14 emits UNRESOLVED leads with `parcel_id = null`. Grouping null-parcel
+records by that key alone would collapse every distinct unresolved property of
+the same doc type into one signal. **Resolution:** when `parcel_id` is null the
+grouping tuple substitutes a per-record **fallback identity** —
+`instrument_number`, else `raw_event_id` — so each distinct unresolved property
+stays a distinct signal. The fallback is folded under a sentinel so it can
+never compare equal to a real parcel id. A null-parcel key offered for grouping
+with no fallback identity is a hard error, never a silent merge. The aggregator
+MUST NEVER collapse two distinct properties because both have `parcel_id = null`.
+
+### F-4 — signal_type is redundant for grouping; canonical_doc_type is the discriminator
+
+§18.B places `signal_type` in the key; §18.I derives `signal_type` from
+`canonical_doc_type` via the county `signal_type_labels` map. The relationship
+is **many-to-one**: distinct canonical doc types legitimately share one
+operator-facing label (an executor's deed and an administrator's deed surface
+under one estate-titled label; a mechanic's lien and a construction lien share
+one lien label). Because `signal_type` is a function of `canonical_doc_type` it
+carries no grouping information beyond it. **Resolution:** `signal_type` is
+retained in the key as the schema-required display component, but
+`canonical_doc_type` is the **authoritative grouping discriminator**. The §18.F
+anti-collapse guarantee is enforced by `canonical_doc_type` — grouping on
+`signal_type` would itself be a collapse bug under the many-to-one relationship.
+
+### F-5 — REVIEW_REQUIRED leads-base records may carry a null filer_entity
+
+`leads_base_record.schema.json` originally required `filer_entity` to be
+non-null whenever `parcel_resolution_status` is `REVIEW_REQUIRED`. The §17
+engine's F-5 default rule (a `canonical_doc_type` with no §17.C rule) routes to
+`REVIEW_REQUIRED` with `filer_entity = null` — no filer can be identified
+without a rule. The constraint was stale (pre-F-5). **Resolution:** the
+schema's `allOf` clause was relaxed to require only a non-empty `review_reason`
+on a `REVIEW_REQUIRED` record; `filer_entity` may be null. This mirrors the
+Session 2 reconciliation of the debtor-resolved contract to the same finding.
+
+### Owner mailing address is not a leads-base field
+
+The leads-base record is pipeline stage 3, built before any enrichment source
+runs (`enrichment_status` is `UNENRICHED` at this stage). Owner mailing address
+is appraisal-district / parcel-master **enrichment** data; it attaches
+downstream when an enrichment source decorates the lead, never on the base
+record. Carrying it on the base record would violate the §13 lead-versus-
+enrichment boundary. The leads-base record has no mailing-address field, by
+design. (Skip-traced phone / contact data is likewise downstream external
+enrichment and is never carried on the leads-base record.)
+
+### confidence_status — a rolled-up confidence label, computed once
+
+`leads_base_record.schema.json` gains a `confidence_status` field, valued with
+the four §08 prime-directive labels — Confirmed, Estimated, Possible, Unknown.
+It is computed once, by the leads-base writer; the dashboard never computes
+confidence itself. The roll-up rule is explicit and deterministic:
+
+1. For every §08 evidence-ledger entry the record's `evidence_ids` point to,
+   read its `status` and map it to a prime-directive label — Confirmed,
+   Estimated, Possible, and Unknown map to themselves; `Needs Review` and
+   `Unsupported`, which are not a positive confidence claim, map to Unknown; a
+   referenced-but-missing entry or unrecognised status also counts as Unknown.
+2. `confidence_status` is the **weakest** of those labels, ranked
+   Confirmed > Estimated > Possible > Unknown. A lead is never labelled more
+   confident than its least-supported claim.
+3. A record with no evidence entries — or built with no evidence ledger
+   available — is `Unknown`. Absence of evidence is not confidence.
