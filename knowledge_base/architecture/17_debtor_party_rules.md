@@ -298,3 +298,102 @@ block forward unchanged — co-owners survive every stage. Multi-owner *resoluti
 (populating `owners` with co-owners for the 9 deferred doc types) is Session 7,
 which keys off this contract. Session 7A is contract + schema + thin
 backward-compatible adaptation only — no debtor-rule logic.
+
+### v5.4.0 Session 7 — the 9 deferred debtor rules implemented (12 doc types)
+
+Session 7 implements the nine operator-supplied debtor rules deferred from
+F-5 (Session 2). The rules are keyed onto the lowercased
+`canonical_doc_types.json` registry names; nine logic rules map onto twelve
+registry doc types. After Session 7, §17 covers **29 canonical doc types**
+(17 from Session 2 + 12 from Session 7), and the engine never silently passes
+a recognised distress doc type through with a wrong-party owner.
+
+**Registry doc types newly mapped (12).** `tax_deed` and
+`tax_foreclosure_notice` (Rule 1 — tax sale / deed); `tax_sale_certificate`
+(Rule 3); `sheriff_sale_surplus` (Rule 4); `eviction_filing` and
+`writ_of_possession` (Rule 5); `divorce_filing`, `final_decree_of_divorce`,
+and `marital_property_division` (Rule 6); `bankruptcy_petition` (Rule 7);
+`condemnation_notice` (Rule 8); `demolition_order` (Rule 9).
+
+**NAME_TYPE assignments (the existing TP/DF/GR/GE/PL/OTHER enum, unextended).**
+Rule 1 / 3 / 4 → `TP` (delinquent former owner / claimant entitled to
+surplus). Rule 5 → `PL` (the landlord — NOT the tenant). Rule 8 / 9 → `DF`
+(the owner being condemned / ordered demolished). Rule 7 → `TP` (the
+bankruptcy debtor). Rule 6 — the divorce types — uses the Session 7A
+multi-owner contract: both spouses go in the owners[] array.
+
+**Document-only resolution — the new §17 invariant.** §17 resolves the
+debtor solely from parties named on the document. Five of the new doc types
+(`tax_foreclosure_notice`, `eviction_filing`, `writ_of_possession`,
+`condemnation_notice`, `demolition_order`) and the divorce types frequently
+carry no owner name on the record — only a parcel, address, case number, or
+tenant. When the owner is not resolvable from document parties, the engine
+routes to `REVIEW_REQUIRED` with `review_reason = "owner_not_on_document"`.
+**§17 must NOT attempt parcel / assessor / tax-roll / GIS resolution itself
+— that is the downstream §13.14 parcel-resolution stage.** §17 is a
+debtor-from-document-parties contract, period; promoting an enrichment lookup
+into §17 would re-couple the stages F-1 and §13.14 deliberately separated.
+
+**Rule 6 — divorce multi-owner.** The Session 7A multi-owner contract is the
+wire format. Both spouses tied to the property go in the `owners[]` array
+(co-owners are never dropped). When the decree clearly awards / orders sold
+by / transfers / vests the property in one named spouse (the document body
+carries one of the recognised award labels — `AWARDED TO`,
+`ORDERED TO SELL BY`, `TO BE TRANSFERRED TO`, `VESTED IN`, `OBLIGATED TO`,
+`SOLE OWNERSHIP TO`), that spouse is `is_primary` and `multi_owner_status`
+is `MULTIPLE_OWNERS_PRIMARY_CLEAR`. Otherwise both spouses are preserved
+with no `is_primary`, `multi_owner_status` is
+`MULTIPLE_OWNERS_PRIMARY_UNCLEAR`, `debtor_resolution_status` is
+`REVIEW_REQUIRED`, and `review_reason` is `"divorce_primary_owner_unclear"`
+— ownership priority is never guessed. The schema's `allOf` rules enforce
+the Session 7A no-contradiction guarantee.
+
+**Rule 7 — bankruptcy `"no_property_connection"`.** The bankruptcy debtor
+(individual or business entity) is the lead — IF the petition has a real-
+property hook. When `property_refs` carries no `parcel_id`, no
+`situs_address`, and no `legal_description`, the engine routes to
+`REVIEW_REQUIRED` with `review_reason = "no_property_connection"`. The lead
+is **NOT hard-excluded** — exclusion is a downstream decision; §17 only
+records that the record is not §17-actionable. `case_number` alone does NOT
+count for the property-connection check — on a bankruptcy record it is
+almost always the bankruptcy case number, not a property identifier. Contact
+context (signer / managing member / registered agent / principal) is
+ENRICHMENT, NOT §17 — it is deliberately not added here.
+
+**`tax_delinquency` is enrichment, NOT a §17 doc type.** `tax_delinquency`
+is a **tax-roll STATUS** (the assessor's flag that a parcel is delinquent on
+taxes for the current cycle), not a recorded document. §17 governs how the
+debtor is extracted from a recorded document's party block; a tax-roll
+status carries no document and no parties — it is parcel-keyed enrichment
+that joins to a parcel via the §13.14 stage, not via §17. `tax_delinquency`
+is therefore intentionally NOT a §17.C rule row; the F-5 default rule never
+fires on it because translators do not produce raw events of that type — it
+is consumed by enrichment.
+
+**Suppression — by name_type first, by name pattern second.** The engine
+picks the lead party by its assigned name_type, so role-descriptor parties
+(tenant on an eviction, bidder on a tax deed, certificate buyer on a tax
+sale certificate) are never selected because they do not hold the lead's
+name_type. The Session-7 §17.D additions add organizational-name suppression
+groups that complement name_type selection: `tax_authority`, `auction_party`,
+`law_firm`, `court_role`, `law_enforcement`, `surplus_recovery`,
+`bankruptcy_official`, `code_enforcement_role`, `property_manager` — nine
+new groups, bringing §17.D to 16 universal suppression groups. A candidate
+matching any of these patterns is routed to `REVIEW_REQUIRED` with
+`review_reason = "known_filer_pattern match: <category>:<label>"` rather
+than emitted as `owner_name`. County-specific suppression entries continue
+to layer on top via the existing `additional_suppressions` argument.
+
+**The §04 deal-path classifier is downstream.** §17 tags
+`sheriff_sale_surplus` as a §17.C-mapped doc type and resolves the former
+owner / claimant; it does NOT implement deal-path logic. The downstream §04
+classifier treats it as a surplus-recovery lead — that lives in §04, not
+here.
+
+**Schemas, dataclasses, and writers — no schema-level changes in Session 7.**
+The Session 7A multi-owner contract is the wire format Session 7's divorce
+path uses. The `debtor_resolved_record` / `leads_base_record` /
+`matched_lead_record` schemas, their `records.py` dataclass mirrors, the
+`leads_base_writer`, and the §19 aggregator are unchanged — they already
+carry the multi-owner block forward unchanged. Session 7 is engine logic
+only.
