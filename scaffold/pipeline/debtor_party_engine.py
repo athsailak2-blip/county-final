@@ -150,7 +150,10 @@ UNIVERSAL_DEBTOR_PARTY_RULES: dict[str, dict] = {
         "debtor_source": "STRUCTURED",
         "known_filer_role": "state taxing authority",
     },
-    "mechanic_lien": {
+    # v5.4.0 Session 8 — plural-key fix. The registry key is MECHANICS_LIEN
+    # (plural). The §17 rule is keyed on the lowercased registry name so the
+    # staged engine resolves it on cutover; the engine's logic is unchanged.
+    "mechanics_lien": {
         "expected_debtor_name_type": "GR",
         "fallback_debtor_name_type": "DF",
         "filer_name_types": ["GE"],
@@ -185,14 +188,17 @@ UNIVERSAL_DEBTOR_PARTY_RULES: dict[str, dict] = {
         "debtor_source": "STRUCTURED",
         "known_filer_role": "judgment creditor",
     },
-    "executor_deed": {
+    # v5.4.0 Session 8 — plural-key fixes. Registry keys are EXECUTORS_DEED
+    # and ADMINISTRATORS_DEED (plural / possessive). Same §17 logic; the rule
+    # rows are renamed so the staged engine resolves them after cutover.
+    "executors_deed": {
         "expected_debtor_name_type": "GR",
         "fallback_debtor_name_type": None,
         "filer_name_types": [],
         "debtor_source": "STRUCTURED",
         "known_filer_role": "none (the estate is the lead subject)",
     },
-    "administrator_deed": {
+    "administrators_deed": {
         "expected_debtor_name_type": "GR",
         "fallback_debtor_name_type": None,
         "filer_name_types": [],
@@ -402,6 +408,74 @@ UNIVERSAL_DEBTOR_PARTY_RULES: dict[str, dict] = {
 }
 
 # ---------------------------------------------------------------------------
+# v5.4.0 Session 8 — broad-key → registry-doc-type fan-out.
+#
+# The §17.C contract (Session 2) defined several BROAD doc-type rule keys
+# (`abstract_of_judgment`, `civil_judgment`, `code_lien`, `foreclosure_notice`,
+# `probate`, `trustee_sale`) that do not match any single canonical_doc_types.json
+# registry key. After the v5.4.0 cutover, the staged engine consumes lowercased
+# REGISTRY keys (the monolith's normalize_doc_type emits registry UPPERCASE
+# values; the bridge lowercases them). Session 8 reconciles the two namespaces:
+# for each broad key, the SAME §17 rule is registered under every fine-grained
+# registry doc type it covers, so the staged engine resolves correctly after
+# cutover. The broad keys are retained as backward-compat aliases.
+#
+# `administrative_lien` is a broad CATEGORY whose registry-aligned children
+# (`federal_tax_lien`, `state_tax_lien`, `municipal_lien`) each carry their own
+# §17 rule rows already; the broad rule has no further fan-out and remains as
+# documentation.
+#
+# Where two broad keys cover the same registry doc type (e.g. `foreclosure_notice`
+# and `trustee_sale` both cover `notice_of_substitute_trustee_sale`), the alias
+# is assigned to one canonical broad key (here, the foreclosure_notice fan-out)
+# so the registry-keyed rule row is defined exactly once. The two broad rules'
+# logic is identical (DOCUMENT_BODY extraction, mortgagor / grantor / debtor
+# labels) so the assignment is operationally neutral.
+# ---------------------------------------------------------------------------
+
+BROAD_KEY_REGISTRY_ALIASES: dict[str, tuple[str, ...]] = {
+    "abstract_of_judgment": ("judgment_lien",),
+    "civil_judgment": (),  # judgment_lien already covered by abstract_of_judgment
+    "administrative_lien": (),  # broad bucket — children carry their own rows
+    "code_lien": ("code_violation_notice", "municipal_lien"),
+    "foreclosure_notice": (
+        "notice_of_sale",
+        "notice_of_default",
+        "notice_of_substitute_trustee_sale",
+        "final_judgment_of_foreclosure",
+        "appointment_of_substitute_trustee",
+    ),
+    "probate": (
+        "letters_testamentary",
+        "letters_of_administration",
+        "determination_of_heirship",
+        "muniment_of_title",
+    ),
+    "trustee_sale": ("trustees_deed_upon_sale",),
+}
+"""v5.4.0 Session 8 — for each broad §17 rule key, the registry-aligned
+canonical_doc_type values the same rule must fire on after the cutover. Empty
+tuple = broad bucket with no registry-fan-out (its children carry their own
+rule rows separately, or no further registry match exists)."""
+
+
+def _fan_out_broad_rules() -> None:
+    """Register each broad rule under every registry alias in BROAD_KEY_REGISTRY_ALIASES.
+
+    Identity by reference is fine — the rule dict is read, never mutated, by the
+    engine. Existing registry-keyed rule rows are never overwritten: an explicit
+    Session-7 rule (e.g. condemnation_notice) wins over a fan-out alias collision.
+    """
+    for broad_key, aliases in BROAD_KEY_REGISTRY_ALIASES.items():
+        base_rule = UNIVERSAL_DEBTOR_PARTY_RULES.get(broad_key)
+        if not base_rule:
+            continue
+        for alias in aliases:
+            if alias not in UNIVERSAL_DEBTOR_PARTY_RULES:
+                UNIVERSAL_DEBTOR_PARTY_RULES[alias] = base_rule
+
+
+# ---------------------------------------------------------------------------
 # §17.D — universal known-filer suppression patterns.
 #
 # A name matching any of these MUST NEVER be returned as owner_name. The
@@ -598,6 +672,39 @@ _BODY_DEBTOR_LABELS: dict[str, list[str]] = {
     "affidavit_of_heirship": ["NAME OF DECEDENT", "DECEDENT", "DECEASED"],
 }
 
+
+def _fan_out_body_labels() -> None:
+    """Share each broad body-label set into every registry-alias key.
+
+    A registry-keyed rule fanned out from `foreclosure_notice` / `trustee_sale` /
+    `probate` reaches the document-body extractor under its own canonical_doc_type
+    value; the label set must be accessible by that name. Existing label entries
+    are never overwritten.
+    """
+    for broad_key, aliases in BROAD_KEY_REGISTRY_ALIASES.items():
+        labels = _BODY_DEBTOR_LABELS.get(broad_key)
+        if not labels:
+            continue
+        for alias in aliases:
+            if alias not in _BODY_DEBTOR_LABELS:
+                _BODY_DEBTOR_LABELS[alias] = list(labels)
+
+
+# Apply the Session 8 fan-out at module-import time. Registering both the rule
+# table and the body-label table here makes the staged engine resolve every
+# fanned-out registry doc type without any further wiring at the call site.
+_fan_out_broad_rules()
+_fan_out_body_labels()
+
+# Doc types whose document body may carry "ESTATE OF <name>" / "HEIRS OF <name>"
+# without a colon. The `probate` broad key and `affidavit_of_heirship`, plus
+# every Session-8 probate-family registry alias (letters_testamentary,
+# letters_of_administration, determination_of_heirship, muniment_of_title).
+_PROBATE_BODY_DOC_TYPES: frozenset[str] = frozenset(
+    {"probate", "affidavit_of_heirship"}
+    | set(BROAD_KEY_REGISTRY_ALIASES.get("probate", ()))
+)
+
 # v5.4.0 Session 7 — Rule 6 divorce: award-language labels the engine reads
 # from a divorce decree / property-division order's document_body_text to make
 # one spouse the clear primary (multi_owner_status MULTIPLE_OWNERS_PRIMARY_CLEAR).
@@ -764,9 +871,13 @@ def extract_debtor_from_document_body(
             if value:
                 return value
 
-    # "ESTATE OF <name>" / "HEIRS OF <name>" appear without a colon for
-    # probate and affidavit-of-heirship document text.
-    if canonical_doc_type in ("probate", "affidavit_of_heirship"):
+    # "ESTATE OF <name>" / "HEIRS OF <name>" appear without a colon in the
+    # probate and affidavit-of-heirship body text. After the Session 8 fan-out,
+    # every probate-family registry doc type (letters_testamentary,
+    # letters_of_administration, determination_of_heirship, muniment_of_title)
+    # uses the same body-label set, so the no-colon estate-of branch must
+    # cover them too.
+    if canonical_doc_type in _PROBATE_BODY_DOC_TYPES:
         match = re.search(
             r"\b(ESTATE\s+OF|HEIRS?\s+OF)\s+([^\n;,]+)", text, re.IGNORECASE
         )

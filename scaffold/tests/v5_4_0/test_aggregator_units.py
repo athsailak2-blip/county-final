@@ -136,7 +136,7 @@ def main() -> int:
                  doc_type="hospital_lien", signal_type="Hospital Lien",
                  parcel_id="P-1", instrument="I-2", recorded_date="2026-02-11"),
             _lbr(base_id="b3", source_id="clerk_recordings",
-                 doc_type="executor_deed", signal_type="Estate-Titled Property",
+                 doc_type="executors_deed", signal_type="Estate-Titled Property",
                  parcel_id="P-1", instrument="I-3", recorded_date="2026-03-01"),
         ])
         out = workdir / "matched_leads.json"
@@ -159,7 +159,7 @@ def main() -> int:
         check("one property (P-1) → exactly one matched_lead", len(first) == 1)
 
         lead = first[0]
-        check("§18.F anti-collapse: hospital_lien + executor_deed on one "
+        check("§18.F anti-collapse: hospital_lien + executors_deed on one "
               "parcel → 2 distinct signals", len(lead["signals"]) == 2)
         hosp = [s for s in lead["signals"]
                 if s["canonical_doc_type"] == "hospital_lien"][0]

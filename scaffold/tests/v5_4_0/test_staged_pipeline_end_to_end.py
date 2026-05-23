@@ -37,7 +37,7 @@ from scaffold.pipeline import semantic_verify
 SIGNAL_TYPE_LABELS = {
     "hospital_lien": "Hospital Lien",
     "foreclosure_notice": "Foreclosure Notice",
-    "executor_deed": "Estate-Titled Property",
+    "executors_deed": "Estate-Titled Property",
 }
 
 
@@ -114,7 +114,7 @@ def main() -> int:
                    recorded_date="2026-03-01", evidence_id="ev-fn-1",
                    document_body_text="NOTICE OF FORECLOSURE SALE\n"
                                       "MORTGAGOR: MARGARET DOE\n"),
-        _raw_event(raw_event_id="raw_ed_1", canonical_doc_type="executor_deed",
+        _raw_event(raw_event_id="raw_ed_1", canonical_doc_type="executors_deed",
                    parcel_id="PARCEL-200", instrument="I-ED-1",
                    recorded_date="2026-02-20", evidence_id="ev-ed-1",
                    parties=[_party("ESTATE OF HAROLD DOE", "GR")]),

@@ -37,7 +37,7 @@ from scaffold.pipeline.contracts import schema_path
 
 SIGNAL_TYPE_LABELS = {
     "hospital_lien": "Hospital Lien",
-    "executor_deed": "Estate-Titled Property",
+    "executors_deed": "Estate-Titled Property",
 }
 
 
@@ -112,9 +112,9 @@ def main() -> int:
         parcel_id="PARCEL-1", canonical_doc_type="hospital_lien",
         signal_type="Hospital Lien")
     k_estate = ake.compute_aggregation_key(
-        parcel_id="PARCEL-1", canonical_doc_type="executor_deed",
+        parcel_id="PARCEL-1", canonical_doc_type="executors_deed",
         signal_type="Estate-Titled Property")
-    check("§18.F anti-collapse: hospital_lien and executor_deed on the same "
+    check("§18.F anti-collapse: hospital_lien and executors_deed on the same "
           "parcel produce DIFFERENT key tuples",
           ake.aggregation_key_tuple(k_hosp)
           != ake.aggregation_key_tuple(k_estate))

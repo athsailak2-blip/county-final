@@ -81,19 +81,22 @@ def _raw_event(doc_type, *, parties=None, document_body_text=None,
 DEBTOR = "DOE, MARGARET R"
 
 # §17.C STRUCTURED doc types: (doc_type, debtor name_type to tag the party).
+# v5.4.0 Session 8 — three keys renamed to the plural / possessive registry
+# forms (mechanic_lien → mechanics_lien, executor_deed → executors_deed,
+# administrator_deed → administrators_deed). The rule logic is unchanged.
 STRUCTURED_CASES = [
     ("hospital_lien", "TP"),
     ("code_lien", "TP"),
     ("administrative_lien", "TP"),
     ("federal_tax_lien", "TP"),
     ("state_tax_lien", "TP"),
-    ("mechanic_lien", "GR"),
+    ("mechanics_lien", "GR"),
     ("construction_lien", "GR"),
     ("lis_pendens", "DF"),
     ("civil_judgment", "DF"),
     ("abstract_of_judgment", "DF"),
-    ("executor_deed", "GR"),
-    ("administrator_deed", "GR"),
+    ("executors_deed", "GR"),
+    ("administrators_deed", "GR"),
     ("sheriff_sale", "DF"),
 ]
 
@@ -160,9 +163,15 @@ def main() -> int:
 
     # --- structural: the §17.C table and §17.D groups -----------------------
     rules = engine.UNIVERSAL_DEBTOR_PARTY_RULES
-    check("§17.C UNIVERSAL_DEBTOR_PARTY_RULES covers 29 mapped doc types "
-          "(17 from Session 2 + 12 from Session 7)",
-          len(rules) == 29)
+    # v5.4.0 Session 8 added 13 registry-keyed fan-out rule rows on top of
+    # Session 7's 29 (17 Session-2 + 12 Session-7), so the §17 table now
+    # carries 42 keys. The fan-out is sourced from BROAD_KEY_REGISTRY_ALIASES
+    # and is tested in detail by test_doc_type_bridge.py; here we pin the count
+    # so a future row addition surfaces in the gate.
+    check("§17.C UNIVERSAL_DEBTOR_PARTY_RULES covers 42 mapped doc types "
+          "(17 from Session 2 + 12 from Session 7 + 13 from Session 8 "
+          "broad-key → registry fan-out)",
+          len(rules) == 42)
     check("§17.C table maps `probate` (Session 2 row 17)", "probate" in rules)
     # The 12 Session-7 registry doc types are all present.
     for new_doc_type in (

@@ -11,7 +11,7 @@ holds.
 The cases:
   - §18.B: the key is the tuple (parcel_id, canonical_doc_type, signal_type).
   - Same key  -> same tuple  -> records collapse into one signal (legitimate).
-  - §18.F anti-collapse: a parcel carrying a hospital_lien AND an executor_deed
+  - §18.F anti-collapse: a parcel carrying a hospital_lien AND an executors_deed
     produces TWO distinct keys, not one — distinct signal_type values must not
     collapse even when they share parcel_id.
 
@@ -28,7 +28,7 @@ if str(REPO_ROOT) not in sys.path:
 # A per-county canonical_doc_type -> display-label map (§18.I signal_type_labels).
 SIGNAL_TYPE_LABELS = {
     "hospital_lien": "Hospital Lien",
-    "executor_deed": "Estate-Titled Property",
+    "executors_deed": "Estate-Titled Property",
     "federal_tax_lien": "Federal Tax Lien",
 }
 
@@ -41,7 +41,7 @@ def main() -> int:
         st_hospital = ake.resolve_signal_type(
             "hospital_lien", signal_type_labels=SIGNAL_TYPE_LABELS)
         st_estate = ake.resolve_signal_type(
-            "executor_deed", signal_type_labels=SIGNAL_TYPE_LABELS)
+            "executors_deed", signal_type_labels=SIGNAL_TYPE_LABELS)
 
         # Three keys on ONE parcel: two identical, one a different doc type.
         key_hospital_a = ake.compute_aggregation_key(
@@ -54,7 +54,7 @@ def main() -> int:
             signal_type=st_hospital)
         key_estate = ake.compute_aggregation_key(
             parcel_id="PARCEL-001",
-            canonical_doc_type="executor_deed",
+            canonical_doc_type="executors_deed",
             signal_type=st_estate)
 
         tup_hospital_a = ake.aggregation_key_tuple(key_hospital_a)
@@ -78,7 +78,7 @@ def main() -> int:
         ("two records with the same key produce the SAME tuple "
          "(legitimate collapse)",
          tup_hospital_a == tup_hospital_b),
-        ("§18.F anti-collapse: hospital_lien and executor_deed on the same "
+        ("§18.F anti-collapse: hospital_lien and executors_deed on the same "
          "parcel produce DIFFERENT keys",
          tup_hospital_a != tup_estate),
         ("the three keys collapse to exactly 2 distinct signals, not 1",
