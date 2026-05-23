@@ -395,6 +395,141 @@ class MatchedLeadRecord:
 # Evidence ledger entry (08).
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Stage 6 — scored_lead record (v5.4.0 Session 9 / Option Y seam).
+# ---------------------------------------------------------------------------
+
+SCORE_TIER_VALUES: tuple[str, ...] = (
+    "Hot", "Strong", "Workable", "Low", "Archive",
+)
+"""Score tiers per score.py. Mirrors score.SCORE_TIERS — kept here as a
+contract-side constant for the dataclass and the schema test."""
+
+TITLE_COMPLEXITY_TIER_VALUES: tuple[str, ...] = (
+    "None", "Light curative", "Moderate curative", "Heavy curative",
+)
+"""Title-complexity tiers per build_leads._title_complexity."""
+
+POST_SCORING_LEAD_STATUSES: tuple[str, ...] = (
+    "STACKED_LEAD", "REVIEW_REQUIRED", "APPROVED_FOR_DASHBOARD",
+)
+"""The three lead_status values a scored_lead may carry — the post-scoring
++ review-evaluation subset of LEAD_STATUSES."""
+
+ScoreTier = Literal["Hot", "Strong", "Workable", "Low", "Archive"]
+TitleComplexityTier = Literal[
+    "None", "Light curative", "Moderate curative", "Heavy curative"
+]
+PostScoringLeadStatus = Literal[
+    "STACKED_LEAD", "REVIEW_REQUIRED", "APPROVED_FOR_DASHBOARD"
+]
+
+
+@dataclass(frozen=True, kw_only=True)
+class ScoreReason:
+    """One factor / delta line on a scored_lead's score breakdown."""
+
+    factor: str
+    delta: int
+
+
+@dataclass(frozen=True, kw_only=True)
+class DealPath:
+    """One deal-path classification on a scored_lead."""
+
+    path: str
+    confidence: Literal["high", "moderate", "low"]
+    rationale: str
+
+
+@dataclass(frozen=True, kw_only=True)
+class TitleComplexityContributor:
+    """One contributor / weight line on a scored_lead's title-complexity
+    breakdown."""
+
+    factor: str
+    weight: int
+
+
+@dataclass(frozen=True, kw_only=True)
+class ParcelDisplay:
+    """The optional parcel-master snapshot a scored_lead carries when
+    enrichment is present (R3(iii) modifier path). Absent (None) when the
+    scored_lead is UNENRICHED — the dashboard renders without one."""
+
+    situs_address: Optional[str] = None
+    situs_city: Optional[str] = None
+    situs_state: Optional[str] = None
+    owner_mailing_address: Optional[str] = None
+    owner_mailing_city: Optional[str] = None
+    owner_mailing_state: Optional[str] = None
+    owner_mailing_zip: Optional[str] = None
+    assessed_value: Optional[float] = None
+    last_sale_price: Optional[float] = None
+    last_sale_date: Optional[str] = None
+    year_built: Optional[int] = None
+
+
+@dataclass(frozen=True, kw_only=True)
+class ScoredLeadRecord:
+    """One record in scored_leads.json. v5.4.0 Session 9 (Option Y).
+
+    A scored_lead WRAPS a matched_lead BY REFERENCE — it carries the
+    matched_lead's `lead_id` and the seam-derived scoring / classification /
+    title-complexity / review output, plus an optional parcel-display
+    enrichment snapshot. matched_lead is the immutable §19 output of record;
+    scored_lead never mutates it.
+
+    Enrichment is OPTIONAL (R3(iii) / §13.14): scoring runs on distress
+    signals from the staged pipeline. Parcel-master enrichment is a MODIFIER
+    applied when present, absent without blocking. `enrichment_status`
+    records honestly whether enrichment was attached; a UNENRICHED lead is
+    still scored, still review-evaluated, still reaches the dashboard."""
+
+    scored_lead_id: str
+    lead_id: str
+    primary_parcel_id: Optional[str]
+    owner_name: str
+    owner_type: OwnerType
+    score: int
+    tier: ScoreTier
+    score_reasons: tuple[ScoreReason, ...]
+    deal_paths: tuple[DealPath, ...]
+    title_complexity_score: int
+    title_complexity_tier: TitleComplexityTier
+    title_complexity_contributors: tuple[TitleComplexityContributor, ...]
+    pattern_set: tuple[str, ...]
+    patterns: tuple[str, ...]
+    display_patterns: tuple[str, ...]
+    stack_depth: int
+    recent_flag: bool
+    attributes: tuple[str, ...]
+    review_flags: tuple[str, ...]
+    lead_status: PostScoringLeadStatus
+    enrichment_status: EnrichmentStatus
+    evidence_ids: tuple[str, ...]
+    source_ids: tuple[str, ...]
+    primary_event_date: Optional[str] = None
+    match_confidence: Optional[int] = None
+    doc_type_normalization: Optional[dict] = None
+    parcel_display: Optional[ParcelDisplay] = None
+    lead_status_history: tuple[dict, ...] = ()
+
+    def __post_init__(self) -> None:
+        # R3(iii) enrichment-optional consistency: parcel_display is present
+        # iff enrichment_status is ENRICHED. Catches construction bugs early.
+        if self.enrichment_status == "UNENRICHED" and self.parcel_display is not None:
+            raise ValueError(
+                "scored_lead contract violation: UNENRICHED scored_lead must "
+                "have parcel_display = None"
+            )
+        if self.enrichment_status == "ENRICHED" and self.parcel_display is None:
+            raise ValueError(
+                "scored_lead contract violation: ENRICHED scored_lead must "
+                "carry a parcel_display block"
+            )
+
+
 @dataclass(frozen=True, kw_only=True)
 class EvidenceLedgerEntry:
     """One evidence object backing one claim (08). Mirror of
@@ -431,6 +566,7 @@ CONTRACT_SCHEMA_FILES: dict[str, str] = {
     "debtor_resolved_record": "debtor_resolved_record.schema.json",
     "leads_base_record": "leads_base_record.schema.json",
     "matched_lead_record": "matched_lead_record.schema.json",
+    "scored_lead_record": "scored_lead_record.schema.json",
     "evidence_ledger_entry": "evidence_ledger_entry.schema.json",
 }
 """Contract name -> JSON Schema filename (relative to this package)."""
@@ -440,6 +576,7 @@ CONTRACT_DATACLASSES: dict[str, type] = {
     "debtor_resolved_record": DebtorResolvedRecord,
     "leads_base_record": LeadsBaseRecord,
     "matched_lead_record": MatchedLeadRecord,
+    "scored_lead_record": ScoredLeadRecord,
     "evidence_ledger_entry": EvidenceLedgerEntry,
 }
 """Contract name -> frozen dataclass mirror."""

@@ -3,13 +3,15 @@
 themselves valid schema documents.
 
 This is a SHAPE / SCAFFOLDING test, not a behavioral test. It asserts only
-what Session 1 produces: that the five inter-stage contract schemas exist
-under scaffold/pipeline/contracts/ and each is a well-formed JSON Schema
+that the inter-stage contract schemas exist under
+scaffold/pipeline/contracts/ and each is a well-formed JSON Schema
 (Draft 2020-12). It does NOT validate any pipeline data against them — that
-is the engine's job, built in Sessions 2-5.
+is the engine's job.
 
-This test is wired into scaffold/tests/run_all.py and must pass at the end of
-Session 1.
+v5.4.0 Session 9 extension: scored_lead_record.schema.json is added — the
+seam stage's output contract (Option Y).
+
+This test is wired into scaffold/tests/run_all.py and must stay green.
 
 Run: python3 scaffold/tests/v5_4_0/test_contract_schemas.py
 Exit 0 = pass, non-zero = fail.
@@ -24,12 +26,15 @@ if str(REPO_ROOT) not in sys.path:
 
 CONTRACTS_DIR = REPO_ROOT / "scaffold" / "pipeline" / "contracts"
 
-# The five inter-stage contracts the v5.4.0 staged engine is built against.
+# The inter-stage contracts the v5.4.0 staged engine is built against:
+# the five Session-1 contracts (Sessions 2-5 built engines against them)
+# plus the Session-9 scored_lead_record (Option Y — the seam's output).
 EXPECTED_SCHEMAS = [
     "raw_event_record.schema.json",
     "debtor_resolved_record.schema.json",
     "leads_base_record.schema.json",
     "matched_lead_record.schema.json",
+    "scored_lead_record.schema.json",
     "evidence_ledger_entry.schema.json",
 ]
 
