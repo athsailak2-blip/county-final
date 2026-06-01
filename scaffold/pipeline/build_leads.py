@@ -81,12 +81,6 @@ from scaffold.pipeline.translators import (  # noqa: E402
     lookup as lookup_translator,
 )
 
-# Import county-side translator registrations if available.
-try:
-    import scrapers  # noqa: F401, E402
-except ImportError:
-    pass
-
 
 SYNTHETIC_DEFAULT_AS_OF = date(2026, 5, 14)
 
@@ -263,7 +257,7 @@ def _adapt_translator_signal(sig: dict, source_id: str) -> dict:
         adapted.setdefault("parcel_id", adapted["primary_parcel_id"])
     adapted.setdefault("source", sig.get("source_id", source_id))
     adapted.setdefault(
-        "subtype", sig.get("doc_type") or sig.get("doc_type_subtype_label")
+        "subtype", sig.get("doc_type_subtype_label") or sig.get("doc_type")
     )
     adapted.setdefault("case_number", sig.get("doc_number"))
     return adapted
@@ -370,7 +364,6 @@ def run_pipeline(
         enrichment_provider=enrichment_provider,
         approve_needs_review=approve_needs_review,
         scoring_overrides=scoring_overrides,
-        state=state,
     )
 
     # --- dashboard payload + Two-Truths invariant -------------------------

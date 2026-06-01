@@ -215,8 +215,7 @@
         "assessed_value": { "type": ["number", "null"] },
         "last_sale_price": { "type": ["number", "null"] },
         "last_sale_date": { "type": ["string", "null"], "format": "date" },
-        "year_built": { "type": ["integer", "null"] },
-        "property_class": { "type": ["string", "null"] }
+        "year_built": { "type": ["integer", "null"] }
       }
     },
     "lead_status_history": {

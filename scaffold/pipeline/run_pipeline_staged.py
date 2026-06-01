@@ -68,7 +68,6 @@ def run_staged_pipeline(
     debtor_party_rules: Optional[dict] = None,
     additional_suppressions: tuple = (),
     scoring_overrides: Optional[dict] = None,
-    state: Optional[str] = None,
 ) -> dict:
     """Drive raw_events through §17 → §18 → §19 → §20 → seam → scoring.
 
@@ -155,7 +154,6 @@ def run_staged_pipeline(
         as_of=as_of,
         enrichment_provider=enrichment_provider,
         scoring_overrides=scoring_overrides,
-        state=state,
     )
     scored_leads_path = workdir / "scored_leads.json"
     scored_leads_path.write_text(
