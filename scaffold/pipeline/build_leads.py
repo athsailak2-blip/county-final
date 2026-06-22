@@ -180,7 +180,7 @@ def _signal_to_raw_event(sig: dict, *, parcels_by_id: dict,
     default routing anyway, so the orchestrator drops them at the input seam
     and surfaces the count via the manifest.
     """
-    raw_doc_type = sig.get("subtype") or sig.get("doc_type") or ""
+    raw_doc_type = sig.get("doc_type") or sig.get("subtype") or ""
     norm = normalize_doc_type(raw_doc_type)
     normalized_upper = norm.get("normalized_doc_type")
     if not normalized_upper:

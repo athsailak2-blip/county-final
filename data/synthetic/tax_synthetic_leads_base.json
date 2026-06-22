@@ -1,0 +1,51 @@
+[
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_foreclosure_notice",
+      "parcel_id": null,
+      "signal_type": "tax_foreclosure_notice"
+    },
+    "base_record_id": "base_raw_3fbadcad083bc6c0",
+    "canonical_doc_type": "tax_foreclosure_notice",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_3fbadcad083bc6c0"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_foreclosure_notice against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_foreclosure_notice against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_foreclosure_notice against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-009",
+      "situs_address": "900 Synthetic Lane"
+    },
+    "raw_event_id": "raw_3fbadcad083bc6c0",
+    "recorded_date": "2026-04-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_foreclosure_notice",
+    "source_id": "tax_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://tax/SYN-009"
+  }
+]

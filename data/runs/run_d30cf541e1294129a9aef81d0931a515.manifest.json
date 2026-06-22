@@ -1,0 +1,20 @@
+{
+  "run_id": "run_d30cf541e1294129a9aef81d0931a515",
+  "county": "Duval County",
+  "state": "FL",
+  "started_at": "2026-06-06T05:20:17Z",
+  "finished_at": "2026-06-06T05:20:17Z",
+  "sources_attempted": 1,
+  "records_collected": 742,
+  "records_normalized": 11,
+  "leads_created": 5,
+  "review_required": 2,
+  "errors": [],
+  "output_files": [
+    "data/dashboard.json",
+    "data/source_heartbeat.json",
+    "data/matched_leads.json",
+    "data/scored_leads.json",
+    "data/evidence_ledger.json"
+  ]
+}

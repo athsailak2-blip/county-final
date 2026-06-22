@@ -1,18 +1,20 @@
 {
-  "run_id": "run_a3d44fd91a8642e3bc06ff8a857a0247",
-  "county": "Bexar",
-  "state": "TX",
-  "started_at": "2026-05-15T20:00:49Z",
-  "finished_at": "2026-05-15T20:00:49Z",
-  "sources_attempted": 1,
-  "records_collected": 288,
-  "records_normalized": 288,
-  "leads_created": 287,
-  "review_required": 62,
+  "run_id": "run_1323052dffcc4607aca681d4ceae0915",
+  "county": "Duval County",
+  "state": "FL",
+  "started_at": "2026-06-06T14:42:23Z",
+  "finished_at": "2026-06-06T14:42:29Z",
+  "sources_attempted": 4,
+  "records_collected": 5584,
+  "records_normalized": 5522,
+  "leads_created": 210,
+  "review_required": 82,
   "errors": [],
   "output_files": [
-    "data/leads.json",
+    "data/dashboard.json",
     "data/source_heartbeat.json",
-    "data/evidence.jsonl"
+    "data/matched_leads.json",
+    "data/scored_leads.json",
+    "data/evidence_ledger.json"
   ]
 }

@@ -78,6 +78,9 @@ def test_builtins_registered():
     case("foreclosure_notices registered", "foreclosure_notices" in names)
     case("parcel_master registered", "parcel_master" in names)
     case("csv_static_list registered", "csv_static_list" in names)
+    case("foreclosure_auction_calendar registered", "foreclosure_auction_calendar" in names)
+    case("tax_deed_auction_listing registered", "tax_deed_auction_listing" in names)
+    case("tax_delinquency_list registered", "tax_delinquency_list" in names)
     case(
         "old arcgis_ names NOT registered",
         "arcgis_foreclosure_notices" not in names

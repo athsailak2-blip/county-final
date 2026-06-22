@@ -42,6 +42,14 @@ TESTS = [
     ("County-agnostic regression", TESTS_DIR / "test_county_agnostic_regression.py"),
     ("Atomic county config writer (v5.1.1-beta)", TESTS_DIR / "test_write_county_config.py"),
     ("Translator registry (v5.1.2-beta)", TESTS_DIR / "test_translator_registry.py"),
+    ("Official Records adapter (Duval OnCore)", TESTS_DIR / "test_official_records.py"),
+    ("Foreclosure Sales adapter (Duval RealForeclose)", TESTS_DIR / "test_foreclosure_sales.py"),
+    ("Tax Deed Sales adapter (Duval RealTaxDeed)", TESTS_DIR / "test_tax_deed_sales.py"),
+    ("PublicSearch Clerk Recordings translator", TESTS_DIR / "test_publicsearch_clerk_recordings.py"),
+    ("Foreclosure Auction Calendar translator", TESTS_DIR / "test_foreclosure_auction_calendar.py"),
+    ("Tax Deed Auction Listing translator", TESTS_DIR / "test_tax_deed_auction_listing.py"),
+    ("Tax Collector adapter (Duval LienHub)", TESTS_DIR / "test_tax_collector.py"),
+    ("Tax Delinquency List translator", TESTS_DIR / "test_tax_delinquency_list.py"),
 ]
 
 # v5.3.0+ — §16-§20 / §02 architecture-contract invariant tests. Auto-discovered
