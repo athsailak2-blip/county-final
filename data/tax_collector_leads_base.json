@@ -1,0 +1,492 @@
+[
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_0d30902a9b401aa9",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_0d30902a9b401aa9"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2024-054700-0100",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "054700-0100",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_0d30902a9b401aa9",
+    "recorded_date": "2024-01-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval/countyheld/certificates"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_329d21383552b5ad",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_329d21383552b5ad"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2022-027937-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "027937-0000",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_329d21383552b5ad",
+    "recorded_date": "2022-01-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval/countyheld/certificates"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_3f47781e3df8dba6",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_3f47781e3df8dba6"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2025-000123-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "000123-0000",
+      "situs_address": "123 MAIN ST, JACKSONVILLE, FL"
+    },
+    "raw_event_id": "raw_3f47781e3df8dba6",
+    "recorded_date": "2026-06-15",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_5465ae6d16166483",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_5465ae6d16166483"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2017-027937-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "027937-0000",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_5465ae6d16166483",
+    "recorded_date": "2017-01-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval/countyheld/certificates"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_7aecac61f74554a7",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_7aecac61f74554a7"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2019-027937-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "027937-0000",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_7aecac61f74554a7",
+    "recorded_date": "2019-01-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval/countyheld/certificates"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_7cdb01bbe5063ffb",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_7cdb01bbe5063ffb"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2023-027937-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "027937-0000",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_7cdb01bbe5063ffb",
+    "recorded_date": "2023-01-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval/countyheld/certificates"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_9ef30a6fc2fb610c",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_9ef30a6fc2fb610c"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2024-148735-0200",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "148735-0200",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_9ef30a6fc2fb610c",
+    "recorded_date": "2024-01-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval/countyheld/certificates"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_e2793e7d433f0c8a",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_e2793e7d433f0c8a"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2016-027937-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "027937-0000",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_e2793e7d433f0c8a",
+    "recorded_date": "2016-01-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval/countyheld/certificates"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_e90860b8660f8391",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_e90860b8660f8391"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2025-000456-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "000456-0000",
+      "situs_address": "456 OAK AVE, JACKSONVILLE, FL"
+    },
+    "raw_event_id": "raw_e90860b8660f8391",
+    "recorded_date": "2026-06-15",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_f9811724767d21f0",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_f9811724767d21f0"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2024-024223-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "024223-0000",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_f9811724767d21f0",
+    "recorded_date": "2024-01-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "tax_collector",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://lienhub.com/county/duval/countyheld/certificates"
+  }
+]

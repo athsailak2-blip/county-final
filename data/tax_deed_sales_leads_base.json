@@ -1,0 +1,296 @@
+[
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_deed",
+      "parcel_id": null,
+      "signal_type": "tax_deed"
+    },
+    "base_record_id": "base_raw_563857b2d7810619",
+    "canonical_doc_type": "tax_deed",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_563857b2d7810619"
+    ],
+    "filer_entity": null,
+    "instrument_number": "164656-0010",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_deed against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_deed against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_deed against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "164656-0010",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_563857b2d7810619",
+    "recorded_date": "",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_deed",
+    "source_id": "tax_deed_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://taxdeed.duvalclerk.com"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_deed",
+      "parcel_id": null,
+      "signal_type": "tax_deed"
+    },
+    "base_record_id": "base_raw_747260e55e431954",
+    "canonical_doc_type": "tax_deed",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_747260e55e431954"
+    ],
+    "filer_entity": null,
+    "instrument_number": "000123-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_deed against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_deed against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_deed against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "000123-0000",
+      "situs_address": "123 MAIN ST, JACKSONVILLE, FL"
+    },
+    "raw_event_id": "raw_747260e55e431954",
+    "recorded_date": "",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_deed",
+    "source_id": "tax_deed_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://taxdeed.duvalclerk.com/"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_deed",
+      "parcel_id": null,
+      "signal_type": "tax_deed"
+    },
+    "base_record_id": "base_raw_9bef93a3a53b26e0",
+    "canonical_doc_type": "tax_deed",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_9bef93a3a53b26e0"
+    ],
+    "filer_entity": null,
+    "instrument_number": "008987-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_deed against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_deed against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_deed against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "008987-0000",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_9bef93a3a53b26e0",
+    "recorded_date": "",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_deed",
+    "source_id": "tax_deed_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://taxdeed.duvalclerk.com"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_deed",
+      "parcel_id": null,
+      "signal_type": "tax_deed"
+    },
+    "base_record_id": "base_raw_9f15f625e2bfbf7e",
+    "canonical_doc_type": "tax_deed",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_9f15f625e2bfbf7e"
+    ],
+    "filer_entity": null,
+    "instrument_number": "167449-2090",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_deed against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_deed against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_deed against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "167449-2090",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_9f15f625e2bfbf7e",
+    "recorded_date": "",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_deed",
+    "source_id": "tax_deed_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://taxdeed.duvalclerk.com"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_deed",
+      "parcel_id": null,
+      "signal_type": "tax_deed"
+    },
+    "base_record_id": "base_raw_b28566f4179cc61b",
+    "canonical_doc_type": "tax_deed",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_b28566f4179cc61b"
+    ],
+    "filer_entity": null,
+    "instrument_number": "065498-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_deed against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_deed against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_deed against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "065498-0000",
+      "situs_address": null
+    },
+    "raw_event_id": "raw_b28566f4179cc61b",
+    "recorded_date": "",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_deed",
+    "source_id": "tax_deed_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://taxdeed.duvalclerk.com"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_deed",
+      "parcel_id": null,
+      "signal_type": "tax_deed"
+    },
+    "base_record_id": "base_raw_cf50c7ec0a72cd98",
+    "canonical_doc_type": "tax_deed",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_cf50c7ec0a72cd98"
+    ],
+    "filer_entity": null,
+    "instrument_number": "000456-0000",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_deed against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_deed against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_deed against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "000456-0000",
+      "situs_address": "456 OAK AVE, JACKSONVILLE, FL"
+    },
+    "raw_event_id": "raw_cf50c7ec0a72cd98",
+    "recorded_date": "",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_deed",
+    "source_id": "tax_deed_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://taxdeed.duvalclerk.com/"
+  }
+]

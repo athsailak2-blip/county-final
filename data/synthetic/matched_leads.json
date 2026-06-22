@@ -1,0 +1,1452 @@
+[
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_bcd764ddf64df37d"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_parcel_SYN-005",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "TEST_OWNER_005",
+    "owner_type": "INDIVIDUAL",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "TEST_OWNER_005",
+        "name_type": "DF",
+        "notes": null,
+        "resolution_status": "RESOLVED",
+        "role": "debtor",
+        "source_field": "DF"
+      }
+    ],
+    "parcel_resolution_status": "RESOLVED",
+    "primary_owner_name": "TEST_OWNER_005",
+    "primary_parcel_id": "SYN-005",
+    "review_reason": null,
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "sheriff_sale",
+          "parcel_id": "SYN-005",
+          "signal_type": "sheriff_sale"
+        },
+        "canonical_doc_type": "sheriff_sale",
+        "count": 1,
+        "earliest_recorded_date": "2026-05-12",
+        "evidence_ids": [
+          "ev_bcd764ddf64df37d"
+        ],
+        "instrument_numbers": [
+          "SYN-FC-005"
+        ],
+        "latest_recorded_date": "2026-05-12",
+        "recorded_date_range": [
+          "2026-05-12",
+          "2026-05-12"
+        ],
+        "signal_type": "sheriff_sale",
+        "source_ids": [
+          "sheriff_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://sheriff/SYN-005"
+        ]
+      }
+    ],
+    "source_ids": [
+      "sheriff_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_befde6e733404f1f"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_parcel_SYN-012",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "TEST_OWNER_012_ESTATE_OF",
+    "owner_type": "INDIVIDUAL",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "TEST_OWNER_012_ESTATE_OF",
+        "name_type": "GR",
+        "notes": null,
+        "resolution_status": "RESOLVED",
+        "role": "debtor",
+        "source_field": "GR"
+      }
+    ],
+    "parcel_resolution_status": "RESOLVED",
+    "primary_owner_name": "TEST_OWNER_012_ESTATE_OF",
+    "primary_parcel_id": "SYN-012",
+    "review_reason": null,
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "executors_deed",
+          "parcel_id": "SYN-012",
+          "signal_type": "executors_deed"
+        },
+        "canonical_doc_type": "executors_deed",
+        "count": 1,
+        "earliest_recorded_date": "2026-02-28",
+        "evidence_ids": [
+          "ev_befde6e733404f1f"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-02-28",
+        "recorded_date_range": [
+          "2026-02-28",
+          "2026-02-28"
+        ],
+        "signal_type": "executors_deed",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-ed-012"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_53a49fb2725bf9eb"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_BK-13-SYN-001",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "bankruptcy_petition against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "bankruptcy_petition against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "bankruptcy_petition against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "owner_not_on_document",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "bankruptcy_petition",
+          "parcel_id": null,
+          "signal_type": "bankruptcy_petition"
+        },
+        "canonical_doc_type": "bankruptcy_petition",
+        "count": 1,
+        "earliest_recorded_date": "2026-04-25",
+        "evidence_ids": [
+          "ev_53a49fb2725bf9eb"
+        ],
+        "instrument_numbers": [
+          "BK-13-SYN-001"
+        ],
+        "latest_recorded_date": "2026-04-25",
+        "recorded_date_range": [
+          "2026-04-25",
+          "2026-04-25"
+        ],
+        "signal_type": "bankruptcy_petition",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/bk-001"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_7ac8d2116ced032b"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_FM-SYN-007",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "marital_property_division against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "marital_property_division against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "marital_property_division against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "owner_not_on_document",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "marital_property_division",
+          "parcel_id": null,
+          "signal_type": "marital_property_division"
+        },
+        "canonical_doc_type": "marital_property_division",
+        "count": 1,
+        "earliest_recorded_date": "2026-03-28",
+        "evidence_ids": [
+          "ev_7ac8d2116ced032b"
+        ],
+        "instrument_numbers": [
+          "FM-SYN-007"
+        ],
+        "latest_recorded_date": "2026-03-28",
+        "recorded_date_range": [
+          "2026-03-28",
+          "2026-03-28"
+        ],
+        "signal_type": "marital_property_division",
+        "source_ids": [
+          "court_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://court/SYN-divorce-007"
+        ]
+      }
+    ],
+    "source_ids": [
+      "court_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_8927407c98d3f03b"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_P-SYN-009",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "letters_testamentary against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "letters_testamentary against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "letters_testamentary against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "document_body_debtor_not_extractable",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "letters_testamentary",
+          "parcel_id": null,
+          "signal_type": "letters_testamentary"
+        },
+        "canonical_doc_type": "letters_testamentary",
+        "count": 1,
+        "earliest_recorded_date": "2026-01-15",
+        "evidence_ids": [
+          "ev_8927407c98d3f03b"
+        ],
+        "instrument_numbers": [
+          "P-SYN-009"
+        ],
+        "latest_recorded_date": "2026-01-15",
+        "recorded_date_range": [
+          "2026-01-15",
+          "2026-01-15"
+        ],
+        "signal_type": "letters_testamentary",
+        "source_ids": [
+          "court_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://court/SYN-probate-009"
+        ]
+      }
+    ],
+    "source_ids": [
+      "court_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_647f16628a9e3628"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_SYN-FC-001",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "document_body_debtor_not_extractable",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "notice_of_sale",
+          "parcel_id": null,
+          "signal_type": "notice_of_sale"
+        },
+        "canonical_doc_type": "notice_of_sale",
+        "count": 1,
+        "earliest_recorded_date": "2026-04-15",
+        "evidence_ids": [
+          "ev_647f16628a9e3628"
+        ],
+        "instrument_numbers": [
+          "SYN-FC-001"
+        ],
+        "latest_recorded_date": "2026-04-15",
+        "recorded_date_range": [
+          "2026-04-15",
+          "2026-04-15"
+        ],
+        "signal_type": "notice_of_sale",
+        "source_ids": [
+          "sheriff_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://sheriff/SYN-001"
+        ]
+      }
+    ],
+    "source_ids": [
+      "sheriff_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_110e0f6acd3041c7"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_110e0f6acd3041c7",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "judgment_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "judgment_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "judgment_lien against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "expected_debtor_name_type DF missing",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "judgment_lien",
+          "parcel_id": null,
+          "signal_type": "judgment_lien"
+        },
+        "canonical_doc_type": "judgment_lien",
+        "count": 1,
+        "earliest_recorded_date": "2026-01-20",
+        "evidence_ids": [
+          "ev_110e0f6acd3041c7"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-01-20",
+        "recorded_date_range": [
+          "2026-01-20",
+          "2026-01-20"
+        ],
+        "signal_type": "judgment_lien",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-jl-006"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_239b70f5fa72dd22"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_239b70f5fa72dd22",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "judgment_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "judgment_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "judgment_lien against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "expected_debtor_name_type DF missing",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "judgment_lien",
+          "parcel_id": null,
+          "signal_type": "judgment_lien"
+        },
+        "canonical_doc_type": "judgment_lien",
+        "count": 1,
+        "earliest_recorded_date": "2025-11-22",
+        "evidence_ids": [
+          "ev_239b70f5fa72dd22"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2025-11-22",
+        "recorded_date_range": [
+          "2025-11-22",
+          "2025-11-22"
+        ],
+        "signal_type": "judgment_lien",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-jl-002"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_38136fc5bb3aff74"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_38136fc5bb3aff74",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "construction_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "construction_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "construction_lien against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "expected_debtor_name_type GR missing",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "construction_lien",
+          "parcel_id": null,
+          "signal_type": "construction_lien"
+        },
+        "canonical_doc_type": "construction_lien",
+        "count": 1,
+        "earliest_recorded_date": "2024-08-15",
+        "evidence_ids": [
+          "ev_38136fc5bb3aff74"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2024-08-15",
+        "recorded_date_range": [
+          "2024-08-15",
+          "2024-08-15"
+        ],
+        "signal_type": "construction_lien",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-expired-005"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_3fbadcad083bc6c0"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_3fbadcad083bc6c0",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_foreclosure_notice against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_foreclosure_notice against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_foreclosure_notice against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "owner_not_on_document",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "tax_foreclosure_notice",
+          "parcel_id": null,
+          "signal_type": "tax_foreclosure_notice"
+        },
+        "canonical_doc_type": "tax_foreclosure_notice",
+        "count": 1,
+        "earliest_recorded_date": "2026-04-01",
+        "evidence_ids": [
+          "ev_3fbadcad083bc6c0"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-04-01",
+        "recorded_date_range": [
+          "2026-04-01",
+          "2026-04-01"
+        ],
+        "signal_type": "tax_foreclosure_notice",
+        "source_ids": [
+          "tax_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://tax/SYN-009"
+        ]
+      }
+    ],
+    "source_ids": [
+      "tax_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_431bef26cd7a2aea"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_431bef26cd7a2aea",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "quitclaim_deed against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "quitclaim_deed against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "quitclaim_deed against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "no_debtor_rule_for_doc_type",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "quitclaim_deed",
+          "parcel_id": null,
+          "signal_type": "quitclaim_deed"
+        },
+        "canonical_doc_type": "quitclaim_deed",
+        "count": 1,
+        "earliest_recorded_date": "2026-03-05",
+        "evidence_ids": [
+          "ev_431bef26cd7a2aea"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-03-05",
+        "recorded_date_range": [
+          "2026-03-05",
+          "2026-03-05"
+        ],
+        "signal_type": "quitclaim_deed",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-qc-003"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_4d87d4c41e4b7425"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_4d87d4c41e4b7425",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "owner_not_on_document",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "tax_sale_certificate",
+          "parcel_id": null,
+          "signal_type": "tax_sale_certificate"
+        },
+        "canonical_doc_type": "tax_sale_certificate",
+        "count": 1,
+        "earliest_recorded_date": "2026-03-10",
+        "evidence_ids": [
+          "ev_4d87d4c41e4b7425"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-03-10",
+        "recorded_date_range": [
+          "2026-03-10",
+          "2026-03-10"
+        ],
+        "signal_type": "tax_sale_certificate",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-tsc-002"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_5aafb1a0db91632a"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_5aafb1a0db91632a",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "sheriff_sale_surplus against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "sheriff_sale_surplus against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "sheriff_sale_surplus against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "owner_not_on_document",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "sheriff_sale_surplus",
+          "parcel_id": null,
+          "signal_type": "sheriff_sale_surplus"
+        },
+        "canonical_doc_type": "sheriff_sale_surplus",
+        "count": 1,
+        "earliest_recorded_date": "2025-09-20",
+        "evidence_ids": [
+          "ev_5aafb1a0db91632a"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2025-09-20",
+        "recorded_date_range": [
+          "2025-09-20",
+          "2025-09-20"
+        ],
+        "signal_type": "sheriff_sale_surplus",
+        "source_ids": [
+          "sheriff_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://sheriff/SYN-011"
+        ]
+      }
+    ],
+    "source_ids": [
+      "sheriff_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_6a01520a796a9d2a"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_6a01520a796a9d2a",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "lis_pendens against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "lis_pendens against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "lis_pendens against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "expected_debtor_name_type DF missing",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "lis_pendens",
+          "parcel_id": null,
+          "signal_type": "lis_pendens"
+        },
+        "canonical_doc_type": "lis_pendens",
+        "count": 1,
+        "earliest_recorded_date": "2026-02-08",
+        "evidence_ids": [
+          "ev_6a01520a796a9d2a"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-02-08",
+        "recorded_date_range": [
+          "2026-02-08",
+          "2026-02-08"
+        ],
+        "signal_type": "lis_pendens",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-lp-010"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_739918be2fa62839"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_739918be2fa62839",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "federal_tax_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "federal_tax_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "federal_tax_lien against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "expected_debtor_name_type TP missing",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "federal_tax_lien",
+          "parcel_id": null,
+          "signal_type": "federal_tax_lien"
+        },
+        "canonical_doc_type": "federal_tax_lien",
+        "count": 1,
+        "earliest_recorded_date": "2025-08-14",
+        "evidence_ids": [
+          "ev_739918be2fa62839"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2025-08-14",
+        "recorded_date_range": [
+          "2025-08-14",
+          "2025-08-14"
+        ],
+        "signal_type": "federal_tax_lien",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-ftl-006"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_7f8f1855fbe7cd50"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_7f8f1855fbe7cd50",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "eviction_filing against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "eviction_filing against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "eviction_filing against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "owner_not_on_document",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "eviction_filing",
+          "parcel_id": null,
+          "signal_type": "eviction_filing"
+        },
+        "canonical_doc_type": "eviction_filing",
+        "count": 1,
+        "earliest_recorded_date": "2025-12-05",
+        "evidence_ids": [
+          "ev_7f8f1855fbe7cd50"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2025-12-05",
+        "recorded_date_range": [
+          "2025-12-05",
+          "2025-12-05"
+        ],
+        "signal_type": "eviction_filing",
+        "source_ids": [
+          "court_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://court/SYN-ev2-008"
+        ]
+      }
+    ],
+    "source_ids": [
+      "court_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_9006497a7f965569"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_9006497a7f965569",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "hoa_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "hoa_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "hoa_lien against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "no_debtor_rule_for_doc_type",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "hoa_lien",
+          "parcel_id": null,
+          "signal_type": "hoa_lien"
+        },
+        "canonical_doc_type": "hoa_lien",
+        "count": 1,
+        "earliest_recorded_date": "2026-03-15",
+        "evidence_ids": [
+          "ev_9006497a7f965569"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-03-15",
+        "recorded_date_range": [
+          "2026-03-15",
+          "2026-03-15"
+        ],
+        "signal_type": "hoa_lien",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-hoa-010"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_939cbc4b0bc8e41c"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_939cbc4b0bc8e41c",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "vacated_judgment against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "vacated_judgment against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "vacated_judgment against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "no_debtor_rule_for_doc_type",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "vacated_judgment",
+          "parcel_id": null,
+          "signal_type": "vacated_judgment"
+        },
+        "canonical_doc_type": "vacated_judgment",
+        "count": 1,
+        "earliest_recorded_date": "2026-03-15",
+        "evidence_ids": [
+          "ev_939cbc4b0bc8e41c"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-03-15",
+        "recorded_date_range": [
+          "2026-03-15",
+          "2026-03-15"
+        ],
+        "signal_type": "vacated_judgment",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-old-002"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_95aada426d04b3ef"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_95aada426d04b3ef",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "mechanics_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "mechanics_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "mechanics_lien against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "expected_debtor_name_type GR missing",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "mechanics_lien",
+          "parcel_id": null,
+          "signal_type": "mechanics_lien"
+        },
+        "canonical_doc_type": "mechanics_lien",
+        "count": 1,
+        "earliest_recorded_date": "2025-12-03",
+        "evidence_ids": [
+          "ev_95aada426d04b3ef"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2025-12-03",
+        "recorded_date_range": [
+          "2025-12-03",
+          "2025-12-03"
+        ],
+        "signal_type": "mechanics_lien",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-ml-006"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_9abd2bc639523949"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_9abd2bc639523949",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "mechanics_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "mechanics_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "mechanics_lien against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "expected_debtor_name_type GR missing",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "mechanics_lien",
+          "parcel_id": null,
+          "signal_type": "mechanics_lien"
+        },
+        "canonical_doc_type": "mechanics_lien",
+        "count": 1,
+        "earliest_recorded_date": "2026-04-30",
+        "evidence_ids": [
+          "ev_9abd2bc639523949"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-04-30",
+        "recorded_date_range": [
+          "2026-04-30",
+          "2026-04-30"
+        ],
+        "signal_type": "mechanics_lien",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-recent-007"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_9d42c5fb6d4b5c92"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_9d42c5fb6d4b5c92",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "affidavit_of_heirship against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "affidavit_of_heirship against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "affidavit_of_heirship against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "document_body_debtor_not_extractable",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "affidavit_of_heirship",
+          "parcel_id": null,
+          "signal_type": "affidavit_of_heirship"
+        },
+        "canonical_doc_type": "affidavit_of_heirship",
+        "count": 1,
+        "earliest_recorded_date": "2026-02-18",
+        "evidence_ids": [
+          "ev_9d42c5fb6d4b5c92"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-02-18",
+        "recorded_date_range": [
+          "2026-02-18",
+          "2026-02-18"
+        ],
+        "signal_type": "affidavit_of_heirship",
+        "source_ids": [
+          "clerk_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://clerk/SYN-aoh-003"
+        ]
+      }
+    ],
+    "source_ids": [
+      "clerk_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_a4a09f4b274e0fa0"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_a4a09f4b274e0fa0",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "demolition_order against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "demolition_order against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "demolition_order against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "owner_not_on_document",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "demolition_order",
+          "parcel_id": null,
+          "signal_type": "demolition_order"
+        },
+        "canonical_doc_type": "demolition_order",
+        "count": 1,
+        "earliest_recorded_date": "2026-04-01",
+        "evidence_ids": [
+          "ev_a4a09f4b274e0fa0"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-04-01",
+        "recorded_date_range": [
+          "2026-04-01",
+          "2026-04-01"
+        ],
+        "signal_type": "demolition_order",
+        "source_ids": [
+          "code_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://code/SYN-demo-004"
+        ]
+      }
+    ],
+    "source_ids": [
+      "code_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_b19a311cb19fe862"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_b19a311cb19fe862",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "eviction_filing against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "eviction_filing against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "eviction_filing against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "owner_not_on_document",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "eviction_filing",
+          "parcel_id": null,
+          "signal_type": "eviction_filing"
+        },
+        "canonical_doc_type": "eviction_filing",
+        "count": 1,
+        "earliest_recorded_date": "2026-03-22",
+        "evidence_ids": [
+          "ev_b19a311cb19fe862"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2026-03-22",
+        "recorded_date_range": [
+          "2026-03-22",
+          "2026-03-22"
+        ],
+        "signal_type": "eviction_filing",
+        "source_ids": [
+          "court_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://court/SYN-ev3-008"
+        ]
+      }
+    ],
+    "source_ids": [
+      "court_synthetic"
+    ]
+  },
+  {
+    "additional_owner_names": [],
+    "enrichment_status": "UNENRICHED",
+    "evidence_ids": [
+      "ev_b857fb2a1830b300"
+    ],
+    "filer_entity": null,
+    "lead_id": "lead_unresolved_raw_b857fb2a1830b300",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "eviction_filing against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "eviction_filing against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "eviction_filing against unidentified party",
+    "primary_parcel_id": null,
+    "review_reason": "owner_not_on_document",
+    "signals": [
+      {
+        "aggregation_key": {
+          "canonical_doc_type": "eviction_filing",
+          "parcel_id": null,
+          "signal_type": "eviction_filing"
+        },
+        "canonical_doc_type": "eviction_filing",
+        "count": 1,
+        "earliest_recorded_date": "2025-08-10",
+        "evidence_ids": [
+          "ev_b857fb2a1830b300"
+        ],
+        "instrument_numbers": [],
+        "latest_recorded_date": "2025-08-10",
+        "recorded_date_range": [
+          "2025-08-10",
+          "2025-08-10"
+        ],
+        "signal_type": "eviction_filing",
+        "source_ids": [
+          "court_synthetic"
+        ],
+        "source_urls": [
+          "synthetic://court/SYN-ev1-008"
+        ]
+      }
+    ],
+    "source_ids": [
+      "court_synthetic"
+    ]
+  }
+]

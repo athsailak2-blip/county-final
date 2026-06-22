@@ -1,0 +1,933 @@
+[
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_017ace6bb5525a6a",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_017ace6bb5525a6a"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-23",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-ED1BB68D0610",
+      "situs_address": "Auction Day 6/23/2026"
+    },
+    "raw_event_id": "raw_017ace6bb5525a6a",
+    "recorded_date": "2026-06-23",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_1184926bf88077e4",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_1184926bf88077e4"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-9",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-9F5E575904FC",
+      "situs_address": "Auction Day 6/9/2026"
+    },
+    "raw_event_id": "raw_1184926bf88077e4",
+    "recorded_date": "2026-06-09",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_1ab4cfbd006a6ab5",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_1ab4cfbd006a6ab5"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-24",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-30147503509F",
+      "situs_address": "Auction Day 6/24/2026"
+    },
+    "raw_event_id": "raw_1ab4cfbd006a6ab5",
+    "recorded_date": "2026-06-24",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_3a576b6884cfaa89",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_3a576b6884cfaa89"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-4",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-B276C7646746",
+      "situs_address": "Auction Day 6/4/2026"
+    },
+    "raw_event_id": "raw_3a576b6884cfaa89",
+    "recorded_date": "2026-06-04",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_4275d26a1590db49",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_4275d26a1590db49"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-1",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-C838534129B8",
+      "situs_address": "Auction Day 6/1/2026"
+    },
+    "raw_event_id": "raw_4275d26a1590db49",
+    "recorded_date": "2026-06-01",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_51236f0eba7b2af7",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_51236f0eba7b2af7"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-29",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-8F7A8B898A07",
+      "situs_address": "Auction Day 6/29/2026"
+    },
+    "raw_event_id": "raw_51236f0eba7b2af7",
+    "recorded_date": "2026-06-29",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_5ffc2e60216200da",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_5ffc2e60216200da"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-17",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-EE99DA45CC53",
+      "situs_address": "Auction Day 6/17/2026"
+    },
+    "raw_event_id": "raw_5ffc2e60216200da",
+    "recorded_date": "2026-06-17",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_73d967a382fb2fc7",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_73d967a382fb2fc7"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-22",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-066142BA52F6",
+      "situs_address": "Auction Day 6/22/2026"
+    },
+    "raw_event_id": "raw_73d967a382fb2fc7",
+    "recorded_date": "2026-06-22",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_7b97e74c74861a67",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_7b97e74c74861a67"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-18",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-C7377F1F0A4B",
+      "situs_address": "Auction Day 6/18/2026"
+    },
+    "raw_event_id": "raw_7b97e74c74861a67",
+    "recorded_date": "2026-06-18",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_88d7a4bbe64f13f5",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_88d7a4bbe64f13f5"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-30",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-0B326374D110",
+      "situs_address": "Auction Day 6/30/2026"
+    },
+    "raw_event_id": "raw_88d7a4bbe64f13f5",
+    "recorded_date": "2026-06-30",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_916410b3bcf14885",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_916410b3bcf14885"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-15",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-4C0FBB2A8681",
+      "situs_address": "Auction Day 6/15/2026"
+    },
+    "raw_event_id": "raw_916410b3bcf14885",
+    "recorded_date": "2026-06-15",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_993858331c7696e5",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_993858331c7696e5"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-16",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-9B359FAD8954",
+      "situs_address": "Auction Day 6/16/2026"
+    },
+    "raw_event_id": "raw_993858331c7696e5",
+    "recorded_date": "2026-06-16",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_b3e3b84fd88af144",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_b3e3b84fd88af144"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-2",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-87B5E1C10809",
+      "situs_address": "Auction Day 6/2/2026"
+    },
+    "raw_event_id": "raw_b3e3b84fd88af144",
+    "recorded_date": "2026-06-02",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://duval.realforeclose.com/index.cfm"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_b7a1b535f64c7bad",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_b7a1b535f64c7bad"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-3",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-06715DD908FE",
+      "situs_address": "Auction Day 6/3/2026"
+    },
+    "raw_event_id": "raw_b7a1b535f64c7bad",
+    "recorded_date": "2026-06-03",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_c17e5dfdb0878f46",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_c17e5dfdb0878f46"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-2",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-87B5E1C10809",
+      "situs_address": "Auction Day 6/2/2026"
+    },
+    "raw_event_id": "raw_c17e5dfdb0878f46",
+    "recorded_date": "2026-06-02",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_f18e7904c99d9c0f",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_f18e7904c99d9c0f"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-8",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-A6DA9F77811C",
+      "situs_address": "Auction Day 6/8/2026"
+    },
+    "raw_event_id": "raw_f18e7904c99d9c0f",
+    "recorded_date": "2026-06-08",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_f3af8341f4473447",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_f3af8341f4473447"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-11",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-BC0CBB506870",
+      "situs_address": "Auction Day 6/11/2026"
+    },
+    "raw_event_id": "raw_f3af8341f4473447",
+    "recorded_date": "2026-06-11",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_fa6b6251d6a9ab2f",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_fa6b6251d6a9ab2f"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-1",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-C838534129B8",
+      "situs_address": "Auction Day 6/1/2026"
+    },
+    "raw_event_id": "raw_fa6b6251d6a9ab2f",
+    "recorded_date": "2026-06-01",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://duval.realforeclose.com/index.cfm"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_fea42680c634fb6b",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_fea42680c634fb6b"
+    ],
+    "filer_entity": null,
+    "instrument_number": "2026-06-25",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "",
+      "legal_description": null,
+      "parcel_id": "FCL-3168B3862BAF",
+      "situs_address": "Auction Day 6/25/2026"
+    },
+    "raw_event_id": "raw_fea42680c634fb6b",
+    "recorded_date": "2026-06-25",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "foreclosure_sales",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "https://www.duval.realforeclose.com/index.cfm?zaction=USER&zmethod=CALENDAR"
+  }
+]
