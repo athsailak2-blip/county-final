@@ -1,0 +1,51 @@
+[
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "demolition_order",
+      "parcel_id": null,
+      "signal_type": "demolition_order"
+    },
+    "base_record_id": "base_raw_a4a09f4b274e0fa0",
+    "canonical_doc_type": "demolition_order",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_a4a09f4b274e0fa0"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "demolition_order against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "demolition_order against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "demolition_order against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-004",
+      "situs_address": "400 Synthetic Lane"
+    },
+    "raw_event_id": "raw_a4a09f4b274e0fa0",
+    "recorded_date": "2026-04-01",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "demolition_order",
+    "source_id": "code_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://code/SYN-demo-004"
+  }
+]

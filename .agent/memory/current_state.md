@@ -12,11 +12,14 @@ The framework version stated in `README.md` is v5.3.1 stable.
 
 ## Current Work
 
-The authorized county Phase 0 recon was completed after explicit operator authorization.
+Duval County Build Mode was explicitly authorized on 2026-07-16. The scoped build
+produced a passing synthetic pipeline artifact under `runs/duval_fl/build/`.
 
 ## County Build State
 
-The active county Phase 0 is complete. The populated config and recon artifacts are in the active county's scoped paths.
+The Duval Phase 0 config and launch file are in the active county's scoped paths.
+Build Mode is source-limited: the repository has no current `data/raw/` inputs, and
+the required Duval recon artifact set is not present.
 
 Build verdict: `READY_WITH_BLOCKERS`.
 
@@ -24,8 +27,10 @@ No scrapers, adapters, dashboards, deployment files, or production refresh work 
 
 ## Important Active Constraint
 
-Stop at the Build Mode Approval Gate. Build Mode requires explicit operator approval.
+Do not treat the build as production-ready. A live refresh requires current raw source
+pulls plus the missing recon-gate artifacts and a schema-compatible translator config.
 
 ## Next Allowed Action
 
-Wait for explicit approval to enter Build Mode with the accessible Orange County primary sources, or wait for operator direction on the blocked tax-delinquency source.
+Next allowed action: resolve the Duval schema/recon blockers, then run a live source
+refresh and mechanical/semantic verification before deployment.

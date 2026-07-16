@@ -1,0 +1,688 @@
+[
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "judgment_lien",
+      "parcel_id": null,
+      "signal_type": "judgment_lien"
+    },
+    "base_record_id": "base_raw_110e0f6acd3041c7",
+    "canonical_doc_type": "judgment_lien",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_110e0f6acd3041c7"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "judgment_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "judgment_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "judgment_lien against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-006",
+      "situs_address": "600 Synthetic Lane"
+    },
+    "raw_event_id": "raw_110e0f6acd3041c7",
+    "recorded_date": "2026-01-20",
+    "review_reason": "expected_debtor_name_type DF missing",
+    "signal_type": "judgment_lien",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-jl-006"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "judgment_lien",
+      "parcel_id": null,
+      "signal_type": "judgment_lien"
+    },
+    "base_record_id": "base_raw_239b70f5fa72dd22",
+    "canonical_doc_type": "judgment_lien",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_239b70f5fa72dd22"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "judgment_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "judgment_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "judgment_lien against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-002",
+      "situs_address": "200 Synthetic Lane"
+    },
+    "raw_event_id": "raw_239b70f5fa72dd22",
+    "recorded_date": "2025-11-22",
+    "review_reason": "expected_debtor_name_type DF missing",
+    "signal_type": "judgment_lien",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-jl-002"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "construction_lien",
+      "parcel_id": null,
+      "signal_type": "construction_lien"
+    },
+    "base_record_id": "base_raw_38136fc5bb3aff74",
+    "canonical_doc_type": "construction_lien",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_38136fc5bb3aff74"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "construction_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "construction_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "construction_lien against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-005",
+      "situs_address": "500 Synthetic Lane"
+    },
+    "raw_event_id": "raw_38136fc5bb3aff74",
+    "recorded_date": "2024-08-15",
+    "review_reason": "expected_debtor_name_type GR missing",
+    "signal_type": "construction_lien",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-expired-005"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "quitclaim_deed",
+      "parcel_id": null,
+      "signal_type": "quitclaim_deed"
+    },
+    "base_record_id": "base_raw_431bef26cd7a2aea",
+    "canonical_doc_type": "quitclaim_deed",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_431bef26cd7a2aea"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "quitclaim_deed against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "quitclaim_deed against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "quitclaim_deed against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-003",
+      "situs_address": "300 Synthetic Lane"
+    },
+    "raw_event_id": "raw_431bef26cd7a2aea",
+    "recorded_date": "2026-03-05",
+    "review_reason": "no_debtor_rule_for_doc_type",
+    "signal_type": "quitclaim_deed",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-qc-003"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "tax_sale_certificate",
+      "parcel_id": null,
+      "signal_type": "tax_sale_certificate"
+    },
+    "base_record_id": "base_raw_4d87d4c41e4b7425",
+    "canonical_doc_type": "tax_sale_certificate",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_4d87d4c41e4b7425"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "tax_sale_certificate against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "tax_sale_certificate against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "tax_sale_certificate against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-002",
+      "situs_address": "200 Synthetic Lane"
+    },
+    "raw_event_id": "raw_4d87d4c41e4b7425",
+    "recorded_date": "2026-03-10",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "tax_sale_certificate",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-tsc-002"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "bankruptcy_petition",
+      "parcel_id": null,
+      "signal_type": "bankruptcy_petition"
+    },
+    "base_record_id": "base_raw_53a49fb2725bf9eb",
+    "canonical_doc_type": "bankruptcy_petition",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_53a49fb2725bf9eb"
+    ],
+    "filer_entity": null,
+    "instrument_number": "BK-13-SYN-001",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "bankruptcy_petition against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "bankruptcy_petition against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "bankruptcy_petition against unidentified party",
+    "property_refs": {
+      "case_number": "BK-13-SYN-001",
+      "legal_description": null,
+      "parcel_id": "SYN-001",
+      "situs_address": "100 Synthetic Lane"
+    },
+    "raw_event_id": "raw_53a49fb2725bf9eb",
+    "recorded_date": "2026-04-25",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "bankruptcy_petition",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/bk-001"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "lis_pendens",
+      "parcel_id": null,
+      "signal_type": "lis_pendens"
+    },
+    "base_record_id": "base_raw_6a01520a796a9d2a",
+    "canonical_doc_type": "lis_pendens",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_6a01520a796a9d2a"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "lis_pendens against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "lis_pendens against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "lis_pendens against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-010",
+      "situs_address": "1000 Synthetic Lane"
+    },
+    "raw_event_id": "raw_6a01520a796a9d2a",
+    "recorded_date": "2026-02-08",
+    "review_reason": "expected_debtor_name_type DF missing",
+    "signal_type": "lis_pendens",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-lp-010"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "federal_tax_lien",
+      "parcel_id": null,
+      "signal_type": "federal_tax_lien"
+    },
+    "base_record_id": "base_raw_739918be2fa62839",
+    "canonical_doc_type": "federal_tax_lien",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_739918be2fa62839"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "federal_tax_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "federal_tax_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "federal_tax_lien against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-006",
+      "situs_address": "600 Synthetic Lane"
+    },
+    "raw_event_id": "raw_739918be2fa62839",
+    "recorded_date": "2025-08-14",
+    "review_reason": "expected_debtor_name_type TP missing",
+    "signal_type": "federal_tax_lien",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-ftl-006"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "hoa_lien",
+      "parcel_id": null,
+      "signal_type": "hoa_lien"
+    },
+    "base_record_id": "base_raw_9006497a7f965569",
+    "canonical_doc_type": "hoa_lien",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_9006497a7f965569"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "hoa_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "hoa_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "hoa_lien against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-010",
+      "situs_address": "1000 Synthetic Lane"
+    },
+    "raw_event_id": "raw_9006497a7f965569",
+    "recorded_date": "2026-03-15",
+    "review_reason": "no_debtor_rule_for_doc_type",
+    "signal_type": "hoa_lien",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-hoa-010"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "vacated_judgment",
+      "parcel_id": null,
+      "signal_type": "vacated_judgment"
+    },
+    "base_record_id": "base_raw_939cbc4b0bc8e41c",
+    "canonical_doc_type": "vacated_judgment",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_939cbc4b0bc8e41c"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "vacated_judgment against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "vacated_judgment against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "vacated_judgment against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-002",
+      "situs_address": "200 Synthetic Lane"
+    },
+    "raw_event_id": "raw_939cbc4b0bc8e41c",
+    "recorded_date": "2026-03-15",
+    "review_reason": "no_debtor_rule_for_doc_type",
+    "signal_type": "vacated_judgment",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-old-002"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "mechanics_lien",
+      "parcel_id": null,
+      "signal_type": "mechanics_lien"
+    },
+    "base_record_id": "base_raw_95aada426d04b3ef",
+    "canonical_doc_type": "mechanics_lien",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_95aada426d04b3ef"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "mechanics_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "mechanics_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "mechanics_lien against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-006",
+      "situs_address": "600 Synthetic Lane"
+    },
+    "raw_event_id": "raw_95aada426d04b3ef",
+    "recorded_date": "2025-12-03",
+    "review_reason": "expected_debtor_name_type GR missing",
+    "signal_type": "mechanics_lien",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-ml-006"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "mechanics_lien",
+      "parcel_id": null,
+      "signal_type": "mechanics_lien"
+    },
+    "base_record_id": "base_raw_9abd2bc639523949",
+    "canonical_doc_type": "mechanics_lien",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_9abd2bc639523949"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "mechanics_lien against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "mechanics_lien against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "mechanics_lien against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-007",
+      "situs_address": "700 Synthetic Lane"
+    },
+    "raw_event_id": "raw_9abd2bc639523949",
+    "recorded_date": "2026-04-30",
+    "review_reason": "expected_debtor_name_type GR missing",
+    "signal_type": "mechanics_lien",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-recent-007"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "affidavit_of_heirship",
+      "parcel_id": null,
+      "signal_type": "affidavit_of_heirship"
+    },
+    "base_record_id": "base_raw_9d42c5fb6d4b5c92",
+    "canonical_doc_type": "affidavit_of_heirship",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_9d42c5fb6d4b5c92"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "affidavit_of_heirship against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "affidavit_of_heirship against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "affidavit_of_heirship against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-003",
+      "situs_address": "300 Synthetic Lane"
+    },
+    "raw_event_id": "raw_9d42c5fb6d4b5c92",
+    "recorded_date": "2026-02-18",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "affidavit_of_heirship",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-aoh-003"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "executors_deed",
+      "parcel_id": "SYN-012",
+      "signal_type": "executors_deed"
+    },
+    "base_record_id": "base_raw_befde6e733404f1f",
+    "canonical_doc_type": "executors_deed",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_befde6e733404f1f"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "TEST_OWNER_012_ESTATE_OF",
+    "owner_type": "INDIVIDUAL",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "TEST_OWNER_012_ESTATE_OF",
+        "name_type": "GR",
+        "notes": null,
+        "resolution_status": "RESOLVED",
+        "role": "debtor",
+        "source_field": "GR"
+      }
+    ],
+    "parcel_resolution_status": "RESOLVED",
+    "primary_owner_name": "TEST_OWNER_012_ESTATE_OF",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-012",
+      "situs_address": "1200 Synthetic Lane"
+    },
+    "raw_event_id": "raw_befde6e733404f1f",
+    "recorded_date": "2026-02-28",
+    "review_reason": null,
+    "signal_type": "executors_deed",
+    "source_id": "clerk_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://clerk/SYN-ed-012"
+  }
+]
