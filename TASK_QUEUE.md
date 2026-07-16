@@ -40,7 +40,7 @@ Do not automatically start the next task.
 | ID | Status | Priority | Task | Notes |
 |---|---|---:|---|---|
 | TQ-001 | Completed | High | Create repository management system | Created only the approved files and folders. No county implementation was started. |
-| TQ-002 | Blocked | High | County implementation | Blocked until the operator explicitly names a county/state and authorizes the framework flow. |
+| TQ-002 | Completed | High | County implementation | The authorized county Phase 0 completed with `READY_WITH_BLOCKERS`; stopped at the Build Mode Approval Gate. |
 | TQ-003 | Pending | Medium | Maintain project memory after future work | Update `.agent/memory/` after durable architecture, state, decision, or mistake changes. |
 
 ## Rules
