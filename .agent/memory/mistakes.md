@@ -1,6 +1,6 @@
 # Mistakes And Prevention Rules
 
-Last updated: 2026-06-22
+Last updated: 2026-07-16
 
 This file records known failure modes so future agents do not repeat them.
 
@@ -20,6 +20,7 @@ This file records known failure modes so future agents do not repeat them.
 | M-010 | Declaring build complete without verification | Ships broken or misleading output | Run the relevant tests and verification gates before declaring completion. |
 | M-011 | Silently ignoring operator-volunteered source knowledge | Loses operational context between runs | Capture casual county/source knowledge in the appropriate run-level notes file when a county run exists. |
 | M-012 | Creating parallel framework systems or duplicate canonical files | Increases drift and confusion | Use existing canonical paths. Do not create replacement systems without explicit operator approval. |
+| M-013 | Schema translator enum drifting from the translator registry | Valid county configs fail JSON Schema even though the translator is registered | Keep `config/counties/_schema.json` translator enum in sync with `scaffold/pipeline/translators/` registered names. Guarded by `test_translator_registry.py::test_schema_enum_covers_registry`. |
 
 ## Current Session Guardrail
 

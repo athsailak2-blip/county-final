@@ -1,0 +1,247 @@
+[
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "marital_property_division",
+      "parcel_id": null,
+      "signal_type": "marital_property_division"
+    },
+    "base_record_id": "base_raw_7ac8d2116ced032b",
+    "canonical_doc_type": "marital_property_division",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_7ac8d2116ced032b"
+    ],
+    "filer_entity": null,
+    "instrument_number": "FM-SYN-007",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "marital_property_division against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "marital_property_division against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "marital_property_division against unidentified party",
+    "property_refs": {
+      "case_number": "FM-SYN-007",
+      "legal_description": null,
+      "parcel_id": "SYN-007",
+      "situs_address": "700 Synthetic Lane"
+    },
+    "raw_event_id": "raw_7ac8d2116ced032b",
+    "recorded_date": "2026-03-28",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "marital_property_division",
+    "source_id": "court_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://court/SYN-divorce-007"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "eviction_filing",
+      "parcel_id": null,
+      "signal_type": "eviction_filing"
+    },
+    "base_record_id": "base_raw_7f8f1855fbe7cd50",
+    "canonical_doc_type": "eviction_filing",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_7f8f1855fbe7cd50"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "eviction_filing against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "eviction_filing against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "eviction_filing against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-008",
+      "situs_address": "800 Synthetic Lane"
+    },
+    "raw_event_id": "raw_7f8f1855fbe7cd50",
+    "recorded_date": "2025-12-05",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "eviction_filing",
+    "source_id": "court_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://court/SYN-ev2-008"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "letters_testamentary",
+      "parcel_id": null,
+      "signal_type": "letters_testamentary"
+    },
+    "base_record_id": "base_raw_8927407c98d3f03b",
+    "canonical_doc_type": "letters_testamentary",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_8927407c98d3f03b"
+    ],
+    "filer_entity": null,
+    "instrument_number": "P-SYN-009",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "letters_testamentary against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "letters_testamentary against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "letters_testamentary against unidentified party",
+    "property_refs": {
+      "case_number": "P-SYN-009",
+      "legal_description": null,
+      "parcel_id": "SYN-009",
+      "situs_address": "900 Synthetic Lane"
+    },
+    "raw_event_id": "raw_8927407c98d3f03b",
+    "recorded_date": "2026-01-15",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "letters_testamentary",
+    "source_id": "court_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://court/SYN-probate-009"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "eviction_filing",
+      "parcel_id": null,
+      "signal_type": "eviction_filing"
+    },
+    "base_record_id": "base_raw_b19a311cb19fe862",
+    "canonical_doc_type": "eviction_filing",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_b19a311cb19fe862"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "eviction_filing against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "eviction_filing against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "eviction_filing against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-008",
+      "situs_address": "800 Synthetic Lane"
+    },
+    "raw_event_id": "raw_b19a311cb19fe862",
+    "recorded_date": "2026-03-22",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "eviction_filing",
+    "source_id": "court_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://court/SYN-ev3-008"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "eviction_filing",
+      "parcel_id": null,
+      "signal_type": "eviction_filing"
+    },
+    "base_record_id": "base_raw_b857fb2a1830b300",
+    "canonical_doc_type": "eviction_filing",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_b857fb2a1830b300"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "eviction_filing against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "eviction_filing against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "eviction_filing against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-008",
+      "situs_address": "800 Synthetic Lane"
+    },
+    "raw_event_id": "raw_b857fb2a1830b300",
+    "recorded_date": "2025-08-10",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "eviction_filing",
+    "source_id": "court_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://court/SYN-ev1-008"
+  }
+]

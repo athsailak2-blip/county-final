@@ -1,0 +1,149 @@
+[
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "sheriff_sale_surplus",
+      "parcel_id": null,
+      "signal_type": "sheriff_sale_surplus"
+    },
+    "base_record_id": "base_raw_5aafb1a0db91632a",
+    "canonical_doc_type": "sheriff_sale_surplus",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_5aafb1a0db91632a"
+    ],
+    "filer_entity": null,
+    "instrument_number": null,
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "sheriff_sale_surplus against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "sheriff_sale_surplus against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "sheriff_sale_surplus against unidentified party",
+    "property_refs": {
+      "case_number": null,
+      "legal_description": null,
+      "parcel_id": "SYN-011",
+      "situs_address": "1100 Synthetic Lane"
+    },
+    "raw_event_id": "raw_5aafb1a0db91632a",
+    "recorded_date": "2025-09-20",
+    "review_reason": "owner_not_on_document",
+    "signal_type": "sheriff_sale_surplus",
+    "source_id": "sheriff_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://sheriff/SYN-011"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "notice_of_sale",
+      "parcel_id": null,
+      "signal_type": "notice_of_sale"
+    },
+    "base_record_id": "base_raw_647f16628a9e3628",
+    "canonical_doc_type": "notice_of_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_647f16628a9e3628"
+    ],
+    "filer_entity": null,
+    "instrument_number": "SYN-FC-001",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "notice_of_sale against unidentified party",
+    "owner_type": "UNKNOWN",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "notice_of_sale against unidentified party",
+        "name_type": null,
+        "notes": null,
+        "resolution_status": "REVIEW_REQUIRED",
+        "role": "unresolved",
+        "source_field": null
+      }
+    ],
+    "parcel_resolution_status": "REVIEW_REQUIRED",
+    "primary_owner_name": "notice_of_sale against unidentified party",
+    "property_refs": {
+      "case_number": "SYN-FC-001",
+      "legal_description": null,
+      "parcel_id": "SYN-001",
+      "situs_address": "100 Synthetic Lane"
+    },
+    "raw_event_id": "raw_647f16628a9e3628",
+    "recorded_date": "2026-04-15",
+    "review_reason": "document_body_debtor_not_extractable",
+    "signal_type": "notice_of_sale",
+    "source_id": "sheriff_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://sheriff/SYN-001"
+  },
+  {
+    "additional_owner_names": [],
+    "aggregation_key": {
+      "canonical_doc_type": "sheriff_sale",
+      "parcel_id": "SYN-005",
+      "signal_type": "sheriff_sale"
+    },
+    "base_record_id": "base_raw_bcd764ddf64df37d",
+    "canonical_doc_type": "sheriff_sale",
+    "confidence_status": "Confirmed",
+    "enrichment_status": "UNENRICHED",
+    "event_date": null,
+    "evidence_ids": [
+      "ev_bcd764ddf64df37d"
+    ],
+    "filer_entity": null,
+    "instrument_number": "SYN-FC-005",
+    "multi_owner_status": "SINGLE_OWNER",
+    "owner_count": 1,
+    "owner_name": "TEST_OWNER_005",
+    "owner_type": "INDIVIDUAL",
+    "owners": [
+      {
+        "confidence": null,
+        "is_primary": true,
+        "name": "TEST_OWNER_005",
+        "name_type": "DF",
+        "notes": null,
+        "resolution_status": "RESOLVED",
+        "role": "debtor",
+        "source_field": "DF"
+      }
+    ],
+    "parcel_resolution_status": "RESOLVED",
+    "primary_owner_name": "TEST_OWNER_005",
+    "property_refs": {
+      "case_number": "SYN-FC-005",
+      "legal_description": null,
+      "parcel_id": "SYN-005",
+      "situs_address": "500 Synthetic Lane"
+    },
+    "raw_event_id": "raw_bcd764ddf64df37d",
+    "recorded_date": "2026-05-12",
+    "review_reason": null,
+    "signal_type": "sheriff_sale",
+    "source_id": "sheriff_synthetic",
+    "source_role": "PRIMARY_EVENT_SOURCE",
+    "source_url": "synthetic://sheriff/SYN-005"
+  }
+]

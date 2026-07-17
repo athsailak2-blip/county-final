@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-06-22
+Last updated: 2026-07-16
 
 ## Repository
 
@@ -12,43 +12,38 @@ The framework version stated in `README.md` is v5.3.1 stable.
 
 ## Current Work
 
-The operator requested and approved a repository management and memory system to reduce agent drift.
-
-The approved files were created in this session.
-
-The operator approved targeted governance-rule updates to `AGENTS.md`, `TASK_QUEUE.md`, and `current_state.md`.
+Duval County Build Mode is authorized (D-002, D-003). The scoped synthetic pipeline
+artifact under `runs/duval_fl/build/` passes, and the schema/translator enum blocker
+is resolved: `config/counties/duval_fl.json` now passes JSON Schema validation.
 
 ## County Build State
 
-No county implementation has been started in this session.
+The Duval Phase 0 config and launch file are in the active county's scoped paths.
+`config/counties/duval_fl.json` passes JSON Schema validation (translator enum drift
+fixed in `_schema.json`). The synthetic build, county-agnostic regression, translator
+registry, and v5.3/v5.4 contract gates pass.
 
-No Phase 0 recon has been started.
+Build Mode remains source-limited: the repository has no current `data/raw/` inputs,
+and the required Duval recon artifact set is not present.
 
-No county target has been selected in this session.
+Build verdict: `READY_WITH_BLOCKERS` (schema blocker cleared).
 
-Do not create or modify county config files, run directories, scrapers, dashboards, deployment files, or source recon artifacts unless explicitly authorized.
+Duval-scoped scrapers/adapters and translators exist under `scrapers/` and `scaffold/pipeline/translators/`. No dashboards were deployed and no production refresh was run.
 
 ## Important Active Constraint
 
-The current instruction is:
+Do not treat the build as production-ready. A live refresh requires current raw source
+pulls plus the missing recon-gate artifacts. The schema/translator blocker is now cleared.
 
-Do not start county implementation.
+The five legacy Duval adapter tests (`official_records`, `foreclosure_sales`,
+`tax_deed_sales`, `publicsearch_clerk_recordings`, `tax_collector`) still fail: their
+fixtures/expected fields diverge from the current adapter parse APIs. Fixing them
+correctly requires verified real portal HTML/JSON samples, which are among the missing
+recon artifacts. Do NOT rewrite those fixtures to force a green gate without verified
+source samples (Evidence Rule).
 
 ## Next Allowed Action
 
-Stop after completing the approved governance-rule updates and report the change manifest.
-
-Do not continue to the next task without operator approval.
-
-Completed creation of:
-
-- `AGENTS.md`
-- `TASK_QUEUE.md`
-- `.agent/`
-- `.agent/memory/`
-- `.agent/memory/current_state.md`
-- `.agent/memory/architecture.md`
-- `.agent/memory/decisions.md`
-- `.agent/memory/mistakes.md`
-
-Then stop and report the change manifest.
+Next allowed action: obtain verified Duval raw source samples for the five adapters,
+reconcile each adapter/test/fixture against the real portal response, then run a live
+source refresh and mechanical/semantic verification before deployment.

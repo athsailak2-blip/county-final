@@ -696,6 +696,32 @@ def test_parcel_master_translator_no_field_map_identity():
         )
 
 
+def test_schema_enum_covers_registry():
+    """Every registered built-in translator must appear in the county config
+    schema translator enum, so a valid config can name any real translator.
+
+    Guards against enum drift: previously the schema enum omitted
+    foreclosure_auction_calendar, tax_deed_auction_listing, and
+    tax_delinquency_list, which made valid Duval sources fail JSON Schema
+    validation even though the translators were registered.
+    """
+    import json
+
+    print("\n[schema translator enum stays in sync with the registry]")
+    schema_path = FRAMEWORK_ROOT / "config" / "counties" / "_schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    enum = set(
+        schema["properties"]["sources"]["additionalProperties"]
+        ["properties"]["translator"]["enum"]
+    )
+    missing = [n for n in registered_names() if n not in enum]
+    case(
+        "schema enum covers every registered translator",
+        not missing,
+        f"missing from enum: {sorted(missing)}",
+    )
+
+
 def main() -> int:
     print("=" * 72)
     print("TRANSLATOR REGISTRY TEST — v5.1.2-beta-r3")
@@ -720,6 +746,7 @@ def main() -> int:
     test_foreclosure_translator_partial_field_map()
     test_parcel_master_translator_field_map_bridges_non_canonical_names()
     test_parcel_master_translator_no_field_map_identity()
+    test_schema_enum_covers_registry()
 
     passed = sum(1 for r in results if r[0] == PASS)
     failed = sum(1 for r in results if r[0] == FAIL)

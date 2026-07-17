@@ -273,7 +273,7 @@
           },
           "translator": {
             "type": "string",
-            "description": "v5.1.2-beta+: Name of a registered translator function in scaffold/pipeline/translators/. Tells the orchestrator how to convert this source's raw records into framework signals + placeholder parcels. If empty, the orchestrator skips this source during pipeline run (raw data still gets pulled but does not produce signals). Examples: 'foreclosure_notices', 'parcel_master', 'publicsearch_clerk_recordings', 'tyler_odyssey_court', 'csv_static_list'. Renamed in v5.1.2-beta-r2: arcgis_foreclosure_notices -> foreclosure_notices, arcgis_parcel_master -> parcel_master (translators are now protocol-agnostic; portal protocol lives in the scraper).",
+            "description": "v5.1.2-beta+: Name of a registered translator function in scaffold/pipeline/translators/. Tells the orchestrator how to convert this source's raw records into framework signals + placeholder parcels. If empty, the orchestrator skips this source during pipeline run (raw data still gets pulled but does not produce signals). Enum must stay in sync with the built-in translator registry in scaffold/pipeline/translators/. Examples: 'foreclosure_notices', 'parcel_master', 'publicsearch_clerk_recordings', 'csv_static_list', 'foreclosure_auction_calendar', 'tax_deed_auction_listing', 'tax_delinquency_list'. Renamed in v5.1.2-beta-r2: arcgis_foreclosure_notices -> foreclosure_notices, arcgis_parcel_master -> parcel_master (translators are now protocol-agnostic; portal protocol lives in the scraper).",
             "enum": [
               "",
               "foreclosure_notices",
@@ -282,6 +282,9 @@
               "tyler_odyssey_court",
               "csv_static_list",
               "static_html_table",
+              "foreclosure_auction_calendar",
+              "tax_deed_auction_listing",
+              "tax_delinquency_list",
               "custom"
             ]
           },

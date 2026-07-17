@@ -2,13 +2,15 @@
 
 Durable record of operator-approved decisions.
 
-Last updated: 2026-06-22
+Last updated: 2026-07-16
 
 ## Decision Log
 
 | ID | Date | Decision | Reason | Scope | Status |
 |---|---|---|---|---|---|
 | D-001 | 2026-06-22 | Create repository management and memory system before county implementation | Operator requested approval before any creation and explicitly prohibited county implementation | Repo management only | Approved |
+| D-002 | 2026-07-16 | Enter Duval Build Mode with blockers documented | Operator replied `Ok build` after the Duval blocker report; proceed with the accessible/source-limited path only | Duval Build Mode | Approved |
+| D-003 | 2026-07-16 | Continue Duval Build Mode and clear resolvable blockers | Operator granted full permission to build Duval to completion | Duval Build Mode | Approved |
 
 ## Decision Rules
 

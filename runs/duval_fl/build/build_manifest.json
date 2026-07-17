@@ -1,0 +1,18 @@
+{
+  "county_id": "duval_fl",
+  "build_label": "SOURCE_LIMITED",
+  "mode": "synthetic_gate_only",
+  "operator_authorized_with_blockers": true,
+  "synthetic": {
+    "lead_total": 24,
+    "matched_leads": "runs/duval_fl/build/synthetic/matched_leads.json",
+    "scored_leads": "runs/duval_fl/build/synthetic/scored_leads.json",
+    "dashboard": "runs/duval_fl/build/synthetic/dashboard.json",
+    "semantic_verdict": "NEEDS_OPERATOR_REVIEW"
+  },
+  "production": {
+    "status": "BLOCKED",
+    "reason": "No current data/raw inputs; Duval recon artifacts and schema-compatible translator names are still required.",
+    "deployment": "NOT_ATTEMPTED"
+  }
+}
