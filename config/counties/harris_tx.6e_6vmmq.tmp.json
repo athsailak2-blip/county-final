@@ -1,0 +1,53 @@
+{
+  "sources": {
+    "clerk_recordings": {
+      "access_pattern": "static_html",
+      "recommended_adapter": "requests_form_scraper",
+      "scraper_module": "scrapers/clerk_recordings.py",
+      "category": "lead",
+      "subtype": "clerk_recordings"
+    },
+    "foreclosure_notices_map": {
+      "access_pattern": "public_records_only",
+      "recommended_adapter": "requests_listing_scraper",
+      "scraper_module": "scrapers/tax_sales_listing.py",
+      "category": "lead",
+      "subtype": "tax_delinquency"
+    },
+    "tax_collector": {
+      "access_pattern": "static_html",
+      "recommended_adapter": "requests_form_scraper",
+      "scraper_module": "scrapers/tax_collector.py",
+      "category": "lead",
+      "subtype": "tax_delinquency"
+    },
+    "court_civil": {
+      "access_pattern": "public_records_only",
+      "recommended_adapter": "login_required_search_or_dataset",
+      "scraper_module": "scrapers/court_civil.py",
+      "category": "lead",
+      "subtype": "court_civil"
+    },
+    "court_eviction": {
+      "access_pattern": "static_html",
+      "recommended_adapter": "jp_case_search_if_exposed",
+      "scraper_module": "",
+      "category": "lead",
+      "subtype": "court_eviction"
+    },
+    "parcel_master": {
+      "access_pattern": "spa_with_api",
+      "recommended_adapter": "gis_public_data_or_search_scraper",
+      "scraper_module": "scrapers/parcel_master.py",
+      "category": "enrichment",
+      "subtype": "parcel_master"
+    },
+    "gis_parcels": {
+      "access_pattern": "public_records_only",
+      "recommended_adapter": "dataset_download_scraper",
+      "scraper_module": "scrapers/parcel_lookup.py",
+      "category": "enrichment",
+      "subtype": "gis_parcels"
+    }
+  }
+}
