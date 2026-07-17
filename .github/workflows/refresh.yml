@@ -1,0 +1,37 @@
+name: Daily Bexar Refresh
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: |
+          pip install -q requests playwright jsonschema
+          playwright install --with-deps chromium
+
+      - name: Run pipeline
+        run: python3 scaffold/pipeline/build_leads.py
+
+      - name: Deploy updated dashboard
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          cd dashboard
+          gh-pages -d . -b gh-pages -r "https://${GH_TOKEN}@github.com/${{ github.repository }}.git"
